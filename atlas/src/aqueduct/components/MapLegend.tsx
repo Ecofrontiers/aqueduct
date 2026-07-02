@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { MapTrifold, CaretDown, CaretUp } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
+import { MapTrifold, CaretDown, CaretUp, ArrowRight } from "@phosphor-icons/react";
 import { ACCOUNT_COLORS } from "./AqueductNetworkLayer";
 
 /**
@@ -52,6 +53,13 @@ export function MapLegend(): React.ReactElement {
           <span style={{ color: ACCOUNT_COLORS.venue }}>◆</span> solvers · <span style={{ color: ACCOUNT_COLORS.venue }}>▪</span> venues.
           Every element carries a LIVE / SIM / TESTNET chip on its page.
         </div>
+        <Link
+          to="/guide"
+          className="flex items-center justify-between gap-1 -mx-3 -mb-2.5 mt-1 px-3 py-2 bg-blue-600 text-white text-[11px] font-medium hover:bg-blue-700 transition-colors"
+        >
+          The full guide — accounts, nodes, honesty system
+          <ArrowRight size={12} />
+        </Link>
       </div>
     </div>
   );

@@ -40,6 +40,7 @@ import AqueductLotDetails from "./aqueduct/pages/AqueductLotDetails.tsx";
 import AqueductLedger from "./aqueduct/pages/AqueductLedger.tsx";
 import AqueductFinancing from "./aqueduct/pages/AqueductFinancing.tsx";
 import AqueductCoopSeat from "./aqueduct/pages/AqueductCoopSeat.tsx";
+import AqueductMapGuide from "./aqueduct/pages/AqueductMapGuide.tsx";
 
 globalThis.Buffer = Buffer;
 
@@ -167,6 +168,10 @@ export const router = createBrowserRouter([
       {
         path: "/coops/:coopId",
         element: <AqueductCoopSeat />,
+      },
+      {
+        path: "/guide",
+        element: <AqueductMapGuide />,
       },
     ],
   },
