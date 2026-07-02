@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-07-02T14:45:53.704Z",
+  "chain": "base-sepolia",
+  "chain_id": 84532,
+  "registry_address": "0x3AA739c23615cD7e08D365af851F43c76cdfcc6E",
+  "registry_live_verified": true,
+  "registry_owner": "0x3D70eA482c25e203bb650a86d6FDbe291E59b6b8",
+  "lot_id": "aq:71fe5cb646fe",
+  "function": "publishIntent",
+  "calldata": "0x8b142e690000000000000000000000000000000000000000000000000000000000000000d6e73c5ac6b9891e4e999518c6f2220007a0250aa5d8abd6efe1616ba1e882440000000000000000000000000000000000000000000000000000000001342aa00000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000006abd20a1",
+  "args": {
+    "vault": "0x0000000000000000000000000000000000000000",
+    "productIdHash": "0xd6e73c5ac6b9891e4e999518c6f2220007a0250aa5d8abd6efe1616ba1e88244",
+    "maxPriceUsd": "20196000",
+    "quantity": "1",
+    "expiry": "1790779553"
+  },
+  "status": "awaiting_broadcast",
+  "expected_env_var": "AQUEDUCT_SETTLE_PRIVATE_KEY",
+  "broadcast_note": "No AQUEDUCT_SETTLE_PRIVATE_KEY is set. This repo intentionally holds no private key. To broadcast: set AQUEDUCT_SETTLE_PRIVATE_KEY to a Base Sepolia-funded signer and run the (separate, not-yet-written) broadcast step by hand.",
+  "tx_hash": null,
+  "explorer_url": null
+}

@@ -35,7 +35,24 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/ethichub-shop/, ''),
         },
+        // Aqueduct oracle agent: same same-origin proxy pattern, targeting
+        // Yahoo Finance's public chart endpoint for the ICE Coffee "C"
+        // front-month quote (KC=F) — the REAL price tier (DEMO-SPEC.md §5).
+        // Production has no proxy; the oracle module degrades to its dated
+        // SNAPSHOT tier honestly (atlas/src/aqueduct/sim/oracle.mjs).
+        '/api/ice-c': {
+          target: 'https://query1.finance.yahoo.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/ice-c/, ''),
+        },
       },
+    },
+    // Allow the dev server to read files outside `atlas/` (the monorepo
+    // root, `atlas/../`) so the swarm sim can import the REAL Routes-adapted
+    // landed-cost engine directly from `routes/engine/services/` at runtime
+    // (DEMO-SPEC.md §3 item 4) rather than duplicating it into atlas/.
+    fs: {
+      allow: ['..'],
     },
   };
 })

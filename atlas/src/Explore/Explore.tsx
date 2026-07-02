@@ -41,6 +41,8 @@ import {
 import { useSearchParams, useNavigate } from "react-router-dom";
 import type { EntityType } from "../context/filters/filtersContext";
 import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
+import { SwarmMapLayer } from "../aqueduct/components/SwarmMapLayer";
+import { AqueductTourOverlay } from "../aqueduct/components/AqueductTourOverlay";
 // EntityType still used for URL param handling
 
 export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {}): React.ReactElement => {
@@ -713,6 +715,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                         the untouched Atlas base pipeline above (does not
                         touch allAssets / CompositeClusterLayer). */}
                     <AqueductLotsLayer />
+                    {/* Gate 2: swarm cascade map glyphs (solvers/buyer/coop/
+                        vault + the one settle arc) — additive, reads the
+                        shared tourStore singleton (see AqueductTourOverlay). */}
+                    <SwarmMapLayer />
                   </>
                 )}
 
@@ -749,6 +755,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </Popup>
                 )}
               </MapBox>
+              {/* Aqueduct swarm tour — additive overlay, position:fixed so it
+                  is independent of this grid (DEMO-SPEC.md §2 "Atlas base
+                  untouched"). */}
+              <AqueductTourOverlay />
             </div>
           </div>
           <div
