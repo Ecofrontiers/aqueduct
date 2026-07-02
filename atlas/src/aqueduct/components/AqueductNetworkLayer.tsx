@@ -7,36 +7,54 @@ import { AGROFORESTRY_VENUES, TO_BUILD_PLATFORM_NODES } from "../sim/venues.mjs"
 import { useTourStore, selectActiveChapter } from "../state/tourStore";
 
 /**
- * The Aqueduct network layer — the map as a living network graph. Design per
- * .claude/design-briefs/lot-detail-and-network-brief.md: curved node-to-node
- * arcs (longer = more curved), arrowheads at the destination (Jenny et al.
- * 2017 — measurably better than taper), width scaled with quantity, animated
- * dash = active flow, static 40% = background volume.
+ * The Aqueduct network layer — the map as a balance of payments, not just
+ * logistics. Two circuits over the same earth, colored by ACCOUNT:
  *
- * Data = the seeded economy's aggregated coop→hub flows (251 lanes from 766
- * routes; per-lot arcs would be soup — Flowmap.blue-style aggregation).
- * Native Mapbox layers; always-on. The tour drives EMPHASIS via tourStore
- * (solver ring during Fill, the one settle arc + vault badge during Settle).
+ *   CURRENT ACCOUNT (goods)            sienna   — commodity legs, origin → hub
+ *   CAPITAL ACCOUNT, exogenous         indigo   — investment/payment entering
+ *                                                 from outside, hub → origin
+ *                                                 (paired counter-arcs on trade
+ *                                                 lanes, opposite curvature)
+ *   CAPITAL ACCOUNT, endogenous        emerald  — credit created INSIDE the
+ *                                                 system against receivables;
+ *                                                 it revolves, it doesn't cross
+ *                                                 oceans → rings at the coop
+ *   SETTLE (onchain)                   Atlas blue — the tour's one arc
+ *
+ * Relationship status is line-style: SOLID = existing relation,
+ * DASHED = opportunity (eligible/open, not yet filled). The anchor coop's
+ * emerald ring is REAL — the Celo USDC credit lines (research/03, decoded).
+ *
+ * Cartography per Jenny et al. 2017 (curved node-to-node arcs, arrowheads at
+ * destination, width ∝ quantity, paired opposite curvature for two-way pairs).
  */
 
-const NETWORK_COLORS = {
-  route: "#4f46e5",
-  finance: "#059669",
+export const ACCOUNT_COLORS = {
+  goods: "#b45309",
+  capitalExo: "#4f46e5",
+  capitalEndo: "#059669",
   settle: "rgb(23, 127, 224)",
-  lot: "#b45309",
   venue: "#9333ea",
 } as const;
 
-// Calm over complete on the map: top lanes only — the full 251 exist in the
+type AccountKind = "goods" | "capitalExo" | "settle";
+
+// Calm over complete on the map: top lanes only — the full set stays in the
 // rail and ledger. A readable network beats an exhaustive one.
 const MAX_STATIC_FLOWS = 80;
 const ANIMATED_FLOWS = 10;
+const CAPITAL_COUNTER_FLOWS = 8; // paired payment/investment arcs on the top lanes
 
-function bezierArc(from: [number, number], to: [number, number], segments = 32): [number, number][] {
+function bezierArc(
+  from: [number, number],
+  to: [number, number],
+  segments = 32,
+  side: 1 | -1 = 1
+): [number, number][] {
   const dx = to[0] - from[0];
   const dy = to[1] - from[1];
   const dist = Math.sqrt(dx * dx + dy * dy);
-  const offset = Math.min(dist * 0.12, 7);
+  const offset = Math.min(dist * 0.12, 7) * side;
   const mx = (from[0] + to[0]) / 2 - (dy / (dist || 1)) * offset;
   const my = (from[1] + to[1]) / 2 + (dx / (dist || 1)) * offset;
   const pts: [number, number][] = [];
@@ -66,26 +84,55 @@ const DASH_STEPS: number[][] = [
   [0, 0.5, 3, 3.5],
 ];
 
-interface FlowLike {
+interface EdgeLike {
   from: [number, number];
   to: [number, number];
   totalKg: number;
-  laneCount: number;
-  hubId?: string;
-  kind?: "route" | "finance" | "settle";
+  kind: AccountKind;
+  side?: 1 | -1;
 }
 
-function flowsToGeojson(flows: FlowLike[]) {
+function edgesToGeojson(edges: EdgeLike[]) {
   // Width ∝ quantity: 2t → 0.6px, 120t → 3px.
   const w = (kg: number) => Math.max(0.6, Math.min(3, 0.6 + (kg / 120000) * 2.4));
   return {
     type: "FeatureCollection" as const,
-    features: flows.map((f) => ({
+    features: edges.map((e) => ({
       type: "Feature" as const,
-      properties: { width: w(f.totalKg), color: NETWORK_COLORS[f.kind ?? "route"] },
-      geometry: { type: "LineString" as const, coordinates: bezierArc(f.from, f.to) },
+      properties: { width: w(e.totalKg), color: ACCOUNT_COLORS[e.kind] },
+      geometry: { type: "LineString" as const, coordinates: bezierArc(e.from, e.to, 32, e.side ?? 1) },
     })),
   };
+}
+
+/** Ring wrapper — the endogenous-credit / opportunity halo around a node. */
+function NodeRing({
+  color,
+  dashed,
+  title,
+  children,
+}: {
+  color: string | null;
+  dashed?: boolean;
+  title?: string;
+  children: React.ReactNode;
+}) {
+  if (!color) return <>{children}</>;
+  return (
+    <div
+      title={title}
+      style={{
+        padding: 3,
+        borderRadius: "50%",
+        border: `2px ${dashed ? "dashed" : "solid"} ${color}`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function AqueductNetworkLayer(): React.ReactElement | null {
@@ -101,7 +148,6 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
     return () => clearInterval(t);
   }, []);
 
-  // Settle arc draws once per settle entry (celebration budget = 1).
   const settleActive = tour.started && chapter === "settle";
   useEffect(() => {
     if (!settleActive) {
@@ -121,53 +167,78 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
 
   const economy = useMemo(() => getEconomy(), []);
 
-  const { staticGeo, activeGeo, arrows } = useMemo(() => {
-    const flows = economy.flows as Array<FlowLike & { commodity: string }>;
-    const top = flows.slice(0, MAX_STATIC_FLOWS);
-    const active = top.slice(0, ANIMATED_FLOWS);
-    const rest = top.slice(ANIMATED_FLOWS);
+  // Per-coop capital-account state from the finance intents:
+  // filled → endogenous facility active (solid emerald ring);
+  // open only → opportunity (dashed indigo ring).
+  const coopCapitalState = useMemo(() => {
+    const state = new Map<string, "facility" | "opportunity">();
+    for (const intent of economy.intents as Array<{ intentType: string; status?: string; coopId?: string }>) {
+      if (intent.intentType !== "finance-this-planting" || !intent.coopId) continue;
+      const prev = state.get(intent.coopId);
+      if (intent.status === "filled") state.set(intent.coopId, "facility");
+      else if (!prev) state.set(intent.coopId, "opportunity");
+    }
+    return state;
+  }, [economy]);
 
-    // Anchor-region detail edges: real lots → their coop, + the Silvi finance arc.
+  const { staticGeo, activeGeo, arrows } = useMemo(() => {
+    const flows = economy.flows as Array<{ from: [number, number]; to: [number, number]; totalKg: number }>;
+    const top = flows.slice(0, MAX_STATIC_FLOWS);
+
+    // Current account: goods, origin → hub (sienna).
+    const goods: EdgeLike[] = top.map((f) => ({ ...f, kind: "goods" as const, side: 1 as const }));
+    const active = goods.slice(0, ANIMATED_FLOWS);
+    const rest = goods.slice(ANIMATED_FLOWS);
+
+    // Capital account, exogenous: paired counter-arcs on the busiest lanes —
+    // payment/investment flowing back hub → origin, opposite curvature so the
+    // pair reads as a circuit, not an overlap.
+    const capital: EdgeLike[] = top.slice(0, CAPITAL_COUNTER_FLOWS).map((f) => ({
+      from: f.to,
+      to: f.from,
+      totalKg: f.totalKg * 0.8,
+      kind: "capitalExo" as const,
+      side: 1 as const, // same geometric side as its pair's reverse = visually opposite
+    }));
+
+    // Anchor detail: real lots → coop (goods), Silvi → community (exogenous capital).
     const anchor = realLots?.[0];
-    const anchorEdgeList: FlowLike[] = [];
+    const anchorEdges: EdgeLike[] = [];
     if (anchor) {
       const coop: [number, number] = [anchor.map_marker.longitude + 0.6, anchor.map_marker.latitude - 0.3];
       for (const lot of realLots ?? []) {
-        anchorEdgeList.push({
+        anchorEdges.push({
           from: [lot.map_marker.longitude, lot.map_marker.latitude],
           to: coop,
           totalKg: 5000,
-          laneCount: 1,
-          kind: "route",
+          kind: "goods",
         });
       }
       const silvi = AGROFORESTRY_VENUES[0] as { coords?: { longitude: number; latitude: number } };
       if (silvi?.coords) {
-        anchorEdgeList.push({
+        anchorEdges.push({
           from: [silvi.coords.longitude, silvi.coords.latitude],
           to: [anchor.map_marker.longitude, anchor.map_marker.latitude],
           totalKg: 40000,
-          laneCount: 1,
-          kind: "finance",
+          kind: "capitalExo",
         });
       }
     }
 
-    const arrowList = [...active, ...anchorEdgeList].map((f, i) => ({
+    const animated = [...active, ...capital, ...anchorEdges];
+    const arrowList = animated.map((e, i) => ({
       id: `arrow-${i}`,
-      color: NETWORK_COLORS[f.kind ?? "route"],
-      ...arrowFor(bezierArc(f.from, f.to)),
+      color: ACCOUNT_COLORS[e.kind],
+      ...arrowFor(bezierArc(e.from, e.to, 32, e.side ?? 1)),
     }));
 
     return {
-      staticGeo: flowsToGeojson(rest),
-      activeGeo: flowsToGeojson([...active, ...anchorEdgeList]),
+      staticGeo: edgesToGeojson(rest),
+      activeGeo: edgesToGeojson(animated),
       arrows: arrowList,
-      anchorEdges: anchorEdgeList,
     };
   }, [economy, realLots]);
 
-  // Settle arc: buyer hub (Hamburg) → anchor coop.
   const settleGeo = useMemo(() => {
     const anchor = realLots?.[0];
     if (!anchor) return null;
@@ -191,7 +262,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
 
   return (
     <>
-      {/* ── Background volume lanes ── */}
+      {/* ── Background lanes (current account) ── */}
       <Source id="aq-net-static" type="geojson" data={staticGeo}>
         <Layer
           id="aq-net-static-lines"
@@ -201,7 +272,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         />
       </Source>
 
-      {/* ── Active lanes: base stroke + animated dash ── */}
+      {/* ── Active circuits: goods out, capital back ── */}
       <Source id="aq-net-active" type="geojson" data={activeGeo}>
         <Layer
           id="aq-net-active-base"
@@ -222,19 +293,19 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         />
       </Source>
 
-      {/* ── The settle arc (tour Settle beat): drawn once, Atlas blue ── */}
+      {/* ── The settle arc (tour Settle beat) ── */}
       {settleActive && settleGeo && settleProgress > 0 && (
         <Source id="aq-settle-arc" type="geojson" data={settleGeo(settleProgress)}>
           <Layer
             id="aq-settle-arc-line"
             type="line"
-            paint={{ "line-color": NETWORK_COLORS.settle, "line-width": 2.5, "line-opacity": 0.95 }}
+            paint={{ "line-color": ACCOUNT_COLORS.settle, "line-width": 2.5, "line-opacity": 0.95 }}
             layout={{ "line-cap": "round", "line-join": "round" }}
           />
         </Source>
       )}
 
-      {/* ── Arrowheads at destinations (direction, per Jenny et al.) ── */}
+      {/* ── Arrowheads at destinations ── */}
       {arrows.map((a) => (
         <Marker key={a.id} longitude={a.at[0]} latitude={a.at[1]} anchor="center" rotation={a.bearing} rotationAlignment="map">
           <div
@@ -250,16 +321,16 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       ))}
 
-      {/* ── Demand hubs: filled indigo circles ── */}
+      {/* ── Demand hubs: where exogenous capital enters ── */}
       {(economy.hubs as Array<{ id: string; name: string; coords: [number, number] }>).map((hub) => (
         <Marker key={hub.id} longitude={hub.coords[0]} latitude={hub.coords[1]} anchor="center">
           <div
-            title={`${hub.name} — import demand hub (SIM, standing buyers)`}
+            title={`${hub.name} — import demand hub (SIM): goods land here, capital enters here`}
             style={{
               width: 13,
               height: 13,
               borderRadius: "50%",
-              background: NETWORK_COLORS.route,
+              background: ACCOUNT_COLORS.capitalExo,
               border: "2px solid #ffffff",
               boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
             }}
@@ -267,47 +338,65 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       ))}
 
-      {/* ── Coop/exporter nodes: sienna outlined rounded squares — click opens the coop seat ── */}
-      {(economy.coops as Array<{ id: string; name: string; coords: [number, number] }>).map((coop) => (
-        <Marker
-          key={coop.id}
-          longitude={coop.coords[0]}
-          latitude={coop.coords[1]}
-          anchor="center"
-          onClick={(e) => {
-            e.originalEvent?.stopPropagation();
-            navigate(`/coops/${coop.id}`);
-          }}
-        >
-          <div
-            title={`${coop.name} (SIM) — open the coop seat`}
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 3,
-              background: "#ffffff",
-              border: `2px solid ${NETWORK_COLORS.lot}`,
-              boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
-              cursor: "pointer",
+      {/* ── Coops: outline = capital-account state ── */}
+      {(economy.coops as Array<{ id: string; name: string; coords: [number, number] }>).map((coop) => {
+        const capState = coopCapitalState.get(coop.id);
+        return (
+          <Marker
+            key={coop.id}
+            longitude={coop.coords[0]}
+            latitude={coop.coords[1]}
+            anchor="center"
+            onClick={(e) => {
+              e.originalEvent?.stopPropagation();
+              navigate(`/coops/${coop.id}`);
             }}
-          />
-        </Marker>
-      ))}
+          >
+            <NodeRing
+              color={capState === "facility" ? ACCOUNT_COLORS.capitalEndo : capState === "opportunity" ? ACCOUNT_COLORS.capitalExo : null}
+              dashed={capState === "opportunity"}
+              title={
+                capState === "facility"
+                  ? `${coop.name} — endogenous credit facility active (SIM) · open the coop seat`
+                  : capState === "opportunity"
+                  ? `${coop.name} — open financing opportunity (SIM) · open the coop seat`
+                  : `${coop.name} (SIM) — open the coop seat`
+              }
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 3,
+                  background: "#ffffff",
+                  border: `2px solid ${ACCOUNT_COLORS.goods}`,
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                  cursor: "pointer",
+                }}
+              />
+            </NodeRing>
+          </Marker>
+        );
+      })}
 
-      {/* Anchor coop (the tour's settle counterparty) */}
+      {/* Anchor coop: the REAL endogenous facility — Celo USDC credit lines */}
       {anchorCoop && (
         <Marker longitude={anchorCoop[0]} latitude={anchorCoop[1]} anchor="center">
-          <div
-            title="Cooperative / exporter node — Soconusco (SIM) · settle credits here, never the farmer directly"
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: 3,
-              background: settleActive ? NETWORK_COLORS.lot : "#ffffff",
-              border: `2.5px solid ${NETWORK_COLORS.lot}`,
-              boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
-            }}
-          />
+          <NodeRing
+            color={ACCOUNT_COLORS.capitalEndo}
+            title="Cooperative / exporter node — Soconusco. Endogenous credit facility REAL: EthicHub credit lines on Celo settle in USDC (line 2 completed a 192,600 → 212,369.79 repay cycle). Settle credits the coop, never the farmer directly."
+          >
+            <div
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: 3,
+                background: settleActive ? ACCOUNT_COLORS.goods : "#ffffff",
+                border: `2.5px solid ${ACCOUNT_COLORS.goods}`,
+                boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
+              }}
+            />
+          </NodeRing>
         </Marker>
       )}
 
@@ -322,8 +411,8 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
                 width: 11,
                 height: 11,
                 borderRadius: 2,
-                background: v.status === "TO-BUILD" ? "transparent" : NETWORK_COLORS.venue,
-                border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${NETWORK_COLORS.venue}`,
+                background: v.status === "TO-BUILD" ? "transparent" : ACCOUNT_COLORS.venue,
+                border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${ACCOUNT_COLORS.venue}`,
                 opacity: v.status === "TO-BUILD" ? 0.5 : 1,
                 boxShadow: v.status === "TO-BUILD" ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
               }}
@@ -345,8 +434,8 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
                 style={{
                   width: 11,
                   height: 11,
-                  background: isBackstop ? NETWORK_COLORS.venue : "#ffffff",
-                  border: `2px ${isBackstop ? "solid" : "dashed"} ${NETWORK_COLORS.venue}`,
+                  background: isBackstop ? ACCOUNT_COLORS.venue : "#ffffff",
+                  border: `2px ${isBackstop ? "solid" : "dashed"} ${ACCOUNT_COLORS.venue}`,
                   transform: "rotate(45deg)",
                   boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
                 }}
@@ -355,7 +444,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
           );
         })}
 
-      {/* ── Vault badge during Settle: light surface, running total ── */}
+      {/* ── Vault badge during Settle ── */}
       {settleActive && anchorCoop && tour.vaultCount > 0 && (
         <Marker longitude={anchorCoop[0] + 0.4} latitude={anchorCoop[1] + 0.4} anchor="center">
           <div

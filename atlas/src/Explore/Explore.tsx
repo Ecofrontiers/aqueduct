@@ -44,6 +44,7 @@ import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
 import { AqueductNetworkLayer } from "../aqueduct/components/AqueductNetworkLayer";
 import { TourDock } from "../aqueduct/components/TourDock";
 import { ActivityPanel } from "../aqueduct/components/ActivityPanel";
+import { MapLegend } from "../aqueduct/components/MapLegend";
 import { useAqueductEconomy } from "../aqueduct/hooks/useAqueductEconomy";
 import {
   LotExploreCard,
@@ -785,9 +786,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </Popup>
                 )}
               </MapBox>
-              {/* Docked tour + activity pulse — in-layout, this view only */}
+              {/* Docked tour + activity pulse + legend — in-layout, this view only */}
               <TourDock mapRef={mapRef as React.RefObject<MapRef>} />
               <ActivityPanel events={economy.events} />
+              <MapLegend />
             </div>
           </div>
           <div

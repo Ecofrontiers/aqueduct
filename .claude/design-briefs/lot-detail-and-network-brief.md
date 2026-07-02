@@ -56,7 +56,13 @@ External (scoped to the one idiom the host lacks — flow/network maps):
   - Solver = diamond, purple; buyer/demand hub = circle, indigo `#4f46e5`.
   - Vault = square badge with count (light surface, gray border, DM Sans).
 - **Edges:** quadratic-bezier curved arcs (longer = more curved), node-to-node; width ∝ quantity; direction = arrowhead at destination (small triangle marker) — not taper; radial fan-out where a node has several edges; control points offset to avoid unconnected nodes.
-- **Edge color = intent type:** sell/route = indigo `#4f46e5`; finance = emerald `#059669`; settle (testnet-real) = Atlas primary blue `rgb(23,127,224)`. Active flow = animated dash; historical = static 40% opacity.
+- **Edge color = ACCOUNT (superseded 2026-07-02, Pat's balance-of-payments framing):**
+  - current account (goods) = sienna `#b45309`, origin → hub;
+  - capital account, exogenous (investment/payment entering) = indigo `#4f46e5`, hub → origin, paired counter-arcs with opposite curvature;
+  - capital account, endogenous (credit facilities) = emerald `#059669`, rendered as RINGS at the coop — credit revolves, it doesn't cross oceans; REAL at the anchor (Celo USDC lines);
+  - settle (testnet-real) = Atlas primary blue.
+  - Relationship status = line-style: solid = existing relation, dashed = opportunity (eligible/open).
+  - Legend card ("Reading the map") teaches the grammar bottom-left.
 - **Implementation:** native Mapbox GL line layers + Markers (no deck.gl dependency; SwarmMapLayer already computes bezier arcs — generalize it). Cluster/simplify at low zoom.
 
 ### Anti-patterns (DO NOT)

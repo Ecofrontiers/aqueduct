@@ -274,6 +274,7 @@ export function generateEconomy(seed = ECONOMY_SEED) {
           id: `aq:i-fin-${contentHash(coop.id + f).slice(0, 10)}`,
           intentType: "finance-this-planting",
           status: rnd() < 0.4 ? "filled" : "open",
+          coopId: coop.id,
           title: `Finance — ${seedlings.toLocaleString()} seedlings, ${origin.name}`,
           detail: `€${Math.round(seedlings * 0.93).toLocaleString()} agroforestry renovation`,
           provenance: "SIM",
