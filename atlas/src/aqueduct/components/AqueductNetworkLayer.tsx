@@ -27,8 +27,10 @@ const NETWORK_COLORS = {
   venue: "#9333ea",
 } as const;
 
-const MAX_STATIC_FLOWS = 140; // top lanes by volume; the rest exist in the rail/ledger
-const ANIMATED_FLOWS = 14;
+// Calm over complete on the map: top lanes only — the full 251 exist in the
+// rail and ledger. A readable network beats an exhaustive one.
+const MAX_STATIC_FLOWS = 80;
+const ANIMATED_FLOWS = 10;
 
 function bezierArc(from: [number, number], to: [number, number], segments = 32): [number, number][] {
   const dx = to[0] - from[0];
@@ -74,8 +76,8 @@ interface FlowLike {
 }
 
 function flowsToGeojson(flows: FlowLike[]) {
-  // Width ∝ quantity: 2t → 0.6px, 120t → 4px.
-  const w = (kg: number) => Math.max(0.6, Math.min(4, 0.6 + (kg / 120000) * 3.4));
+  // Width ∝ quantity: 2t → 0.6px, 120t → 3px.
+  const w = (kg: number) => Math.max(0.6, Math.min(3, 0.6 + (kg / 120000) * 2.4));
   return {
     type: "FeatureCollection" as const,
     features: flows.map((f) => ({
@@ -194,7 +196,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         <Layer
           id="aq-net-static-lines"
           type="line"
-          paint={{ "line-color": ["get", "color"], "line-width": ["get", "width"], "line-opacity": 0.3 }}
+          paint={{ "line-color": ["get", "color"], "line-width": ["get", "width"], "line-opacity": 0.18 }}
           layout={{ "line-cap": "round", "line-join": "round" }}
         />
       </Source>

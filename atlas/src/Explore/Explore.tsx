@@ -644,6 +644,11 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
 
   const [accordionSearch, setAccordionSearch] = useState("");
 
+  // One quiet header system for all rail sections — color as accent (inset
+  // border + icon), not as a field. Seven saturated bars read as seven apps.
+  const RAIL_HEADER_CLS =
+    "w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-gray-800 shrink-0 bg-white border-t border-gray-100 hover:bg-gray-50 transition-colors";
+
   const toggleSection = (section: AccordionSection) => {
     setAccordionSearch("");
     setOpenSection((prev) => (prev === section ? null : section));
@@ -913,11 +918,12 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("bioregion")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0 bg-esv-600"
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: "inset 3px 0 0 #16a34a" }}
                     >
                       <span className="flex items-center gap-1.5">
-                        <Globe size={14} />
-                        Bioregions ({bioregionList.length})
+                        <Globe size={14} style={{ color: "#16a34a" }} />
+                        Bioregions <span className="font-normal text-gray-400">({bioregionList.length})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -966,12 +972,12 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("lot")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
-                      style={{ backgroundColor: AQUEDUCT_SECTION_COLORS.lot }}
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: `inset 3px 0 0 ${AQUEDUCT_SECTION_COLORS.lot}` }}
                     >
                       <span className="flex items-center gap-1.5">
-                        <Coffee size={14} />
-                        Lots ({economy.lots.length})
+                        <Coffee size={14} style={{ color: AQUEDUCT_SECTION_COLORS.lot }} />
+                        Lots <span className="font-normal text-gray-400">({economy.lots.length.toLocaleString()})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1033,12 +1039,12 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("intent")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
-                      style={{ backgroundColor: AQUEDUCT_SECTION_COLORS.intent }}
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: `inset 3px 0 0 ${AQUEDUCT_SECTION_COLORS.intent}` }}
                     >
                       <span className="flex items-center gap-1.5">
-                        <ArrowsLeftRight size={14} />
-                        Intents & Routes ({economy.intents.length})
+                        <ArrowsLeftRight size={14} style={{ color: AQUEDUCT_SECTION_COLORS.intent }} />
+                        Intents & Routes <span className="font-normal text-gray-400">({economy.intents.length.toLocaleString()})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1097,12 +1103,12 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("aqActor")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
-                      style={{ backgroundColor: AQUEDUCT_SECTION_COLORS.actor }}
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: `inset 3px 0 0 ${AQUEDUCT_SECTION_COLORS.actor}` }}
                     >
                       <span className="flex items-center gap-1.5">
-                        <Cpu size={14} />
-                        Solvers & Venues ({economy.actors.length})
+                        <Cpu size={14} style={{ color: AQUEDUCT_SECTION_COLORS.actor }} />
+                        Solvers & Venues <span className="font-normal text-gray-400">({economy.actors.length})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1163,10 +1169,13 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("asset")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
-                      style={{ backgroundColor: ENTITY_COLORS.asset.primary }}
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: `inset 3px 0 0 ${ENTITY_COLORS.asset.primary}` }}
                     >
-                      <span className="flex items-center gap-1.5"><TreeStructure size={14} />Assets ({filteredAssets.length})</span>
+                      <span className="flex items-center gap-1.5">
+                        <TreeStructure size={14} style={{ color: ENTITY_COLORS.asset.primary }} />
+                        Assets <span className="font-normal text-gray-400">({filteredAssets.length})</span>
+                      </span>
                       <CaretDown
                         size={14}
                         className={clsx(
@@ -1212,10 +1221,13 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("action")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
-                      style={{ backgroundColor: ENTITY_COLORS.action.primary }}
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: `inset 3px 0 0 ${ENTITY_COLORS.action.primary}` }}
                     >
-                      <span className="flex items-center gap-1.5"><Lightning size={14} />Actions ({actionsToDisplay.length})</span>
+                      <span className="flex items-center gap-1.5">
+                        <Lightning size={14} style={{ color: ENTITY_COLORS.action.primary }} />
+                        Actions <span className="font-normal text-gray-400">({actionsToDisplay.length})</span>
+                      </span>
                       <CaretDown
                         size={14}
                         className={clsx(
@@ -1261,10 +1273,13 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   <>
                     <button
                       onClick={() => toggleSection("actor")}
-                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
-                      style={{ backgroundColor: ENTITY_COLORS.actor.primary }}
+                      className={RAIL_HEADER_CLS}
+                      style={{ boxShadow: `inset 3px 0 0 ${ENTITY_COLORS.actor.primary}` }}
                     >
-                      <span className="flex items-center gap-1.5"><Users size={14} />Actors ({orgsToDisplay.length})</span>
+                      <span className="flex items-center gap-1.5">
+                        <Users size={14} style={{ color: ENTITY_COLORS.actor.primary }} />
+                        Actors <span className="font-normal text-gray-400">({orgsToDisplay.length})</span>
+                      </span>
                       <CaretDown
                         size={14}
                         className={clsx(

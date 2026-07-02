@@ -10,9 +10,6 @@ import { useNewFiltersDispatch } from "./context/filters";
 import { useAccountEffect } from "wagmi";
 import { Asset } from "./modules/assets";
 import { Org, Action } from "./shared/types";
-// @ts-ignore
-import * as klaro from "klaro";
-import klaroConfig from "./TnC/klaroConfig";
 
 function App() {
   useScrollClass();
@@ -97,9 +94,9 @@ function App() {
     },
   });
 
-  useEffect(() => {
-    klaro.setup(klaroConfig);
-  }, []);
+  // Consent banner removed for the demo build: no analytics run, so there is
+  // nothing to consent to — the privacy-preserving default, and the banner was
+  // colliding with the tour dock for a cold visitor's first minute.
 
   return (
     <HelmetProvider>
