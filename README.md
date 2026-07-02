@@ -48,17 +48,63 @@ Read-real today: **Regen Network** (ecocredit gRPC/REST), **EthicHub** (onchain 
 - **MIT + self-hostable** — anyone can run it; no operator can enclose the layer.
 - **Credibility spine** — respects the scientific-credibility rules for nature markets (public shapefiles, additionality, independent verification, spatially-explicit data); we don't blend incommensurable scores.
 
+## The demo (what runs today)
+
+One app: **Aqueduct**, wearing Regen Atlas's body. The layers above are wired — the
+`routes/` landed-cost engine computes real solver bids inside the `atlas/` map UI.
+
+- **Map** (`/`) — the network graph: 3 real EthicHub coffee lots (LIVE reads, Chiapas)
+  inside a seeded synthetic economy of ~1,250 SIM lots across 21 real smallholder
+  origins, with coop→hub flow arcs, demand hubs, venues, and a docked judge tour
+  ("One lot, end to end": aggregate → verify → price → publish → fill → settle → ask).
+- **Coop seat** (`/coops/:coopId`) — the same engine from the cooperative's chair:
+  publish a sell intent and watch solvers compete on YOUR route; tokenized trade
+  finance (structured receivable → policy-engine eligibility → advance) benchmarked
+  against EthicHub's real Celo USDC credit lines; duplicate-financing check over
+  content-addressed lot IDs.
+- **Financing** (`/financing`) — capital formations: buyers/grants/funds matched to the
+  lot population by the same (institution, rule, condition, effect) policy engine,
+  citing verified GIIN IRIS+ metrics.
+- **Ledger** (`/ledger`) — the real-vs-sim receipts. Every element in the app carries a
+  provenance chip: **LIVE / SNAPSHOT / SIM / TESTNET / TO-BUILD**. A real EUDR check
+  finding real gaps renders PARTIAL — nothing is invented to look complete.
+
+The synthetic economy is deterministic (one seed, no runtime randomness — replays
+identically) and calibrated to the research in [`docs/research/`](docs/research/):
+solver-market concentration per measured CoW/Across data, coffee price bands anchored
+by the real EthicHub lots, cacao/honey labeled as coarse.
+
+## Quickstart
+
+```bash
+git clone https://github.com/Ecofrontiers/aqueduct && cd aqueduct/atlas
+npm install
+cp .env.example .env   # or create .env — see below
+npm run dev            # → http://localhost:5173
+```
+
+Minimal `.env` (the app degrades gracefully without the rest):
+
+```
+VITE_MAPBOX_ACCESS_TOKEN=   # required — the map
+VITE_SUPABASE_URL=          # optional — the inherited Atlas asset registry
+VITE_SUPABASE_ANON_KEY=     # optional
+```
+
 ## Repository
 
 ```
 aqueduct/
-├── atlas/    # READ  — forked Regen Atlas (the aggregation interface, our starting point)
-├── routes/   # WRITE — forked SlabClaw Routes (intents + solver/transport engine)
-├── docs/     # concept, application draft, source materials, research
-└── LICENSE   # MIT
+├── atlas/                  # the app — forked Regen Atlas, now Aqueduct
+│   └── src/aqueduct/       # connectors, canonical lot schema, sim economy,
+│                           #   policy engine, trade finance, pages
+├── routes/                 # forked SlabClaw Routes — the landed-cost/solver engine
+├── docs/                   # research (9 cited reports), application, specs
+└── LICENSE                 # MIT
 ```
 
-> **Status: early.** `atlas/` and `routes/` are the forked starting point, not yet wired together. What is *real today* (aggregation, provenance, the intent/route engine) and what is *to build* (the regen-ag intent schema, the EAS-on-Celo lot attestation, the platform adapters, the farmer front door) is tracked honestly in [`docs/`](docs/). Nothing here claims a capability that isn't wired.
+Built on [Regen Atlas](https://www.regenatlas.xyz) (Ecofrontiers SARL) and SlabClaw
+Routes — forked as the starting point, credited in-app.
 
 ## License
 
