@@ -34,8 +34,9 @@ export interface AqueductLotSnapshot {
   onchain: { chain: string; contract: string; total_credit_lines: number | null; note: string } | null;
   join_keys: { deterministic: string[]; fuzzy: string };
   join_confidence: string;
-  // set client-side, not part of the persisted snapshot file:
-  provenance?: "LIVE" | "SNAPSHOT";
+  // set client-side, not part of the persisted snapshot file. "SIM" only on
+  // generator lots merged in by useAqueductEconomy.
+  provenance?: "LIVE" | "SNAPSHOT" | "SIM";
 }
 
 interface LotsFile {

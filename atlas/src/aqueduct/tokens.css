@@ -1,86 +1,100 @@
-/* Aqueduct swarm-layer tokens (DESIGN-BRIEF.md §0).
- * Scoped to `.aq-layer` — the Atlas base (:root, daisyUI theme, existing
- * components) is untouched. Only new swarm/intent-layer components opt in
- * by nesting under this class. */
+/* Aqueduct styles — the Atlas's own light design system (FABLE-KICKOFF.md
+ * "corrected direction": one app, light surfaces, DM Sans, Atlas palette).
+ * The former amber-on-black terminal identity is deleted; monospace survives
+ * only for data values (hashes, IDs, prices). */
 .aq-layer {
-  --aq-panel: #131722;
-  --aq-panel-2: #1e222d;
-  --aq-border: #2a2e39;
-  --aq-text: #d1d4dc;
-  --aq-dim: #787b86;
-  --aq-amber: #ffb700;
-  --aq-up: #26a69a;
-  --aq-down: #ef5350;
+  /* Surfaces mirror the Atlas base theme (index.css / tailwind.config.js). */
+  --aq-panel: rgb(244, 244, 244); /* = cardBackground */
+  --aq-panel-2: #ffffff;
+  --aq-border: #e5e7eb;
+  --aq-text: #181818;
+  --aq-dim: #6b7280;
+  --aq-accent: rgb(23, 127, 224); /* Atlas primary-400 */
+  --aq-up: #059669;
+  --aq-down: #dc2626;
+  --aq-warn: #b45309;
+  /* Legacy alias kept for un-migrated call sites; points at the accent, not amber. */
+  --aq-amber: rgb(23, 127, 224);
 
   color: var(--aq-text);
-  font-variant-numeric: tabular-nums;
 }
 
+/* Data values only — hashes, IDs, prices (tabular). Never headings or prose. */
 .aq-mono {
-  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
 }
 
-/* Provenance chip — monochrome outlined, monospace caps (DESIGN-BRIEF §5.1).
- * Never a status color; never an agent-type hue. */
+/* Provenance chip — small caps tag in Atlas badge idiom (light tint + strong
+ * text), one color family per provenance. Honesty chips everywhere. */
 .aq-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  border: 1px solid var(--aq-dim);
-  color: var(--aq-dim);
-  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 0.0625rem 0.375rem;
-  border-radius: 3px;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
   line-height: 1.4;
+  white-space: nowrap;
 }
+.aq-chip--live { background: #ecfdf5; color: #047857; }
+.aq-chip--snapshot { background: #eff6ff; color: #1d4ed8; }
+.aq-chip--sim { background: #f3f4f6; color: #4b5563; }
+.aq-chip--testnet { background: #fdf4ff; color: #a21caf; }
 .aq-chip--to-build {
-  opacity: 0.5;
+  background: transparent;
+  color: #9ca3af;
+  border: 1px dashed #d1d5db;
 }
 
-/* Status pill — one word, colored (DESIGN-BRIEF §5.1). Independent axis from chips. */
+/* Status pill — one word, colored. Independent axis from provenance. */
 .aq-status {
   display: inline-flex;
   align-items: center;
-  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 0.0625rem 0.375rem;
-  border-radius: 3px;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
   line-height: 1.4;
+  white-space: nowrap;
 }
-.aq-status--ok { color: var(--aq-up); border: 1px solid var(--aq-up); }
-.aq-status--partial { color: var(--aq-amber); border: 1px solid var(--aq-amber); }
-.aq-status--failed { color: var(--aq-down); border: 1px solid var(--aq-down); }
+.aq-status--ok { background: #ecfdf5; color: #047857; }
+.aq-status--partial { background: #fffbeb; color: #b45309; }
+.aq-status--failed { background: #fef2f2; color: #b91c1c; }
 
-/* join_confidence — labeled level, never a number (DESIGN-BRIEF §5.2). */
+/* join_confidence — labeled level, never a number. */
 .aq-join-confidence {
-  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   color: var(--aq-dim);
   border: 1px dashed var(--aq-border);
   padding: 0.0625rem 0.375rem;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .aq-card {
-  background: var(--aq-panel);
-  border: 1px solid var(--aq-border);
-  border-radius: 10px;
-}
-.aq-card-2 {
   background: var(--aq-panel-2);
   border: 1px solid var(--aq-border);
-  border-radius: 8px;
+  border-radius: 4px;
+}
+.aq-card-2 {
+  background: var(--aq-panel);
+  border: 1px solid var(--aq-border);
+  border-radius: 4px;
 }
 .aq-hairline {
   border-top: 1px solid var(--aq-border);
 }
+.aq-dim {
+  color: var(--aq-dim);
+}
 .aq-em-dash::before {
-  content: "\2014"; /* — missing data, never blank / N/A, DESIGN-BRIEF §0 */
+  content: "\2014"; /* — missing data, never blank / N/A */
   color: var(--aq-dim);
 }

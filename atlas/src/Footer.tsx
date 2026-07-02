@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GithubLogo, LinkedinLogo, XLogo, X } from "@phosphor-icons/react";
+import { GithubLogo, X } from "@phosphor-icons/react";
 import { analytics } from "./modules/analytics";
 import { Link } from "react-router-dom";
 
@@ -60,7 +60,15 @@ export default (): React.ReactElement => {
       <div className="border-t border-gray-200 flex items-center justify-between px-4 h-[36px] overflow-hidden">
         {/* Left: copyright + legal */}
         <div className="flex items-center gap-1 text-[10px] text-gray-500 shrink-0">
-          <span>&copy; Regen Atlas 2026</span>
+          <span>&copy; Aqueduct 2026</span>
+          <span>&middot;</span>
+          <a
+            className="text-gray-500 hover:text-gray-700 transition-colors"
+            href="https://www.regenatlas.xyz"
+            target="_blank"
+          >
+            built on Regen Atlas
+          </a>
           <span>&middot;</span>
           <button
             className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -104,67 +112,11 @@ export default (): React.ReactElement => {
           <div className="w-px h-1/2 bg-gray-400/50 group-hover/list:bg-gray-400 transition-colors self-center" />
         </div>
 
-        {/* Right: Docs, Blog, social */}
+        {/* Right: source */}
         <div className="flex items-center gap-3 md:gap-4 shrink-0">
           <a
-            className="hidden md:inline text-[10px] text-gray-400"
-            href="https://regen-atlas.gitbook.io/regen-atlas-docs"
-            target="_blank"
-            onClick={() => {
-              analytics.sendEvent({
-                category: "Link Click",
-                action: "Docs",
-                label: "Footer",
-              });
-            }}
-          >
-            Docs
-          </a>
-          <a
-            className="hidden md:inline text-[10px] text-gray-400"
-            href="https://paragraph.xyz/@regenatlas"
-            target="_blank"
-            onClick={() => {
-              analytics.sendEvent({
-                category: "Link Click",
-                action: "Blog",
-                label: "Footer",
-              });
-            }}
-          >
-            Blog
-          </a>
-          <a
             className="text-gray-400"
-            href="https://x.com/theregenatlas"
-            target="_blank"
-            onClick={() => {
-              analytics.sendEvent({
-                category: "Link Click",
-                action: "Twitter",
-                label: "Footer",
-              });
-            }}
-          >
-            <XLogo size={14} />
-          </a>
-          <a
-            className="text-gray-400"
-            href="https://www.linkedin.com/company/regen-atlas"
-            target="_blank"
-            onClick={() => {
-              analytics.sendEvent({
-                category: "Link Click",
-                action: "LinkedIn",
-                label: "Footer",
-              });
-            }}
-          >
-            <LinkedinLogo size={14} />
-          </a>
-          <a
-            className="text-gray-400"
-            href="https://github.com/Regen-Atlas/Regen-Atlas"
+            href="https://github.com/Ecofrontiers/aqueduct"
             target="_blank"
             onClick={() => {
               analytics.sendEvent({

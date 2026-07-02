@@ -49,16 +49,13 @@ function saveVaultState(v: { count: number; totalEur: number; countedRun: number
 }
 
 /**
- * Module-level singleton store for the swarm tour — NOT React context. Two
+ * Module-level singleton store for the tour — NOT React context. Two
  * independent mount points need the SAME live cascade/playback state without
- * either owning the other: the DOM overlay (rail + feed + captions, mounted
- * as a sibling after the Atlas MapBox) and the SwarmMapLayer (map glyphs +
- * settle arc, mounted as a MapBox child deep in Explore.tsx's existing JSX).
- * Wrapping the whole Explore render tree in a new context provider would be
- * a much larger, non-additive edit to Atlas base code; a tiny external store
- * (`useSyncExternalStore`, same primitive React/zustand use internally) lets
- * both mount points stay simple additive insertions (DEMO-SPEC.md §2 "Atlas
- * base untouched").
+ * either owning the other: the TourDock (docked panel, sibling after the
+ * Atlas MapBox) and the AqueductNetworkLayer (map emphasis: solver ring,
+ * settle arc, vault badge — a MapBox child deep in Explore.tsx's JSX). A
+ * tiny external store (`useSyncExternalStore`, the same primitive
+ * React/zustand use internally) lets both stay simple insertions.
  */
 const _initialVault = loadVaultState();
 let state: TourState = {

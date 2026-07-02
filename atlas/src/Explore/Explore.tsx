@@ -41,8 +41,17 @@ import {
 import { useSearchParams, useNavigate } from "react-router-dom";
 import type { EntityType } from "../context/filters/filtersContext";
 import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
-import { SwarmMapLayer } from "../aqueduct/components/SwarmMapLayer";
-import { AqueductTourOverlay } from "../aqueduct/components/AqueductTourOverlay";
+import { AqueductNetworkLayer } from "../aqueduct/components/AqueductNetworkLayer";
+import { TourDock } from "../aqueduct/components/TourDock";
+import { ActivityPanel } from "../aqueduct/components/ActivityPanel";
+import { useAqueductEconomy } from "../aqueduct/hooks/useAqueductEconomy";
+import {
+  LotExploreCard,
+  IntentExploreCard,
+  ActorExploreCard,
+  AQUEDUCT_SECTION_COLORS,
+} from "../aqueduct/components/AqueductExploreCards";
+import { Coffee, ArrowsLeftRight, Cpu } from "@phosphor-icons/react";
 // EntityType still used for URL param handling
 
 export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {}): React.ReactElement => {
@@ -601,14 +610,26 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   // Always show panel on lg (accordion is default content). On md, only when detail selected.
   const showLeftPanel = true;
 
-  // Accordion: priority order Bioregions > Assets > Actions > Actors, one open at a time
-  type AccordionSection = "bioregion" | "asset" | "action" | "actor";
+  // Aqueduct economy — lots / intents & routes / solvers & venues for the rail
+  const economy = useAqueductEconomy();
+
+  // Accordion: priority order Lots > Bioregions > Intents > Solvers > Assets > Actions > Actors
+  type AccordionSection =
+    | "bioregion"
+    | "lot"
+    | "intent"
+    | "aqActor"
+    | "asset"
+    | "action"
+    | "actor";
   const [openSection, setOpenSection] = useState<AccordionSection | null>(null);
 
   // Auto-select highest priority section when panel content changes
   useEffect(() => {
     if (selectedBioregion) return; // accordion only used in card-list mode
-    if (bioregionList.length > 0) {
+    if (economy.lots.length > 0) {
+      setOpenSection("lot");
+    } else if (bioregionList.length > 0) {
       setOpenSection("bioregion");
     } else if (activeEntityTypes.has("asset") && filteredAssets.length > 0) {
       setOpenSection("asset");
@@ -619,7 +640,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
     } else {
       setOpenSection(null);
     }
-  }, [activeEntityTypes, selectedBioregion, bioregionList.length]);
+  }, [activeEntityTypes, selectedBioregion, bioregionList.length, economy.lots.length]);
 
   const [accordionSearch, setAccordionSearch] = useState("");
 
@@ -662,9 +683,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
               <MapBox
                 mapStyle={mapStyle}
                 initialViewState={{
-                  longitude: 15,
-                  latitude: 30,
-                  zoom: 1.6,
+                  // Open framed on Chiapas — the anchor lots (Soconusco) are the content
+                  longitude: -92.4,
+                  latitude: 15.6,
+                  zoom: 5.5,
                 }}
                 showMapStyleSwitch={true}
                 mapRef={mapRef as React.RefObject<MapRef>}
@@ -711,14 +733,17 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
 
                     {/* Agent markers removed - agents counted with bioregions instead */}
 
-                    {/* Aqueduct swarm layer: EthicHub-read lots, additive to
-                        the untouched Atlas base pipeline above (does not
-                        touch allAssets / CompositeClusterLayer). */}
+                    {/* The network graph: typed nodes + curved flow arcs,
+                        always-on. The tour drives emphasis, not existence.
+                        Mounted BEFORE the lot layer so its markers (hubs,
+                        venues, arrowheads, solver ring) stack underneath —
+                        react-map-gl Markers paint in DOM/mount order, no
+                        z-index available, so order is the only lever. */}
+                    <AqueductNetworkLayer />
+                    {/* Aqueduct lot markers (EthicHub reads) — separate from
+                        the Atlas assets pipeline above. Mounted last so lot
+                        chips always stay on top of route lines/nodes. */}
                     <AqueductLotsLayer />
-                    {/* Gate 2: swarm cascade map glyphs (solvers/buyer/coop/
-                        vault + the one settle arc) — additive, reads the
-                        shared tourStore singleton (see AqueductTourOverlay). */}
-                    <SwarmMapLayer />
                   </>
                 )}
 
@@ -755,10 +780,9 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </Popup>
                 )}
               </MapBox>
-              {/* Aqueduct swarm tour — additive overlay, position:fixed so it
-                  is independent of this grid (DEMO-SPEC.md §2 "Atlas base
-                  untouched"). */}
-              <AqueductTourOverlay />
+              {/* Docked tour + activity pulse — in-layout, this view only */}
+              <TourDock mapRef={mapRef as React.RefObject<MapRef>} />
+              <ActivityPanel events={economy.events} />
             </div>
           </div>
           <div
@@ -930,6 +954,202 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                                 }}
                               />
                             ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </>
+                )}
+
+                {/* Lots — Aqueduct commodity lots */}
+                {economy.lots.length > 0 && (
+                  <>
+                    <button
+                      onClick={() => toggleSection("lot")}
+                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
+                      style={{ backgroundColor: AQUEDUCT_SECTION_COLORS.lot }}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Coffee size={14} />
+                        Lots ({economy.lots.length})
+                      </span>
+                      <CaretDown
+                        size={14}
+                        className={clsx("transition-transform", openSection === "lot" && "rotate-180")}
+                      />
+                    </button>
+                    {openSection === "lot" && (() => {
+                      const q = accordionSearch.toLowerCase();
+                      const items = q
+                        ? economy.lots.filter(
+                            (l) =>
+                              l.title_redacted.toLowerCase().includes(q) ||
+                              (l.origin.region ?? "").toLowerCase().includes(q) ||
+                              (l.origin.country ?? "").toLowerCase().includes(q)
+                          )
+                        : economy.lots;
+                      return (
+                        <div className="flex-1 min-h-0 flex flex-col">
+                          <div className="relative shrink-0 border-b border-gray-200">
+                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                              type="text"
+                              value={accordionSearch}
+                              onChange={(e) => setAccordionSearch(e.target.value)}
+                              placeholder="Search lots..."
+                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                            />
+                          </div>
+                          <div className="flex-1 min-h-0 overflow-y-auto">
+                            {items.slice(0, 80).map((lot) => (
+                              <LotExploreCard
+                                key={lot.aqueduct_id}
+                                lot={lot}
+                                onLocate={() => {
+                                  if (lot.map_marker) {
+                                    mapRef?.current?.flyTo({
+                                      center: [lot.map_marker.longitude, lot.map_marker.latitude],
+                                      zoom: 9,
+                                      duration: 900,
+                                    });
+                                  }
+                                }}
+                              />
+                            ))}
+                            {items.length > 80 && (
+                              <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
+                                Showing 80 of {items.length.toLocaleString()} — search to narrow.
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </>
+                )}
+
+                {/* Intents & Routes — Aqueduct order flow */}
+                {economy.intents.length > 0 && (
+                  <>
+                    <button
+                      onClick={() => toggleSection("intent")}
+                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
+                      style={{ backgroundColor: AQUEDUCT_SECTION_COLORS.intent }}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <ArrowsLeftRight size={14} />
+                        Intents & Routes ({economy.intents.length})
+                      </span>
+                      <CaretDown
+                        size={14}
+                        className={clsx("transition-transform", openSection === "intent" && "rotate-180")}
+                      />
+                    </button>
+                    {openSection === "intent" && (() => {
+                      const q = accordionSearch.toLowerCase();
+                      const items = q
+                        ? economy.intents.filter(
+                            (it) => it.title.toLowerCase().includes(q) || it.detail.toLowerCase().includes(q)
+                          )
+                        : economy.intents;
+                      return (
+                        <div className="flex-1 min-h-0 flex flex-col">
+                          <div className="relative shrink-0 border-b border-gray-200">
+                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                              type="text"
+                              value={accordionSearch}
+                              onChange={(e) => setAccordionSearch(e.target.value)}
+                              placeholder="Search intents..."
+                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                            />
+                          </div>
+                          <div className="flex-1 min-h-0 overflow-y-auto">
+                            {items.slice(0, 80).map((intent) => (
+                              <IntentExploreCard
+                                key={intent.id}
+                                intent={intent}
+                                onLocate={() => {
+                                  if (intent.coordinates) {
+                                    mapRef?.current?.flyTo({
+                                      center: [intent.coordinates.longitude, intent.coordinates.latitude],
+                                      zoom: 8,
+                                      duration: 900,
+                                    });
+                                  }
+                                }}
+                              />
+                            ))}
+                            {items.length > 80 && (
+                              <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
+                                Showing 80 of {items.length.toLocaleString()} — search to narrow.
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </>
+                )}
+
+                {/* Solvers & Venues — Aqueduct market actors */}
+                {economy.actors.length > 0 && (
+                  <>
+                    <button
+                      onClick={() => toggleSection("aqActor")}
+                      className="w-full flex items-center justify-between px-4 h-11 md:h-8 text-sm font-semibold text-white shrink-0"
+                      style={{ backgroundColor: AQUEDUCT_SECTION_COLORS.actor }}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Cpu size={14} />
+                        Solvers & Venues ({economy.actors.length})
+                      </span>
+                      <CaretDown
+                        size={14}
+                        className={clsx("transition-transform", openSection === "aqActor" && "rotate-180")}
+                      />
+                    </button>
+                    {openSection === "aqActor" && (() => {
+                      const q = accordionSearch.toLowerCase();
+                      const items = q
+                        ? economy.actors.filter(
+                            (a) => a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q)
+                          )
+                        : economy.actors;
+                      return (
+                        <div className="flex-1 min-h-0 flex flex-col">
+                          <div className="relative shrink-0 border-b border-gray-200">
+                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                              type="text"
+                              value={accordionSearch}
+                              onChange={(e) => setAccordionSearch(e.target.value)}
+                              placeholder="Search solvers & venues..."
+                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                            />
+                          </div>
+                          <div className="flex-1 min-h-0 overflow-y-auto">
+                            {items.slice(0, 100).map((actor) => (
+                              <ActorExploreCard
+                                key={actor.id}
+                                actor={actor}
+                                onLocate={
+                                  actor.coordinates
+                                    ? () =>
+                                        mapRef?.current?.flyTo({
+                                          center: [actor.coordinates!.longitude, actor.coordinates!.latitude],
+                                          zoom: 6,
+                                          duration: 900,
+                                        })
+                                    : undefined
+                                }
+                              />
+                            ))}
+                            {items.length > 100 && (
+                              <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
+                                Showing 100 of {items.length.toLocaleString()} — search to narrow.
+                              </div>
+                            )}
                           </div>
                         </div>
                       );

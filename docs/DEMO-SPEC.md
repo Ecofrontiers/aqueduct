@@ -7,6 +7,11 @@
 
 ## 1. The product (one paragraph)
 
+**Canonical definition (Pat, locked 2026-07-02 — use these words everywhere):**
+"Aqueduct is a generalized peer-to-peer logistics layer for smallholder farmers: agents
+aggregate, verify, and price commodity lots, and intents match and settle them."
+
+
 Aqueduct is an **open financial + logistics layer for smallholder commodities**: an
 aggregation + certification + intent/solver network over the platforms where smallholder
 production already lives. It is NOT a farmer-facing app and NOT a regen-ag project —
@@ -34,14 +39,14 @@ License MIT. Repo: `~/Desktop/1_projects/aqueduct/`.
 | Swarm meaning | **Farmer empowerment** — the judge watches agents compete and concludes "this machinery works for the producer." Rendered SUBTLY: no meters/tickers/preaching; spread + producer-share data sits quietly in lot detail panels; the explicit argument lives in the deck, not the UI |
 | Card lineage | **Omitted entirely** — no SlabClaw/Charizard/collectibles reference anywhere (demo, application, repo UI). Team credibility = Regen Atlas + The Green Crypto Handbook + the Hedera diligence build. Scrub forked `routes/` of card-domain references; `api.slabclaw.com` appears nowhere |
 | End of tour | **The ask, stated** — final screen renders Q5: what the grant funds, milestones, what compounds in the open |
-| Visual identity | **Atlas base untouched; design effort spent ONLY on the new swarm/intent layer** (agents, bids, routes, settle events) — the new thing is what looks new |
+| Visual identity | **SUPERSEDED 2026-07-02 (Pat: "you just built an app on top of the other app — there's no integration at all").** Original intent stands for STYLE (don't restyle Atlas's look); it was wrongly obeyed as STRUCTURE (overlay-only). Binding correction: **Aqueduct is a MODE of the app, not an overlay.** The demo build opens IN Aqueduct mode: the map IS the aggregation view (commodity lots, venues, storage nodes, intent arcs as first-class map content, Chiapas-framed), the feed is part of that view's layout, and the tour DRIVES app state (route, camera, panels) rather than floating over whatever page is showing. Atlas's own browse (bioregions/assets) stays functional and reachable but is not the front door; tour chrome never renders on non-Aqueduct pages; zero z-fighting with Atlas UI |
 | Lineage framing | **Openly a fork/extension of Regen Atlas** (Pat, 2026-07-02) — the UI and application say so explicitly ("Aqueduct extends the open Regen Atlas"). Lineage is a feature: the base layer is already live, open (MIT), and ours — not something to disguise. regenatlas.xyz remains live as the standing proof |
 | Map aesthetic (A1) | **Keep Atlas's current Mapbox style** — zero restyle risk, visual continuity with the cited live product |
 | Swarm rendering (A2) | **Feed-first, map secondary** — the activity feed (terminal-log aesthetic) IS the swarm view; the map shows results. Honest to how agents actually work; consistent with the subtle mandate |
 | Tour chrome (A3) | **Chaptered side rail** — persistent rail lists the beats (Aggregate → Verify → Price → Publish → Fill → Settle → Ask); click a chapter to play it; judge sees the whole arc upfront and can jump |
 | Tour pacing | **Judge-clicked, ~8-10 steps** — each click advances one captioned beat (map → lot → certs → diligence → oracle → intent → solver race → settle → ask); ~3 min read fully |
 | Incumbent stance | **Neutral rails they join** — venues (Algrano, GrainChain, AgriDex…) render as first-class nodes the layer aggregates and routes intents TO; Aqueduct adds no toll and replaces nobody |
-| Rails lineage | **Domain-neutral citation** — "we deployed an intent-settlement registry (Base Sepolia) and closed a live USDC→marketplace buy rail"; verifiable onchain, zero collectibles language |
+| Rails lineage | **Domain-neutral citation — FINAL** (F5 revisited with the provenance-trail argument 2026-07-02; Pat kept it, risk accepted): "we deployed an intent-settlement registry (Base Sepolia) and closed a live USDC→marketplace buy rail"; zero collectibles language anywhere. Accepted risk: a reviewer tracing the deployer/fork lineage discovers the collectibles provenance — deemed survivable |
 | Backstop solver | **Open reference solver** — a forkable, open-source backstop that wins ONLY when no other solver bids; code public, margin visible. Cold-start realism (research/04: no network ever bootstrapped without one) that reinforces neutrality instead of undercutting it |
 | Sentient stack ties | **Offer, don't commit** — name the compatibility (diligence agents mirror ROMA's Verifier role; GRID publication is natural) without making either a milestone |
 | Evidence home (Q37) | **Application + deck; demo stays product-pure** — research/02's five sentences live in Q2(a)/Q5 and the deck; tour captions carry no citations. ONE exception: the ask-screen may carry the RCT insight in a single line (matching without price-info-alone is the unlock) since it IS the thesis. *(Set on best judgment while Pat was AFK — consistent with Q18 "subtle"; re-openable.)* |

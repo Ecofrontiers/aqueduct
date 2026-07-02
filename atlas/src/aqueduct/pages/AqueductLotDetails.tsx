@@ -6,7 +6,7 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import { MapBox } from "../../shared/components/MapBox";
 import { useMapState } from "../../context/map";
-import { useAqueductLots } from "../hooks/useAqueductLots";
+import { useAqueductEconomy } from "../hooks/useAqueductEconomy";
 import { LotCard } from "../components/LotCard";
 
 /**
@@ -19,9 +19,9 @@ import { LotCard } from "../components/LotCard";
 export default function AqueductLotDetails(): React.ReactElement {
   const { lotId } = useParams<{ lotId: string }>();
   const { mapStyle } = useMapState();
-  const { lots, loading } = useAqueductLots();
+  const { lots, loading } = useAqueductEconomy();
 
-  const lot = lots?.find((l) => l.aqueduct_id === lotId || l.source.platform_lot_id === lotId);
+  const lot = lots.find((l) => l.aqueduct_id === lotId || l.source?.platform_lot_id === lotId);
 
   if (loading) {
     return (
@@ -70,17 +70,21 @@ export default function AqueductLotDetails(): React.ReactElement {
                       width: 16,
                       height: 16,
                       borderRadius: "50%",
-                      background: "#ffb700",
-                      border: `2px solid ${lot.provenance === "LIVE" ? "#ffb700" : "#787b86"}`,
-                      boxShadow: "0 0 0 4px rgba(255,183,0,0.25), 0 0 0 1px rgba(0,0,0,0.35)",
+                      background: "#b45309",
+                      border: "2px solid #ffffff",
+                      boxShadow:
+                        lot.provenance === "LIVE"
+                          ? "0 0 0 2px #b45309, 0 0 0 6px rgba(180,83,9,0.15)"
+                          : "0 1px 2px rgba(0,0,0,0.25)",
                     }}
                     title={lot.title_redacted}
                   />
                 </Marker>
               </MapBox>
-              <div className="text-xs mt-2 px-2" style={{ color: "#787b86" }}>
-                Map pin is community-approximate ({lot.map_marker.precision}) — EthicHub does not publish plot-level
-                geolocation for this lot (the EUDR gap, rendered above).
+              <div className="text-xs mt-2 px-2 text-gray-400">
+                {lot.sim
+                  ? `Synthetic lot — map position is ${lot.map_marker.precision}, illustrative only.`
+                  : `Map pin is community-approximate (${lot.map_marker.precision}) — EthicHub does not publish plot-level geolocation for this lot (the EUDR gap, rendered above).`}
               </div>
             </div>
           </div>

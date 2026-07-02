@@ -8,10 +8,11 @@
 // presented as live" (this cascade is honestly presented as a replay of a
 // real computation, not as a live independent run each time).
 
-import { runSolverRace } from "./solverRoster.mjs";
-import { priceLot } from "./oracle.mjs";
 import { evaluateBuyerMatch } from "./buyerAgent.mjs";
 import { buildFinanceIntent } from "./financeIntent.mjs";
+import { priceLot } from "./oracle.mjs";
+import { explainVerdict } from "./policy.mjs";
+import { runSolverRace } from "./solverRoster.mjs";
 import { COOP_EXPORTER_NODE, VAULT_NODE } from "./venues.mjs";
 
 const CADENCE_MS = 2500; // DESIGN-BRIEF §1.1 "events surface on a ~2-3s tick"
@@ -115,17 +116,17 @@ export async function buildCascade(lot) {
   const oracle = await priceLot();
   const priceId = push({
     chapter: "price", beat: "B4", prov: oracle.provenance, agent: "@oracle-ice-c",
-    verb: "priced", object: lot.aqueduct_id, detail: `ICE C ${oracle.baseCentsLb.toFixed(1)} ¢/lb + Chiapas diff → fair FOB €${oracle.fairFobEurKg.toFixed(2)}/kg`,
+    verb: "priced", object: lot.aqueduct_id, detail: `ICE C ${oracle.baseCentsLb.toFixed(1)} ¢/lb + Chiapas diff → commodity floor €${oracle.floorFobEurKg.toFixed(2)}/kg`,
     valueText: `+${oracle.differentialCentsLb} ¢/lb`, status: "OK",
     parentId: eudrId,
     expand: {
-      headline: `The oracle priced the commodity-equivalent fair FOB from ${oracle.baseSource}, plus a named, sourced Chiapas differential — never a bare C-quote.`,
+      headline: `The oracle priced the commodity floor from ${oracle.baseSource}, plus a named, sourced Chiapas differential — never a bare C-quote.`,
       sections: [
         { label: "ICE C base", value: `${oracle.baseCentsLb.toFixed(2)} ¢/lb (${oracle.provenance}, as of ${oracle.baseAsOf})` },
         { label: "base source", value: oracle.baseSource },
         { label: "Chiapas differential", value: `+${oracle.differentialCentsLb} ¢/lb — ${oracle.differentialSource}` },
-        { label: "fair FOB", value: `€${oracle.fairFobEurKg.toFixed(2)}/kg` },
-        { label: "asking vs commodity-equivalent spread", value: lot.price ? `€${lot.price.amount.toFixed(2)}/kg asking vs €${oracle.fairFobEurKg.toFixed(2)}/kg commodity-equivalent — the specialty premium this layer makes legible` : "—" },
+        { label: "commodity floor FOB", value: `€${oracle.floorFobEurKg.toFixed(2)}/kg` },
+        { label: "asking vs commodity-equivalent spread", value: lot.price ? `€${lot.price.amount.toFixed(2)}/kg asking vs €${oracle.floorFobEurKg.toFixed(2)}/kg commodity-equivalent — the specialty premium this layer makes legible` : "—" },
       ],
     },
   });
@@ -174,17 +175,49 @@ export async function buildCascade(lot) {
   });
 
   // ---- Chapter 5: Fill (B7 solver race + buyer match) ----
-  const race = runSolverRace({ fobEurPerKg: lot.price?.amount ?? 17.0, weightKg: 70 });
+  // Institutional policy (docs/research/09-institutional-policy-swarm-coordination.md,
+  // Phase 5): every bid/decline already carries a policyVerdict from sim/policy.mjs
+  // (solverRoster.mjs) — this beat renders it with the same expand/citation discipline
+  // as the B3 EUDR beat above, not a new UI grammar.
+  const race = runSolverRace({ lot, fobEurPerKg: lot.price?.amount ?? 17.0, weightKg: 70 });
   let prevBidParent = intentId;
   for (const b of race.bids) {
+    const citedModes = b.policyVerdict ? explainVerdict(b.policyVerdict) : [];
+    const logicScoreLine = b.policyVerdict
+      ? {
+          label: "governance-logics score",
+          value: `hierarchy ${b.policyVerdict.logicScores.hierarchy}, market ${b.policyVerdict.logicScores.market}, network ${b.policyVerdict.logicScores.network}${b.policyVerdict.requiresReview ? " — flagged for review" : ""}`,
+        }
+      : null;
+
     if (b.status === "DECLINED") {
-      const id = push({
+      push({
         chapter: "fill", beat: "B7", prov: "SIM", agent: b.handle,
         verb: "declined", object: `intent aq:i-04`, detail: b.note,
         valueText: "—", status: "DECLINED", parentId: intentId,
+        expand: citedModes.length
+          ? {
+              headline: `${b.handle} declined per institutional policy — ${b.note}`,
+              sections: [
+                ...citedModes.map((fm) => ({ label: `cites: ${fm.name}`, value: `${fm.sev} — ${fm.desc}` })),
+                logicScoreLine,
+              ],
+            }
+          : undefined,
       });
       continue;
     }
+    const policySections =
+      b.policyVerdict && b.policyVerdict.marginAdjustmentBps > 0
+        ? [
+            {
+              label: "policy risk premium",
+              value: `+${b.policyVerdict.marginAdjustmentBps} bps — ${b.policyVerdict.note}`,
+            },
+            ...citedModes.map((fm) => ({ label: `cites: ${fm.name}`, value: `${fm.sev} — ${fm.desc}` })),
+            logicScoreLine,
+          ]
+        : [];
     const id = push({
       chapter: "fill", beat: "B7", prov: b.real ? "LIVE" : "SIM", agent: b.handle,
       verb: "bid", object: `landed route ${lot.aqueduct_id}`, detail: `${b.bid.lines.length} cost lines, T+${b.bid.tenorDays}`,
@@ -194,6 +227,7 @@ export async function buildCascade(lot) {
         sections: b.bid.lines.map((l) => ({ label: l.label, value: `€${l.eurPerKg.toFixed(4)}/kg (${l.confidence})` })).concat([
           { label: "Landed (FCA Hamburg)", value: `€${b.bid.landedEurPerKg.toFixed(4)}/kg` },
           { label: "margin", value: `${b.bid.marginPct.toFixed(2)}%` },
+          ...policySections,
         ]),
       },
     });

@@ -1,35 +1,47 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-/** Ask screen — beat B10, DESIGN-BRIEF.md §7.1. */
-export function AskScreen({ onReplay, lotsAggregated, settleTxHref }: { onReplay: () => void; lotsAggregated: number; settleTxHref: string | null }): React.ReactElement {
+/** The ask — final tour beat. Atlas light styling; the prose walks, nothing is sold. */
+export function AskScreen({
+  onReplay,
+  lotsAggregated,
+  settleTxHref,
+}: {
+  onReplay: () => void;
+  lotsAggregated: number;
+  settleTxHref: string | null;
+}): React.ReactElement {
   return (
-    <div className="aq-layer aq-card" style={{ padding: 14, display: "flex", flexDirection: "column", gap: 12 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-1.5">
         <StatCard title="What $50k funds" lines={["Registry API hardening", "Cropster ERP import adapter", "2nd + 3rd connector (Algrano, Agrotoken)"]} />
-        <StatCard
-          title="Milestones"
-          lines={["M1 · registry API public + first external query", "M2 · first non-anchor platform via ERP import", "M3 · first external self-host"]}
-        />
+        <StatCard title="Milestones" lines={["M1 · registry API public + first external query", "M2 · first non-anchor platform via ERP import", "M3 · first external self-host"]} />
         <StatCard title="What compounds in the open" lines={["Canonical lot schema", "Content-addressed lot ID", "Open registry — connectors + solver are reference implementations"]} />
       </div>
 
-      <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+      <div className="flex gap-4 flex-wrap">
         <Kpi value={String(lotsAggregated)} unit="lots aggregated" />
         <Kpi value="1" unit="platform read live" />
-        <Kpi value="€6.63→€17.00" unit="spread surfaced (fair FOB vs asking)" />
+        <Kpi value="€6.63 floor" unit="vs €17.00 asking — the specialty premium made legible" />
         <Kpi value={settleTxHref ? "1" : "0"} unit="real settle tx" />
       </div>
 
-      <div className="aq-hairline" style={{ paddingTop: 10, fontSize: "11px", color: "var(--aq-dim)" }}>
-        The RCT record: matching without price-info-alone is the unlock — an intent/solver layer, not a price feed, is what moved outcomes when it existed (docs/research/02).
-      </div>
+      <p className="text-[11px] text-gray-400 leading-relaxed border-t border-gray-100 pt-2">
+        The RCT record: matching without price-info-alone is the unlock — an intent/solver
+        layer, not a price feed, is what moved outcomes when it existed (docs/research/02).
+      </p>
 
-      <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-        <button onClick={onReplay} className="aq-chip" style={{ padding: "6px 12px", cursor: "pointer" }}>
+      <div className="flex gap-2">
+        <button
+          onClick={onReplay}
+          className="px-3 py-1.5 text-[11px] font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+        >
           Replay the fill
         </button>
-        <Link to="/ledger" className="aq-chip" style={{ padding: "6px 12px", textDecoration: "none" }}>
+        <Link
+          to="/ledger"
+          className="px-3 py-1.5 text-[11px] font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+        >
           Read the real-vs-sim ledger
         </Link>
       </div>
@@ -39,12 +51,10 @@ export function AskScreen({ onReplay, lotsAggregated, settleTxHref }: { onReplay
 
 function StatCard({ title, lines }: { title: string; lines: string[] }) {
   return (
-    <div className="aq-card-2" style={{ padding: 10 }}>
-      <div className="aq-mono" style={{ fontSize: "10px", color: "var(--aq-amber)", marginBottom: 6, textTransform: "uppercase" }}>
-        {title}
-      </div>
+    <div className="bg-gray-50 px-3 py-2">
+      <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-1">{title}</div>
       {lines.map((l, i) => (
-        <div key={i} className="text-[11px]" style={{ color: "var(--aq-text)", marginBottom: 3 }}>
+        <div key={i} className="text-[11px] text-gray-700 mb-0.5">
           {l}
         </div>
       ))}
@@ -54,11 +64,9 @@ function StatCard({ title, lines }: { title: string; lines: string[] }) {
 
 function Kpi({ value, unit }: { value: string; unit: string }) {
   return (
-    <div>
-      <div className="aq-mono" style={{ fontSize: "20px", color: "var(--aq-text)" }}>
-        {value}
-      </div>
-      <div style={{ fontSize: "10px", color: "var(--aq-dim)" }}>{unit}</div>
+    <div className="min-w-0">
+      <div className="text-base font-bold text-gray-900 aq-mono">{value}</div>
+      <div className="text-[10px] text-gray-400">{unit}</div>
     </div>
   );
 }

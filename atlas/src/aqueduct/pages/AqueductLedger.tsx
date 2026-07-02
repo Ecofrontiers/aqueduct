@@ -6,6 +6,7 @@ import Footer from "../../Footer";
 import { StatusPill, ProvenanceChip, type Status } from "../components/Chips";
 import { SIM_SOLVER_ROSTER } from "../sim/solverRoster.mjs";
 import { REGISTRAR_NODE, TO_BUILD_PLATFORM_NODES, AGROFORESTRY_VENUES } from "../sim/venues.mjs";
+import { getEconomy } from "../sim/economy.mjs";
 
 interface LedgerEntry {
   ts: string;
@@ -129,6 +130,28 @@ export default function AqueductLedger(): React.ReactElement {
               (routes/engine/services/commodity-landed-cost.mjs) with its own declared cost profile — never
               price±random. Calibration ranges are docs/research/04's solver-intent-economics table.
             </p>
+            {(() => {
+              const meta = getEconomy().meta;
+              return (
+                <div className="aq-card-2 p-3 text-xs">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="font-semibold" style={{ color: "var(--aq-text)" }}>
+                      Seeded synthetic economy
+                    </span>
+                    <ProvenanceChip provenance="SIM" />
+                  </div>
+                  <div className="aq-mono" style={{ color: "var(--aq-text)" }}>
+                    {meta.counts.lots.toLocaleString()} lots · {meta.counts.intents.toLocaleString()} intents ·{" "}
+                    {meta.counts.routes.toLocaleString()} routes · {meta.counts.flows} flow lanes ·{" "}
+                    {meta.counts.solvers} solvers · {meta.counts.coops} coops
+                  </div>
+                  <div style={{ color: "var(--aq-dim)" }}>
+                    seed {meta.seed} — {meta.generated_basis}. Coffee: {meta.calibration.coffee}. Cacao/honey:
+                    coarse calibration, labeled. Solver market: {meta.calibration.solvers}.
+                  </div>
+                </div>
+              );
+            })()}
             {SIM_SOLVER_ROSTER.map((s) => (
               <div key={s.handle} className="aq-card-2 p-3 aq-mono text-xs">
                 <div className="flex items-center justify-between gap-2">

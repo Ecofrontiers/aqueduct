@@ -78,8 +78,8 @@ export async function priceLot() {
     base = SNAPSHOT_TIER;
   }
 
-  const fairCentsLb = base.centsLb + CHIAPAS_DIFFERENTIAL_CENTS_LB;
-  const fairFobEurKg = centsLbToEurPerKg(fairCentsLb);
+  const floorCentsLb = base.centsLb + CHIAPAS_DIFFERENTIAL_CENTS_LB;
+  const floorFobEurKg = centsLbToEurPerKg(floorCentsLb);
 
   return {
     provenance: base.tier, // "LIVE" | "SNAPSHOT"
@@ -88,8 +88,8 @@ export async function priceLot() {
     baseAsOf: base.asOf,
     differentialCentsLb: CHIAPAS_DIFFERENTIAL_CENTS_LB,
     differentialSource: CHIAPAS_DIFFERENTIAL_SOURCE,
-    fairCentsLb: Math.round(fairCentsLb * 100) / 100,
-    fairFobEurKg: Math.round(fairFobEurKg * 100) / 100,
+    floorCentsLb: Math.round(floorCentsLb * 100) / 100,
+    floorFobEurKg: Math.round(floorFobEurKg * 100) / 100,
     incoterm: "FOB",
   };
 }

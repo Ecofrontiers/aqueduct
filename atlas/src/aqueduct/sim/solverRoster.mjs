@@ -18,8 +18,19 @@
 //    research/04 §3) — for THIS lot (EUDR-partial, thin specialty micro-lot)
 //    that is exactly what happens, which is why the reference solver's REAL
 //    computation is the one that appears as the winning bid.
+//
+// Institutional policy (docs/research/09-institutional-policy-swarm-coordination.md):
+// @sim-solver-5's decline is no longer a static flag on this roster — it's evaluated per
+// lot against SOLVER_POLICIES via sim/policy.mjs, citing a named failure mode from
+// sim/failureModes.mjs. Same behavior on this lot, now generalizable to every lot.
 
-import { computeLandedCost, computeReferenceBid, REFERENCE_PROFILE } from "../../../../routes/engine/services/commodity-landed-cost.mjs";
+import {
+  REFERENCE_PROFILE,
+  computeLandedCost,
+  computeReferenceBid,
+} from "../../../../routes/engine/services/commodity-landed-cost.mjs";
+import { SOLVER_POLICIES } from "./institutionPolicies.mjs";
+import { evaluatePolicy } from "./policy.mjs";
 
 /** @type {Array<{handle: string, role: string, networkWinRatePct: number, note: string, profile: object}>} */
 export const SIM_SOLVER_ROSTER = [
@@ -108,32 +119,62 @@ export const SIM_SOLVER_ROSTER = [
       confidence: "estimate",
       source: "docs/research/04 §Sim-economy parameters",
     },
-    declinesThisRoute: true,
   },
 ];
 
 /**
- * Run the race for one lot: every SIM solver (except explicit decliners)
- * bids via the shared deterministic function; the REAL reference/backstop
- * solver bids too. Returns bids sorted by landed cost ascending (best first)
- * plus the winner. This is executed at cascade-build time in the browser —
+ * Run the race for one lot: every SIM solver first clears its institutional policy
+ * (sim/policy.mjs, decline or reprice), then bids via the shared deterministic function;
+ * the REAL reference/backstop solver bids too, ungated (see institutionPolicies.mjs —
+ * its whole role is to be the policy-free fallback). Returns bids sorted by landed cost
+ * ascending (best first) plus the winner. Executed at cascade-build time in the browser —
  * a genuine computation over the lot's actual FOB price, not a canned table.
+ * @param {{lot: object, fobEurPerKg: number, weightKg: number}} args - lot is the
+ *   AqueductLotSnapshot; policy rules read its eudr/certs/quality fields directly.
  */
-export function runSolverRace({ fobEurPerKg, weightKg }) {
+export function runSolverRace({ lot, fobEurPerKg, weightKg }) {
   const bids = [];
 
   for (const solver of SIM_SOLVER_ROSTER) {
-    if (solver.declinesThisRoute) {
-      bids.push({ handle: solver.handle, role: solver.role, status: "DECLINED", bid: null, note: "declined — EUDR-readiness flagged, not confirmed; route risk-adjusted out" });
+    const policy = SOLVER_POLICIES[solver.handle];
+    const verdict = policy ? evaluatePolicy(lot, policy) : null;
+
+    if (verdict && !verdict.eligible) {
+      bids.push({
+        handle: solver.handle,
+        role: solver.role,
+        status: "DECLINED",
+        bid: null,
+        note: verdict.note,
+        policyVerdict: verdict,
+      });
       continue;
     }
-    const bid = computeLandedCost({ fobEurPerKg, weightKg, profile: solver.profile });
-    bids.push({ handle: solver.handle, role: solver.role, status: "BID", bid, note: solver.note });
+
+    const profile = verdict?.marginAdjustmentBps
+      ? { ...solver.profile, marginBps: solver.profile.marginBps + verdict.marginAdjustmentBps }
+      : solver.profile;
+    const bid = computeLandedCost({ fobEurPerKg, weightKg, profile });
+    bids.push({
+      handle: solver.handle,
+      role: solver.role,
+      status: "BID",
+      bid,
+      note: solver.note,
+      policyVerdict: verdict,
+    });
   }
 
   // The REAL backstop bid — genuine call into the Routes-adapted engine.
   const referenceBid = computeReferenceBid({ fobEurPerKg, weightKg });
-  bids.push({ handle: "@solver-backstop", role: "open reference (backstop)", status: "BID", bid: referenceBid, note: "code public, margin visible — fills when SIM solvers decline or fail to clear the buyer ceiling (research/04 §3 cold-start pattern)", real: true });
+  bids.push({
+    handle: "@solver-backstop",
+    role: "open reference (backstop)",
+    status: "BID",
+    bid: referenceBid,
+    note: "code public, margin visible — fills when SIM solvers decline or fail to clear the buyer ceiling (research/04 §3 cold-start pattern)",
+    real: true,
+  });
 
   const competing = bids.filter((b) => b.status === "BID" && b.bid);
   competing.sort((a, b) => a.bid.landedEurPerKg - b.bid.landedEurPerKg);

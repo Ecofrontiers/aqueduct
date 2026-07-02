@@ -1,41 +1,25 @@
 import { useState } from "react";
-import { LinkedinLogo, List, XLogo } from "@phosphor-icons/react";
+import { List } from "@phosphor-icons/react";
 import { Link, useLocation } from "react-router-dom";
 import { Modal } from "./shared/components/Modal";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
 import { router } from "./main";
 import clsx from "clsx";
-import { ParagraphIcon } from "./shared/components/ParagraphIcon";
 import { analytics } from "./modules/analytics";
 
-type NavKey = "about" | "explore" | "hacks";
-
-const hacksSubmenu = [
-  { name: "Explore + EII", link: "/hacks/explore" },
-  { name: "Impact & Market Intelligence", link: "/insights" },
-  { name: "Bioregion Vaults", link: "/vaults/NT01" },
-  { name: "Interspecies Parliament", link: "/parliament" },
-  { name: "Hedera — RAEIS Provenance", link: "/publish" },
-];
+type NavKey = "map" | "ledger" | "about";
 
 const primaryNav: { key: NavKey; name: string; link: string }[] = [
+  { key: "map", name: "Map", link: "/" },
+  { key: "ledger", name: "Ledger", link: "/ledger" },
   { key: "about", name: "About", link: "/about" },
-  { key: "explore", name: "Explore", link: "/" },
 ];
 
 const secondaryLinks = [
   {
     name: "List Project",
     url: "/list",
-  },
-  {
-    name: "Docs",
-    url: "https://regen-atlas.gitbook.io/regen-atlas-docs",
-  },
-  {
-    name: "Blog",
-    url: "https://paragraph.xyz/@regenatlas",
   },
 ];
 
@@ -50,7 +34,9 @@ function isActive(pathname: string, link: string): boolean {
       pathname === "/" ||
       pathname.startsWith("/assets") ||
       pathname.startsWith("/orgs") ||
-      pathname.startsWith("/actions")
+      pathname.startsWith("/actions") ||
+      pathname.startsWith("/lots") ||
+      pathname.startsWith("/agents")
     );
   }
   return pathname.startsWith(link);
@@ -72,15 +58,11 @@ export default (): React.ReactElement => {
     >
       {/* Single row nav */}
       <div className="flex items-center h-[60px] lg:h-[36px]">
-        <Link className="hidden md:block" to="/">
-          <img
-            src="/RA_logo-01.svg"
-            alt="logo"
-            className="h-[35px] lg:h-[24px]"
-          />
-        </Link>
-        <Link className="block md:hidden h-[32px]" to="/">
-          <img src="/RA_logo-02.svg" alt="logo" className="h-[32px]" />
+        <Link
+          className="font-extrabold tracking-[0.04em] text-[17px] lg:text-[15px] leading-none select-none"
+          to="/"
+        >
+          AQUEDUCT
         </Link>
 
         <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
@@ -105,43 +87,6 @@ export default (): React.ReactElement => {
               {item.name}
             </Link>
           ))}
-          <div className="relative group">
-            <button
-              className={clsx(
-                "text-sm font-medium transition-colors",
-                ["/insights", "/parliament", "/publish", "/vaults", "/hacks"].some((p) =>
-                  location.pathname.startsWith(p)
-                )
-                  ? "text-primary-300 font-bold"
-                  : "hover:text-primary-300"
-              )}
-            >
-              Hacks
-            </button>
-            <div className="absolute top-full left-0 pt-1 hidden group-hover:block z-30">
-              <div className="bg-white rounded shadow-lg border border-gray-200 py-1 min-w-[160px]">
-                {hacksSubmenu.map((item) => (
-                  <Link
-                    key={item.link}
-                    to={item.link}
-                    className={clsx(
-                      "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors",
-                      location.pathname === item.link && "text-primary-300 font-semibold"
-                    )}
-                    onClick={() => {
-                      analytics.sendEvent({
-                        category: "Link Click",
-                        action: item.name,
-                        label: "Header Nav — Hacks",
-                      });
-                    }}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
         </nav>
 
         <div className="hidden lg:flex items-center ml-auto h-full group/wallet">
@@ -211,29 +156,6 @@ export default (): React.ReactElement => {
                 </div>
               ))}
 
-              <div className="mt-2 mb-4">
-                <p className="text-sm text-gray-500 text-center uppercase tracking-wider mb-1">Hacks</p>
-                {hacksSubmenu.map((item) => (
-                  <div
-                    key={item.link}
-                    className={clsx(
-                      "p-3 text-lg mb-1 text-gray-900 text-center cursor-pointer",
-                      location.pathname === item.link && "text-primary-300"
-                    )}
-                    onClick={() => {
-                      analytics.sendEvent({
-                        category: "Link Click",
-                        action: item.name,
-                        label: "Mobile Menu — Hacks",
-                      });
-                      router.navigate(item.link).then(() => setIsModalOpen(false));
-                    }}
-                  >
-                    {item.name}
-                  </div>
-                ))}
-              </div>
-
               <div className="mt-4">
                 {secondaryLinks.map((item) => (
                   <a
@@ -256,26 +178,12 @@ export default (): React.ReactElement => {
                     {item.name}
                   </a>
                 ))}
-                <a
-                  className="block p-3 text-lg mb-1 text-gray-900 text-center"
-                  href="https://x.com/theregenatlas"
-                  target="_blank"
-                >
-                  X
-                </a>
-                <a
-                  className="block p-3 text-lg mb-1 text-gray-900 text-center"
-                  href="https://www.linkedin.com/company/regen-atlas"
-                  target="_blank"
-                >
-                  LinkedIn
-                </a>
               </div>
             </div>
 
             {/* Footer — pinned to bottom */}
             <div className="flex flex-col items-center pb-8 text-xs text-gray-500">
-              <p>&copy; Regen Atlas 2026</p>
+              <p>&copy; Aqueduct 2026 &middot; built on Regen Atlas</p>
               <div className="flex gap-4 mt-2">
                 {legalLinks.map((item) => (
                   <div

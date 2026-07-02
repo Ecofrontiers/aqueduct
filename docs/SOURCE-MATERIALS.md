@@ -43,5 +43,7 @@ Screens on three questions: **(1) is this good for the people the market forgot,
 Point Aqueduct's grade→origin→oracle→match→track engine at **smallholder produce**, with Regen Atlas supplying the geospatial origin-record + regen/MRV provenance, delivered **open** so value + data stay with farmers. Sentient's five middleman functions map 1:1 to shipped primitives. Credibility edge: we didn't propose the trust layer, we **shipped** it for a $5k Charizard and are retargeting it to a $5 crop lot.
 
 ## Local raw files
-- 3 form-capture PDFs on `~/Desktop/` (Sentient … _What are you building_ / grant-track).
-- 3 screenshots (Q4 amount, Q5 unlock, Q6 upload) on `~/Desktop/`.
+Moved from `~/Desktop/` into `docs/source-materials/` on 2026-07-02 (gitignored — form
+captures stay out of the repo when it goes public at submission):
+- `sentient-form-what-are-you-building.pdf` + `sentient-form-what-are-you-building-2.pdf` + `sentient-form-grant-track.pdf` (form-capture PDFs).
+- `sentient-form-q4-amount.png`, `sentient-form-q5-unlock.png`, `sentient-form-q6-upload.png` (Q4 amount, Q5 unlock, Q6 upload).

@@ -2,7 +2,15 @@ import React from "react";
 
 export type Provenance = "LIVE" | "SNAPSHOT" | "SIM" | "TESTNET" | "TO-BUILD";
 
-/** Provenance chip — monochrome outlined, monospace caps (DESIGN-BRIEF §5.1). */
+/** Provenance chip — Atlas badge idiom, one color family per provenance. */
+const PROVENANCE_CLASS: Record<Provenance, string> = {
+  LIVE: "aq-chip--live",
+  SNAPSHOT: "aq-chip--snapshot",
+  SIM: "aq-chip--sim",
+  TESTNET: "aq-chip--testnet",
+  "TO-BUILD": "aq-chip--to-build",
+};
+
 export function ProvenanceChip({
   provenance,
   dated,
@@ -11,7 +19,7 @@ export function ProvenanceChip({
   dated?: string; // ISO date paired with SNAPSHOT (§4.8: always paired with the date)
 }): React.ReactElement {
   const label = provenance === "SNAPSHOT" && dated ? `SNAPSHOT · ${dated.slice(0, 10)}` : provenance;
-  return <span className={`aq-chip${provenance === "TO-BUILD" ? " aq-chip--to-build" : ""}`}>{label}</span>;
+  return <span className={`aq-chip ${PROVENANCE_CLASS[provenance]}`}>{label}</span>;
 }
 
 export type Status = "OK" | "PARTIAL" | "FAILED" | "PENDING" | "BID" | "FILLED" | "SETTLED" | "DECLINED" | "UNDERCUT";
