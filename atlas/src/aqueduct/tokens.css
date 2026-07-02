@@ -1,0 +1,86 @@
+/* Aqueduct swarm-layer tokens (DESIGN-BRIEF.md §0).
+ * Scoped to `.aq-layer` — the Atlas base (:root, daisyUI theme, existing
+ * components) is untouched. Only new swarm/intent-layer components opt in
+ * by nesting under this class. */
+.aq-layer {
+  --aq-panel: #131722;
+  --aq-panel-2: #1e222d;
+  --aq-border: #2a2e39;
+  --aq-text: #d1d4dc;
+  --aq-dim: #787b86;
+  --aq-amber: #ffb700;
+  --aq-up: #26a69a;
+  --aq-down: #ef5350;
+
+  color: var(--aq-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.aq-mono {
+  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Provenance chip — monochrome outlined, monospace caps (DESIGN-BRIEF §5.1).
+ * Never a status color; never an agent-type hue. */
+.aq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--aq-dim);
+  color: var(--aq-dim);
+  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 3px;
+  line-height: 1.4;
+}
+.aq-chip--to-build {
+  opacity: 0.5;
+}
+
+/* Status pill — one word, colored (DESIGN-BRIEF §5.1). Independent axis from chips. */
+.aq-status {
+  display: inline-flex;
+  align-items: center;
+  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 3px;
+  line-height: 1.4;
+}
+.aq-status--ok { color: var(--aq-up); border: 1px solid var(--aq-up); }
+.aq-status--partial { color: var(--aq-amber); border: 1px solid var(--aq-amber); }
+.aq-status--failed { color: var(--aq-down); border: 1px solid var(--aq-down); }
+
+/* join_confidence — labeled level, never a number (DESIGN-BRIEF §5.2). */
+.aq-join-confidence {
+  font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  color: var(--aq-dim);
+  border: 1px dashed var(--aq-border);
+  padding: 0.0625rem 0.375rem;
+  border-radius: 3px;
+}
+
+.aq-card {
+  background: var(--aq-panel);
+  border: 1px solid var(--aq-border);
+  border-radius: 10px;
+}
+.aq-card-2 {
+  background: var(--aq-panel-2);
+  border: 1px solid var(--aq-border);
+  border-radius: 8px;
+}
+.aq-hairline {
+  border-top: 1px solid var(--aq-border);
+}
+.aq-em-dash::before {
+  content: "\2014"; /* — missing data, never blank / N/A, DESIGN-BRIEF §0 */
+  color: var(--aq-dim);
+}

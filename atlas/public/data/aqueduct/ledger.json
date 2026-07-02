@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-07-02T14:03:37.739Z",
+  "anchor_fallback_switch": null,
+  "entries": [
+    {
+      "ts": "2026-07-02T14:03:36.543Z",
+      "provenance": "LIVE",
+      "agent": "@scout-ethichub",
+      "platform": "ethichub-shop",
+      "url": "https://greencoffee.ethichub.com/en/shop",
+      "verb": "read",
+      "detail": "read 21 lots at greencoffee.ethichub.com — 7 matched Chiapas",
+      "status": "OK"
+    },
+    {
+      "ts": "2026-07-02T14:03:36.888Z",
+      "provenance": "LIVE",
+      "agent": "@scout-ethichub-lending",
+      "platform": "ethichub-lending-api",
+      "url": "https://app.ethichub.com/api/v1/projects",
+      "verb": "read",
+      "detail": "read 9 lending projects (of 688 total)",
+      "status": "OK"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.100Z",
+      "provenance": "LIVE",
+      "agent": "@oracle-celo-creditline",
+      "platform": "celo-onchain",
+      "url": "https://celoscan.io/address/0xDb5D3aBF19014308A67420344021CEEE6003ACdd",
+      "verb": "read",
+      "detail": "eth_call CreditLine.totalSupply() on 0xDb5D3aBF19014308A67420344021CEEE6003ACdd — 4 credit lines",
+      "status": "OK"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.219Z",
+      "provenance": "LIVE",
+      "agent": "@scout-ethichub",
+      "platform": "ethichub-shop",
+      "url": "https://greencoffee.ethichub.com/en/shop/neri-ortiz-perez-chiapas-mexico-bourbon-honey-86-sca-79",
+      "verb": "pinned",
+      "detail": "pinned lot 79 — N.O.P. / Chiapas (México) – Bourbon Honey – 86 SCA · €18.7/kg",
+      "status": "OK"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.414Z",
+      "provenance": "LIVE",
+      "agent": "@diligence-identity",
+      "platform": "ethichub-cross-surface",
+      "url": "https://app.ethichub.com/api/v1/projects",
+      "verb": "matched",
+      "detail": "joined shop lot 79 ↔ lending project(s) 704, 698 by producer/community name \"San José Ixtepec\" — join_confidence: name_place_match (cross-surface, both EthicHub)",
+      "status": "PARTIAL"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.416Z",
+      "provenance": "LIVE",
+      "agent": "@scout-ethichub",
+      "platform": "ethichub-shop",
+      "url": "https://greencoffee.ethichub.com/en/shop/lazaro-morales-apolonia-perez-chiapas-mexico-bourbon-washed-86-sca-16",
+      "verb": "pinned",
+      "detail": "pinned lot 16 — L.M. & A.P. / Chiapas (México) – Bourbon Mild washed – 86 SCA · €17.6/kg",
+      "status": "OK"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.571Z",
+      "provenance": "LIVE",
+      "agent": "@diligence-identity",
+      "platform": "ethichub-cross-surface",
+      "url": "https://app.ethichub.com/api/v1/projects",
+      "verb": "matched",
+      "detail": "joined shop lot 16 ↔ lending project(s) 702 by producer/community name \"Agua Caliente\" — join_confidence: name_place_match (cross-surface, both EthicHub)",
+      "status": "PARTIAL"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.572Z",
+      "provenance": "LIVE",
+      "agent": "@scout-ethichub",
+      "platform": "ethichub-shop",
+      "url": "https://greencoffee.ethichub.com/en/shop/juventino-matias-ortiz-chiapas-mexico-bourbon-washed-85-5-sca-18",
+      "verb": "pinned",
+      "detail": "pinned lot 18 — J.M.O. / Chiapas (México) – Bourbon Gentle wash – 85.5 SCA · €16.5/kg",
+      "status": "OK"
+    },
+    {
+      "ts": "2026-07-02T14:03:37.739Z",
+      "provenance": "LIVE",
+      "agent": "@diligence-identity",
+      "platform": "ethichub-cross-surface",
+      "url": "https://app.ethichub.com/api/v1/projects",
+      "verb": "matched",
+      "detail": "joined shop lot 18 ↔ lending project(s) 705, 700 by producer/community name \"Salchiji\" — join_confidence: name_place_match (cross-surface, both EthicHub)",
+      "status": "PARTIAL"
+    }
+  ]
+}

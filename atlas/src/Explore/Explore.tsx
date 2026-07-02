@@ -40,6 +40,7 @@ import {
 } from "./ExploreCards";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import type { EntityType } from "../context/filters/filtersContext";
+import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
 // EntityType still used for URL param handling
 
 export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {}): React.ReactElement => {
@@ -707,6 +708,11 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     />
 
                     {/* Agent markers removed - agents counted with bioregions instead */}
+
+                    {/* Aqueduct swarm layer: EthicHub-read lots, additive to
+                        the untouched Atlas base pipeline above (does not
+                        touch allAssets / CompositeClusterLayer). */}
+                    <AqueductLotsLayer />
                   </>
                 )}
 

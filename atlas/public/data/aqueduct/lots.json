@@ -1,0 +1,300 @@
+{
+  "generated_at": "2026-07-02T14:03:37.739Z",
+  "anchor_id": "aq:71fe5cb646fe",
+  "lots": [
+    {
+      "aqueduct_id": "aq:71fe5cb646fe",
+      "aqueduct_id_full": "71fe5cb646fe65580daf2a28a708e7c512f74df9337e3fc9c6d77b0e2308b961",
+      "source": {
+        "platform": "ethichub-shop",
+        "platform_lot_id": "79",
+        "url": "https://greencoffee.ethichub.com/en/shop/neri-ortiz-perez-chiapas-mexico-bourbon-honey-86-sca-79",
+        "fetched_at": "2026-07-02T14:03:37.219Z"
+      },
+      "identity_stage": "green",
+      "ico_mark": null,
+      "producer": {
+        "initials": "N.O.P.",
+        "entity_type": "person"
+      },
+      "origin": {
+        "country": "México",
+        "region": "Chiapas",
+        "community": "San José Ixtepec",
+        "locality_raw": "Soconusco, Chiapas (Mexico)",
+        "plot_geo": null
+      },
+      "map_marker": {
+        "latitude": 15.22,
+        "longitude": -92.18,
+        "precision": "community-approximate — not a scraped plot coordinate"
+      },
+      "altitude_masl": "1,700–2,000 m.a.s.l.",
+      "harvest_window": {
+        "season": "2025",
+        "note": "as published — no plot-level harvest date"
+      },
+      "process": "Honey",
+      "variety": "Bourbon",
+      "drying": "Natural, sun and wind",
+      "sensory": {
+        "aroma": "Cane sugar, Chocolate",
+        "taste": "Peach, Grape",
+        "body": "Medium",
+        "acidity": "Honeyed"
+      },
+      "quality": {
+        "sca_score": 86,
+        "grade_basis": "SCA cupping score (EthicHub-published)"
+      },
+      "lot_type": "Single Producer Lot",
+      "coffee_type": "Green Coffee",
+      "weight_state": "green",
+      "format": "Brick 5kg",
+      "composition": "single",
+      "custody_model": "identity_preserved",
+      "certs": [],
+      "eudr": {
+        "plot_geo_present": false,
+        "harvest_window_present": true,
+        "legality_evidence": false,
+        "dds_ref": null
+      },
+      "price": {
+        "amount": 18.7,
+        "currency": "EUR",
+        "unit": "kg",
+        "incoterm": "FOB (origin, price as published incl. VAT)"
+      },
+      "image": "https://greencoffee.ethichub.com/web/image/product.product/86/image_1920/Neri%20Ort%C3%ADz%20P%C3%A9rez%20-%20Chiapas%20%28Mexico%29%20%20%E2%80%93%20Bourbon%20Honey%20%E2%80%93%2086%20SCA?unique=147bf43",
+      "producer_story": "San José Ixtepec, located at over 1,600 meters above sea level, is a region with a mild and humid climate—ideal conditions for cultivating high-quality specialty coffee. Nowadays, the region faces significant migration, threatening the continuity of traditional coffee farming. N.O.P., a producer and roaster passionate about honey and natural processes, leads this micro-production. He works with small local coffee growers, advising them on sustainable techniques and personally selecting the best cherries. Direct impact: This project aims to revitalize the local coffee economy by creating jobs, providing training, and encouraging younger generations to stay rooted in their communities. Each purchase directly supports this regenerative and fair model.",
+      "title_redacted": "N.O.P. / Chiapas (Mexico) – Bourbon Honey – 86 SCA",
+      "lending": {
+        "matched": true,
+        "join_confidence": "name_place_match",
+        "community_searched": "San José Ixtepec",
+        "projects": [
+          {
+            "id": 704,
+            "community_name": "San José Ixtepec (México)",
+            "status": 5,
+            "objective": "Shall we take the next step with San José Ixtepec? Let's export! (2024) (Part II)"
+          },
+          {
+            "id": 698,
+            "community_name": "San José Ixtepec (México)",
+            "status": 5,
+            "objective": "Let's help the group of San José Ixtepec to send their coffee to Europe - Part II(2024)"
+          }
+        ]
+      },
+      "onchain": {
+        "chain": "celo",
+        "contract": "0xDb5D3aBF19014308A67420344021CEEE6003ACdd",
+        "total_credit_lines": 4,
+        "note": "platform-level aggregate, not per-lot financing (research/03 caveat)"
+      },
+      "join_keys": {
+        "deterministic": [],
+        "fuzzy": "producer_initials:N.O.P.|community:San José Ixtepec|region:Chiapas|country:México"
+      },
+      "join_confidence": "name_place_match"
+    },
+    {
+      "aqueduct_id": "aq:356dbc6fcd83",
+      "aqueduct_id_full": "356dbc6fcd83ad3cf8cd80b566ea8fece63ec3de2876230a7d053ae288dce804",
+      "source": {
+        "platform": "ethichub-shop",
+        "platform_lot_id": "16",
+        "url": "https://greencoffee.ethichub.com/en/shop/lazaro-morales-apolonia-perez-chiapas-mexico-bourbon-washed-86-sca-16",
+        "fetched_at": "2026-07-02T14:03:37.416Z"
+      },
+      "identity_stage": "green",
+      "ico_mark": null,
+      "producer": {
+        "initials": "L.M. & A.P.",
+        "entity_type": "community_pair"
+      },
+      "origin": {
+        "country": "México",
+        "region": "Chiapas",
+        "community": "Agua Caliente",
+        "locality_raw": "Agua Caliente, Sierra Madre, Soconusco, Chiapas (Mexico)",
+        "plot_geo": null
+      },
+      "map_marker": {
+        "latitude": 15.27,
+        "longitude": -92.33,
+        "precision": "community-approximate — not a scraped plot coordinate"
+      },
+      "altitude_masl": "1,600 m.a.s.l.",
+      "harvest_window": {
+        "season": null,
+        "note": "as published — no plot-level harvest date"
+      },
+      "process": "Mild washed",
+      "variety": "Bourbon",
+      "drying": "Natural, sun and wind-dried",
+      "sensory": {
+        "aroma": "Butter, vanilla",
+        "taste": "Date, orange",
+        "body": "Creamy",
+        "acidity": "Citrusy"
+      },
+      "quality": {
+        "sca_score": 86,
+        "grade_basis": "SCA cupping score (EthicHub-published)"
+      },
+      "lot_type": "Single Producer Lot",
+      "coffee_type": "Green Coffee",
+      "weight_state": "green",
+      "format": "Brick 5kg",
+      "composition": "single",
+      "custody_model": "identity_preserved",
+      "certs": [],
+      "eudr": {
+        "plot_geo_present": false,
+        "harvest_window_present": false,
+        "legality_evidence": false,
+        "dds_ref": null
+      },
+      "price": {
+        "amount": 17.6,
+        "currency": "EUR",
+        "unit": "kg",
+        "incoterm": "FOB (origin, price as published incl. VAT)"
+      },
+      "image": "https://greencoffee.ethichub.com/web/image/product.product/16/image_1920/L%C3%A1zaro%20Morales%20%26%20Apolonia%20P%C3%A9rez%20-%20Chiapas%20%28Mexico%29%20%E2%80%93%20Bourbon%20Washed%20%E2%80%93%2086%20SCA?unique=7afad27",
+      "producer_story": "This coffee is produced by Don L.M. & A.P. and Doña L.M. & A.P., the heart of a multigenerational coffee-growing family. With years of experience and deep care for their land, they have passed on their passion and knowledge to their children—ensuring the legacy of high-quality coffee cultivation continues. Their community, Agua Caliente, is located in the Sierra Madre of Chiapas, within the municipality of Tapachula. Famous for its hot springs and lush landscapes, this area sits at 1,600 meters above sea level and offers ideal conditions for specialty coffee. The coffee trees grow under rich biodiversity and natural shade, contributing to a unique and complex flavor profile. 💚 Direct Impact: This lot represents the strength of family farming traditions and intergenerational stewardship of the land. By purchasing this coffee, you’re supporting a dignified rural livelihood deeply rooted in sustainability and ecological harmony.",
+      "title_redacted": "L.M. & A.P. / Chiapas (Mexico) – Bourbon Washed – 86 SCA",
+      "lending": {
+        "matched": true,
+        "join_confidence": "name_place_match",
+        "community_searched": "Agua Caliente",
+        "projects": [
+          {
+            "id": 702,
+            "community_name": "Agua Caliente (México)",
+            "status": 5,
+            "objective": "Shall we take the next step with Agua Caliente? Let's export! (2024) (Part II)"
+          }
+        ]
+      },
+      "onchain": {
+        "chain": "celo",
+        "contract": "0xDb5D3aBF19014308A67420344021CEEE6003ACdd",
+        "total_credit_lines": 4,
+        "note": "platform-level aggregate, not per-lot financing (research/03 caveat)"
+      },
+      "join_keys": {
+        "deterministic": [],
+        "fuzzy": "producer_initials:L.M. & A.P.|community:Agua Caliente|region:Chiapas|country:México"
+      },
+      "join_confidence": "name_place_match"
+    },
+    {
+      "aqueduct_id": "aq:05ea944e5e8a",
+      "aqueduct_id_full": "05ea944e5e8a9a3bed335ca4f178f25091e753eb910eb4e3d21f482f16208afc",
+      "source": {
+        "platform": "ethichub-shop",
+        "platform_lot_id": "18",
+        "url": "https://greencoffee.ethichub.com/en/shop/juventino-matias-ortiz-chiapas-mexico-bourbon-washed-85-5-sca-18",
+        "fetched_at": "2026-07-02T14:03:37.572Z"
+      },
+      "identity_stage": "green",
+      "ico_mark": null,
+      "producer": {
+        "initials": "J.M.O.",
+        "entity_type": "person"
+      },
+      "origin": {
+        "country": "México",
+        "region": "Chiapas",
+        "community": "Salchiji",
+        "locality_raw": "Sierra Madre, Soconusco, Chiapas (Mexico)",
+        "plot_geo": null
+      },
+      "map_marker": {
+        "latitude": 15.31,
+        "longitude": -92.41,
+        "precision": "community-approximate — not a scraped plot coordinate"
+      },
+      "altitude_masl": "1,600 m.a.s.l.",
+      "harvest_window": {
+        "season": "2024",
+        "note": "as published — no plot-level harvest date"
+      },
+      "process": "Gentle wash",
+      "variety": "Bourbon",
+      "drying": "Natural, sun and wind",
+      "sensory": {
+        "aroma": "Caramel, lemon, herbal",
+        "taste": "Berry, fruity, biscuit sweetness",
+        "body": "Creamy",
+        "acidity": "Medium"
+      },
+      "quality": {
+        "sca_score": 85.5,
+        "grade_basis": "SCA cupping score (EthicHub-published)"
+      },
+      "lot_type": "Single Producer Lot",
+      "coffee_type": "Green Coffee",
+      "weight_state": "green",
+      "format": "Brick 5kg",
+      "composition": "single",
+      "custody_model": "identity_preserved",
+      "certs": [],
+      "eudr": {
+        "plot_geo_present": false,
+        "harvest_window_present": true,
+        "legality_evidence": false,
+        "dds_ref": null
+      },
+      "price": {
+        "amount": 16.5,
+        "currency": "EUR",
+        "unit": "kg",
+        "incoterm": "FOB (origin, price as published incl. VAT)"
+      },
+      "image": "https://greencoffee.ethichub.com/web/image/product.product/79/image_1920/Juventino%20Mat%C3%ADas%20Ortiz%20-%20Chiapas%20%28Mexico%29%20%E2%80%93%20Bourbon%20Washed%20%E2%80%93%2085.5%20SCA?unique=59e12ae",
+      "producer_story": "Salchiji is a remote village nestled in the mountains of the Sierra Madre of Chiapas, where market access is limited but the altitude and climate are ideal for producing specialty coffee. J.M.O., together with his wife B., carefully cultivates this washed Bourbon lot with dedication and care. The plots are located at over 1,700 meters above sea level, on steep mountain slopes—conditions that contribute to the cup’s creamy body, bright acidity, and sweet, fruity profile. Direct Impact: This coffee represents the effort to keep traditional coffee farming alive in hard-to-reach areas. Purchasing this lot helps bring value to these unique harvests and supports economic and environmental sustainability in regions with limited market access.",
+      "title_redacted": "J.M.O. / Chiapas (Mexico) – Bourbon Washed – 85.5 SCA",
+      "lending": {
+        "matched": true,
+        "join_confidence": "name_place_match",
+        "community_searched": "Salchiji",
+        "projects": [
+          {
+            "id": 705,
+            "community_name": "Salchiji (México)",
+            "status": 5,
+            "objective": "Salchijí exports to Europe (Part II)"
+          },
+          {
+            "id": 700,
+            "community_name": "Salchiji (México)",
+            "status": 5,
+            "objective": "Shall we take the next step with Salchijí? Let's export! (2024) (Part II)"
+          }
+        ]
+      },
+      "onchain": {
+        "chain": "celo",
+        "contract": "0xDb5D3aBF19014308A67420344021CEEE6003ACdd",
+        "total_credit_lines": 4,
+        "note": "platform-level aggregate, not per-lot financing (research/03 caveat)"
+      },
+      "join_keys": {
+        "deterministic": [],
+        "fuzzy": "producer_initials:J.M.O.|community:Salchiji|region:Chiapas|country:México"
+      },
+      "join_confidence": "name_place_match"
+    }
+  ],
+  "meta": {
+    "generated_at": "2026-07-02T14:03:37.739Z",
+    "shop_lots_total": 21,
+    "shop_chiapas_total": 7,
+    "lending_projects_total": 688
+  }
+}

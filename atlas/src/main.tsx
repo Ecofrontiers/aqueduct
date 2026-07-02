@@ -36,6 +36,8 @@ import VaultDetail from "./Ecospatial/VaultDetail.tsx";
 import Parliament from "./Ecospatial/Parliament/Parliament.tsx";
 import { PublishPage } from "./Publish";
 import HacksExplore from "./Explore/HacksExplore.tsx";
+import AqueductLotDetails from "./aqueduct/pages/AqueductLotDetails.tsx";
+import AqueductLedger from "./aqueduct/pages/AqueductLedger.tsx";
 
 globalThis.Buffer = Buffer;
 
@@ -147,6 +149,14 @@ export const router = createBrowserRouter([
       {
         path: "/hacks/explore",
         element: <HacksExplore />,
+      },
+      {
+        path: "/lots/:lotId",
+        element: <AqueductLotDetails />,
+      },
+      {
+        path: "/ledger",
+        element: <AqueductLedger />,
       },
     ],
   },
