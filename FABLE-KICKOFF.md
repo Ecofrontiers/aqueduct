@@ -84,6 +84,15 @@ Asked before Phase 1; answers verbatim in spirit:
    activity column in the main view. It should feel like a live marketplace/dApp.
    `/ledger` keeps the firehose.
 6. **Fully light everywhere.** Mono survives only for data values (hashes, IDs, prices).
+7. **The coop seat (north-star correction, same day):** Pat's pause — "who is this
+   optimized for?" — surfaced that the build served judges and the demand side while the
+   named beneficiary had no surface. Correction: `/coops/:coopId` — the same engine from
+   the cooperative's chair. REAL EthicHub communities (identity + lending history real,
+   production a declared projection) + SIM coops; publish-sell-intent runs the real
+   solver race FOR the coop; tokenized trade finance = structured receivable → policy-
+   engine eligibility → advance (declared 60%) vs the REAL Celo USDC benchmark; stablecoin
+   settlement rail (real Celo USDC precedent, prepared Base Sepolia settle); duplicate-
+   financing check over content-addressed IDs (the MonetaGo registry service).
 
 ## The corrected direction (binding)
 

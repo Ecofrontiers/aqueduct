@@ -39,6 +39,7 @@ import HacksExplore from "./Explore/HacksExplore.tsx";
 import AqueductLotDetails from "./aqueduct/pages/AqueductLotDetails.tsx";
 import AqueductLedger from "./aqueduct/pages/AqueductLedger.tsx";
 import AqueductFinancing from "./aqueduct/pages/AqueductFinancing.tsx";
+import AqueductCoopSeat from "./aqueduct/pages/AqueductCoopSeat.tsx";
 
 globalThis.Buffer = Buffer;
 
@@ -162,6 +163,10 @@ export const router = createBrowserRouter([
       {
         path: "/financing",
         element: <AqueductFinancing />,
+      },
+      {
+        path: "/coops/:coopId",
+        element: <AqueductCoopSeat />,
       },
     ],
   },

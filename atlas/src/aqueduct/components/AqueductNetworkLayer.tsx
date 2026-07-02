@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Marker, Source, Layer } from "react-map-gl";
+import { useNavigate } from "react-router-dom";
 import { useAqueductLots } from "../hooks/useAqueductLots";
 import { getEconomy } from "../sim/economy.mjs";
 import { AGROFORESTRY_VENUES, TO_BUILD_PLATFORM_NODES } from "../sim/venues.mjs";
@@ -87,6 +88,7 @@ function flowsToGeojson(flows: FlowLike[]) {
 
 export function AqueductNetworkLayer(): React.ReactElement | null {
   const { lots: realLots } = useAqueductLots({ liveRefetch: false });
+  const navigate = useNavigate();
   const tour = useTourStore();
   const chapter = selectActiveChapter(tour);
   const [dashStep, setDashStep] = useState(0);
@@ -263,11 +265,20 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       ))}
 
-      {/* ── Coop/exporter nodes: sienna outlined rounded squares ── */}
+      {/* ── Coop/exporter nodes: sienna outlined rounded squares — click opens the coop seat ── */}
       {(economy.coops as Array<{ id: string; name: string; coords: [number, number] }>).map((coop) => (
-        <Marker key={coop.id} longitude={coop.coords[0]} latitude={coop.coords[1]} anchor="center">
+        <Marker
+          key={coop.id}
+          longitude={coop.coords[0]}
+          latitude={coop.coords[1]}
+          anchor="center"
+          onClick={(e) => {
+            e.originalEvent?.stopPropagation();
+            navigate(`/coops/${coop.id}`);
+          }}
+        >
           <div
-            title={`${coop.name} (SIM) — settle credits the coop, never the farmer directly`}
+            title={`${coop.name} (SIM) — open the coop seat`}
             style={{
               width: 10,
               height: 10,
@@ -275,6 +286,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
               background: "#ffffff",
               border: `2px solid ${NETWORK_COLORS.lot}`,
               boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+              cursor: "pointer",
             }}
           />
         </Marker>

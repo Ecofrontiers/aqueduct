@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useAqueductLots, type AqueductLotSnapshot } from "./useAqueductLots";
 import { buildFinanceIntent } from "../sim/financeIntent.mjs";
 import { getEconomy } from "../sim/economy.mjs";
+import { buildCoopRegistry } from "../sim/tradeFinance.mjs";
 import {
   AGROFORESTRY_VENUES,
   TO_BUILD_PLATFORM_NODES,
@@ -152,6 +153,17 @@ export function useAqueductEconomy() {
       provenance: "LIVE",
       detail: "code public, margin visible — a genuine landed-cost computation, fills only when nobody else bids",
     });
+    // REAL communities first — identity + lending history real, production projected.
+    const realCoopSeats: AqueductActor[] = buildCoopRegistry(realLots ?? [])
+      .filter((s: { real: boolean }) => s.real)
+      .map((s: { id: string; name: string; commodity: string; coords: [number, number] | null }) => ({
+        id: s.id,
+        kind: "coop" as const,
+        name: s.name,
+        role: `${s.commodity} aggregation — REAL community, projected production`,
+        provenance: "LIVE" as Provenance,
+        coordinates: s.coords ? { longitude: s.coords[0], latitude: s.coords[1] } : undefined,
+      }));
     const coops: AqueductActor[] = economy.coops.map(
       (c: { id: string; name: string; commodity: string; coords: [number, number] }) => ({
         id: c.id,
@@ -184,8 +196,8 @@ export function useAqueductEconomy() {
       { id: VAULT_NODE.handle, kind: "infrastructure" as const, name: VAULT_NODE.name, role: "accumulation vault", provenance: "SIM" as Provenance, detail: VAULT_NODE.note },
       { id: REGISTRAR_NODE.handle, kind: "infrastructure" as const, name: REGISTRAR_NODE.name, role: "reputation registry", provenance: "TO-BUILD" as Provenance, detail: REGISTRAR_NODE.note },
     ];
-    return [...solvers, ...coops, ...venues];
-  }, [economy]);
+    return [...solvers, ...realCoopSeats, ...coops, ...venues];
+  }, [economy, realLots]);
 
   const events = useMemo<AqueductEvent[]>(() => {
     const liveReads: AqueductEvent[] = (realLots ?? []).map((l) => ({

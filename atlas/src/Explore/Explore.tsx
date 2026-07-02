@@ -1133,6 +1133,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                               <ActorExploreCard
                                 key={actor.id}
                                 actor={actor}
+                                href={actor.kind === "coop" ? `/coops/${actor.id}` : undefined}
                                 onLocate={
                                   actor.coordinates
                                     ? () =>

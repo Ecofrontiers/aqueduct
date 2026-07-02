@@ -142,12 +142,20 @@ const ACTOR_ICONS = {
   coop: Users,
 } as const;
 
-export function ActorExploreCard({ actor, onLocate }: { actor: AqueductActor; onLocate?: () => void }) {
+export function ActorExploreCard({
+  actor,
+  onLocate,
+  href,
+}: {
+  actor: AqueductActor;
+  onLocate?: () => void;
+  href?: string;
+}) {
   const color = AQUEDUCT_SECTION_COLORS.actor;
   const Icon = ACTOR_ICONS[actor.kind];
   return (
     <div
-      className={`bg-cardBackground border border-gray-100 hover:border-gray-300 transition-all overflow-hidden ${onLocate ? "cursor-pointer" : ""}`}
+      className={`bg-cardBackground border border-gray-100 hover:border-gray-300 transition-all overflow-hidden ${onLocate || href ? "cursor-pointer" : ""}`}
       onClick={onLocate}
     >
       <div className="flex">
@@ -170,7 +178,18 @@ export function ActorExploreCard({ actor, onLocate }: { actor: AqueductActor; on
               </span>
             )}
           </div>
-          <h4 className="text-sm font-semibold text-gray-900 truncate">{actor.name}</h4>
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="text-sm font-semibold text-gray-900 truncate">{actor.name}</h4>
+            {href && (
+              <Link
+                to={href}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-shrink-0 text-gray-300 hover:text-gray-600 transition-colors"
+              >
+                <ArrowRight size={14} />
+              </Link>
+            )}
+          </div>
           <p className="text-[11px] text-gray-500 truncate">{actor.role}</p>
         </div>
       </div>
