@@ -29,6 +29,12 @@ broadcast/
 *.pem
 *.p12
 
+# ── Internal agent instructions (internal paths/rules; never commit) ──
+CLAUDE.md
+**/CLAUDE.md
+AGENTS.md
+**/AGENTS.md
+
 # ── OS / editor ────────────────────────────────────────────────
 .DS_Store
 .vscode/
