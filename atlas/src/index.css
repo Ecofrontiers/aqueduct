@@ -1,0 +1,223 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --rounded-box: 0;
+  --rounded-btn: 0;
+  --rounded-badge: 0;
+  background-color: #f8f8f8;
+  color: #181818;
+  color-scheme: light;
+  font-family: "DM Sans", Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  font-weight: 400;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-background min-h-[100vh];
+  overflow-x: hidden;
+}
+
+.button {
+  @apply bg-blue-700 text-white font-medium py-1 px-6 rounded-full lg:text-lg;
+}
+
+.button:hover {
+  @apply bg-blue-400;
+}
+
+.button-gradient {
+  @apply bg-gradient-to-r from-primary-200 to-primary-300 text-gray-800;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.button-gradient {
+  background: linear-gradient(to right, rgb(157, 207, 253), rgb(23, 127, 224));
+  background-size: 200% 200%;
+  transition: background-size 0.5s ease;
+}
+
+.button-gradient:hover {
+  animation: gradient 1s ease;
+  background-size: 200% 200%;
+}
+
+.button-gray {
+  @apply bg-gray-400;
+}
+
+.button-gray:hover {
+  @apply bg-gray-600;
+}
+.button-gradient:disabled,
+.button:disabled {
+  @apply !bg-gray-400 text-gray-100;
+  background: none;
+}
+
+body.scrolled .site-header {
+  box-shadow: 0 3px 2px 0 rgb(0 0 0 / 0.08);
+  @apply md:shadow-none lg:shadow-md;
+}
+
+body.scrolled-360 .site-header {
+  @apply shadow-none lg:shadow-md;
+}
+
+body.scrolled-360 .filters-row-mobile {
+  @apply top-[60px] left-0 w-full px-3 z-10;
+  box-shadow: 0 3px 2px 0 rgb(0 0 0 / 0.08);
+  position: sticky;
+}
+
+@media (min-width: 768px) {
+  body.scrolled-360 .filters-row-mobile {
+    position: fixed;
+  }
+}
+
+body.scrolled .filters-row-mobile {
+  @apply md:shadow-md;
+}
+
+body.scrolled-360.modal-open .filters-row-mobile {
+  position: relative;
+}
+
+.map-wrapper .mapboxgl-map {
+  @apply !h-[50vh] !w-full;
+  @apply md:!h-[calc(100vh-100px)];
+  @apply lg:!h-[calc(100vh-72px)];
+}
+
+.map-wrapper-orgs .mapboxgl-map {
+  @apply !h-[360px] !w-full;
+  @apply md:!h-[calc(100vh-160px)];
+}
+
+.asset-card {
+  /* box-shadow: 0 4px 4px 0 rgb(0 0 0 / 0.25); */
+  box-shadow: 0 4px 6px 0 rgb(46 95 169 / 0.08);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 6px 0 rgb(46 95 169 / 0.08);
+}
+
+.main-container {
+  @apply bg-background max-w-full mx-auto px-3 md:px-4 pb-2 md:pb-0;
+}
+
+.second-order-asset-popup .mapboxgl-popup-tip {
+  display: none;
+}
+
+.parent-dot-popup .mapboxgl-popup-content {
+  padding: 4px 8px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+
+.asset-hover-popup .mapboxgl-popup-content {
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+.asset-hover-popup .mapboxgl-popup-tip {
+  display: none;
+}
+
+/* Klaro */
+
+.cm-btn-success {
+  background-color: rgb(94, 173, 247) !important;
+}
+
+.klaro .cookie-modal a,
+.klaro .context-notice a,
+.klaro .cookie-notice a {
+  color: rgb(94, 173, 247) !important;
+}
+
+/* Hide Mapbox logo */
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
+/* About page — gradient headline */
+.about-gradient-text {
+  background: linear-gradient(
+    135deg,
+    rgb(23, 127, 224) 0%,
+    rgb(94, 173, 247) 50%,
+    rgb(23, 127, 224) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* About page — infinite chain rail */
+.about-chain-rail {
+  position: relative;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.about-chain-rail-inner {
+  display: flex;
+  width: max-content;
+  animation: about-chain-scroll 40s linear infinite;
+}
+
+@keyframes about-chain-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.about-issuer-rail-inner {
+  display: flex;
+  width: max-content;
+  animation: about-chain-scroll 30s linear infinite;
+}

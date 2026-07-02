@@ -1,0 +1,82 @@
+{
+  "id": "bkc",
+  "name": "Bioregional Knowledge Commons",
+  "description": "Federated knowledge graph linking capital allocation to ecological evidence across bioregional nodes via KOI-net protocol. Operates as a federation of sovereign nodes, each owning their knowledge graph while coordinating through ECDSA-signed envelopes.",
+  "link": "https://bioregional.wiki",
+  "logo": null,
+  "bioregion_codes": ["NA15", "NA17", "NA22"],
+  "data_sources": ["USGS", "SNOTEL", "KOI-net knowledge graph"],
+  "orgs": [
+    {
+      "id": "greater-victoria",
+      "name": "Greater Victoria Node",
+      "role": "KOI-net node, knowledge steward",
+      "bioregion_code": "NA22"
+    },
+    {
+      "id": "front-range",
+      "name": "Front Range Node",
+      "role": "KOI-net node, Colorado River Basin data",
+      "bioregion_code": "NA15"
+    },
+    {
+      "id": "cascadia-valley",
+      "name": "Cascadia Valley Node",
+      "role": "KOI-net node, watershed sensing",
+      "bioregion_code": "NA17"
+    },
+    {
+      "id": "octo",
+      "name": "Octo",
+      "role": "Federation coordinator, Backend-for-Frontend proxy",
+      "bioregion_code": null
+    }
+  ],
+  "agents": [
+    {
+      "id": "owockibot",
+      "name": "owockibot",
+      "agent_type": "ECONOMIC",
+      "role": "Gitcoin bounty board integration, capital routing recommendations"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "cascadia-watershed-restoration",
+      "title": "Cascadia Watershed Restoration",
+      "bioregion_code": "NA15",
+      "target_pillar": 1,
+      "description": "Restore riparian buffer zones along 12km of degraded waterways in the Southern Rockies bioregion. Evidence tracked via KOI-net knowledge graph with USGS/SNOTEL verification.",
+      "measurement_gate": {
+        "metric": "eii.structure",
+        "threshold": 0.72,
+        "direction": "above",
+        "deadline": null
+      },
+      "status": "proposed"
+    }
+  ],
+  "governance": {
+    "model": "node-sovereign + pilot-chartered + commons-governed",
+    "stewards": [
+      { "name": "Darren Zal", "role": "lead" },
+      { "name": "Benjamin Life", "role": "co-steward" },
+      { "name": "Kevin Owocki", "role": "steward" },
+      { "name": "Todd Youngblood", "role": "steward" },
+      { "name": "Aaron Neyer", "role": "steward" }
+    ]
+  },
+  "integrations": [
+    "TBFF (Threshold-Based Flow Funding)",
+    "Hypercerts",
+    "Allo Protocol QF",
+    "Grassroots Economics Sarafu Protocol"
+  ],
+  "federation": {
+    "protocol": "KOI-net",
+    "total_nodes": 72,
+    "active_nodes": 4,
+    "signing": "ECDSA"
+  },
+  "created_at": 1772633430
+}

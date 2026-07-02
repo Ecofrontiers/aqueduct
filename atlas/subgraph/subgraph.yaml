@@ -1,0 +1,363 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  # Core Vault
+  - kind: ethereum
+    name: EcospatialVault
+    network: base-sepolia
+    source:
+      address: "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0"
+      abi: EcospatialVault
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bioregion
+        - Vault
+        - Deposit
+        - Withdrawal
+      abis:
+        - name: EcospatialVault
+          file: ../contracts/out/EcospatialVault.sol/EcospatialVault.json
+      eventHandlers:
+        - event: Deposited(indexed address,indexed bytes32,uint256,uint256)
+          handler: handleDeposited
+        - event: Withdrawn(indexed address,indexed bytes32,uint256,uint256)
+          handler: handleWithdrawn
+        - event: EpochStarted(indexed bytes32,uint256,uint256)
+          handler: handleEpochStarted
+        - event: EpochEnded(indexed bytes32,uint256,uint256)
+          handler: handleEpochEnded
+        - event: YieldHarvested(indexed bytes32,uint256,address)
+          handler: handleYieldHarvested
+      file: ./src/mappings/vault.ts
+
+  # Proposal Registry
+  - kind: ethereum
+    name: ProposalRegistry
+    network: base-sepolia
+    source:
+      address: "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+      abi: ProposalRegistry
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - ProposalFunding
+      abis:
+        - name: ProposalRegistry
+          file: ../contracts/out/ProposalRegistry.sol/ProposalRegistry.json
+      eventHandlers:
+        - event: ProposalSubmitted(indexed bytes32,indexed uint256,indexed address,uint8,bytes32)
+          handler: handleProposalSubmitted
+        - event: ProposalFunded(indexed bytes32,indexed uint256,indexed address,uint256)
+          handler: handleProposalFunded
+        - event: ProposalActivated(indexed bytes32,indexed uint256)
+          handler: handleProposalActivated
+        - event: ProposalSettled(indexed bytes32,indexed uint256,int256,uint256,uint256)
+          handler: handleProposalSettled
+        - event: ProposalSlashed(indexed bytes32,indexed uint256,uint256)
+          handler: handleProposalSlashed
+      file: ./src/mappings/proposal.ts
+
+  # EII Oracle
+  - kind: ethereum
+    name: EIIOracle
+    network: base-sepolia
+    source:
+      address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+      abi: EIIOracle
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EIIReading
+        - Bioregion
+      abis:
+        - name: EIIOracle
+          file: ../contracts/out/EIIOracle.sol/EIIOracle.json
+      eventHandlers:
+        - event: EIIMeasured(indexed bytes32,uint256,uint256,uint256,uint256,uint256)
+          handler: handleEIIMeasured
+      file: ./src/mappings/oracle.ts
+
+  # Agent Registry
+  - kind: ethereum
+    name: AgentRegistry
+    network: base-sepolia
+    source:
+      address: "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f"
+      abi: AgentRegistry
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Agent
+      abis:
+        - name: AgentRegistry
+          file: ../contracts/out/AgentRegistry.sol/AgentRegistry.json
+      eventHandlers:
+        - event: AgentRegistered(indexed address,string,bytes32)
+          handler: handleAgentRegistered
+        - event: AgentDeactivated(indexed address)
+          handler: handleAgentDeactivated
+        - event: AgentCommitted(indexed address,indexed bytes32,uint8,uint256,uint256)
+          handler: handleAgentCommitted
+        - event: ReputationUpdated(indexed address,uint256,uint256)
+          handler: handleReputationUpdated
+        - event: AgentRewarded(indexed address,uint256,string)
+          handler: handleAgentRewarded
+        - event: AgentSlashed(indexed address,uint256,string)
+          handler: handleAgentSlashed
+      file: ./src/mappings/agent.ts
+
+  # Bounty Escrow
+  - kind: ethereum
+    name: BountyEscrow
+    network: base-sepolia
+    source:
+      address: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"
+      abi: BountyEscrow
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bounty
+      abis:
+        - name: BountyEscrow
+          file: ../contracts/out/BountyEscrow.sol/BountyEscrow.json
+      eventHandlers:
+        - event: BountyPosted(indexed uint256,indexed address,indexed bytes32,uint256,uint256)
+          handler: handleBountyPosted
+        - event: BountyAssigned(indexed uint256,indexed address)
+          handler: handleBountyAssigned
+        - event: BountySubmitted(indexed uint256,bytes32,bytes32)
+          handler: handleBountySubmitted
+        - event: BountyVerified(indexed uint256,bool)
+          handler: handleBountyVerified
+        - event: BountyExpired(indexed uint256)
+          handler: handleBountyExpired
+      file: ./src/mappings/bounty.ts
+
+  # Tournament
+  - kind: ethereum
+    name: Tournament
+    network: base-sepolia
+    source:
+      address: "0xc5a5C42992dECbae36851359345FE25997F5C42d"
+      abi: Tournament
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Tournament
+        - TournamentStanding
+      abis:
+        - name: Tournament
+          file: ../contracts/out/Tournament.sol/Tournament.json
+      eventHandlers:
+        - event: TournamentCreated(indexed uint256,string,bytes32[],uint256,uint256)
+          handler: handleTournamentCreated
+        - event: ParticipantJoined(indexed uint256,indexed address,indexed bytes32)
+          handler: handleParticipantJoined
+        - event: TournamentStarted(indexed uint256)
+          handler: handleTournamentStarted
+        - event: ParticipantEliminated(indexed uint256,indexed address,uint256)
+          handler: handleParticipantEliminated
+        - event: TournamentCompleted(indexed uint256,address[])
+          handler: handleTournamentCompleted
+        - event: PrizeClaimed(indexed uint256,indexed address,uint256)
+          handler: handlePrizeClaimed
+      file: ./src/mappings/tournament.ts
+
+  # Tribunal (Challenges)
+  - kind: ethereum
+    name: Tribunal
+    network: base-sepolia
+    source:
+      address: "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB"
+      abi: Tribunal
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Challenge
+        - Evidence
+      abis:
+        - name: Tribunal
+          file: ../contracts/out/Tribunal.sol/Tribunal.json
+      eventHandlers:
+        - event: ChallengeCreated(indexed uint256,indexed address,indexed address,string)
+          handler: handleChallengeCreated
+        - event: DefenseStaked(indexed uint256,indexed address,uint256)
+          handler: handleDefenseStaked
+        - event: EvidenceSubmitted(indexed uint256,indexed address,bytes32)
+          handler: handleEvidenceSubmitted
+        - event: JurorSelected(indexed uint256,indexed address)
+          handler: handleJurorSelected
+        - event: VoteCast(indexed uint256,indexed address,bool)
+          handler: handleVoteCast
+        - event: PhaseAdvanced(indexed uint256,uint8)
+          handler: handlePhaseAdvanced
+        - event: ChallengeResolved(indexed uint256,bool,uint256)
+          handler: handleChallengeResolved
+      file: ./src/mappings/tribunal.ts
+
+  # Prediction Market
+  - kind: ethereum
+    name: EIIPredictionMarket
+    network: base-sepolia
+    source:
+      address: "0x9A676e781A523b5d0C0e43731313A708CB607508"
+      abi: EIIPredictionMarket
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PredictionMarket
+        - MarketPosition
+      abis:
+        - name: EIIPredictionMarket
+          file: ../contracts/out/EIIPredictionMarket.sol/EIIPredictionMarket.json
+      eventHandlers:
+        - event: MarketCreated(indexed bytes32,indexed bytes32,uint256,uint256,uint256)
+          handler: handleMarketCreated
+        - event: SharesPurchased(indexed bytes32,indexed address,bool,uint256,uint256)
+          handler: handleSharesPurchased
+        - event: MarketSettled(indexed bytes32,uint256,bool)
+          handler: handleMarketSettled
+      file: ./src/mappings/financial.ts
+
+  # Governance
+  - kind: ethereum
+    name: CyberneticGovernance
+    network: base-sepolia
+    source:
+      address: "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9"
+      abi: CyberneticGovernance
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vote
+        - Sanction
+      abis:
+        - name: CyberneticGovernance
+          file: ../contracts/out/CyberneticGovernance.sol/CyberneticGovernance.json
+      eventHandlers:
+        - event: VoteCast(indexed bytes32,indexed bytes32,indexed address,uint256,bool)
+          handler: handleVoteCast
+        - event: SanctionIssued(indexed bytes32,indexed address,uint8,bytes32)
+          handler: handleSanctionIssued
+        - event: SanctionAppealed(indexed bytes32,indexed address,uint256)
+          handler: handleSanctionAppealed
+        - event: SanctionDecayed(indexed bytes32,indexed address,uint256)
+          handler: handleSanctionDecayed
+      file: ./src/mappings/governance.ts
+
+  # ESV Emissions
+  - kind: ethereum
+    name: ESVEmissions
+    network: base-sepolia
+    source:
+      address: "0x851356ae760d987E095750cCeb3bC6014560891C"
+      abi: ESVEmissions
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EpochEmission
+        - EmissionShare
+      abis:
+        - name: ESVEmissions
+          file: ../contracts/out/ESVEmissions.sol/ESVEmissions.json
+      eventHandlers:
+        - event: EmissionTriggered(indexed bytes32,uint256,int256,uint256)
+          handler: handleEmissionTriggered
+        - event: ShareAllocated(indexed bytes32,uint256,indexed address,uint256,string)
+          handler: handleShareAllocated
+        - event: EmissionClaimed(indexed bytes32,uint256,indexed address,uint256)
+          handler: handleEmissionClaimed
+      file: ./src/mappings/emissions.ts
+
+  # Milestone NFT
+  - kind: ethereum
+    name: MilestoneNFT
+    network: base-sepolia
+    source:
+      address: "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E"
+      abi: MilestoneNFT
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MilestoneNFT
+      abis:
+        - name: MilestoneNFT
+          file: ../contracts/out/MilestoneNFT.sol/MilestoneNFT.json
+      eventHandlers:
+        - event: MilestoneMinted(indexed uint256,indexed bytes32,indexed address,string)
+          handler: handleMilestoneMinted
+        - event: MilestoneListed(indexed uint256,uint256)
+          handler: handleMilestoneListed
+        - event: MilestoneDelisted(indexed uint256)
+          handler: handleMilestoneDelisted
+        - event: MilestoneTraded(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleMilestoneTraded
+      file: ./src/mappings/milestone.ts
+
+templates:
+  # ESV Token template (deployed per bioregion)
+  - kind: ethereum
+    name: ESVToken
+    network: base-sepolia
+    source:
+      abi: ESVToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ESVToken
+        - TokenHolder
+      abis:
+        - name: ESVToken
+          file: ../contracts/out/ESVToken.sol/ESVToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Minted(indexed address,uint256,string)
+          handler: handleMinted
+        - event: Slashed(indexed address,uint256,string)
+          handler: handleSlashed
+        - event: Staked(indexed address,uint256)
+          handler: handleStaked
+        - event: Unstaked(indexed address,uint256)
+          handler: handleUnstaked
+        - event: Delegated(indexed address,indexed address,uint256)
+          handler: handleDelegated
+      file: ./src/mappings/token.ts

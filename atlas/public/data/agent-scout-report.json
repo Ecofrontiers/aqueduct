@@ -1,0 +1,226 @@
+{
+  "schema": "RAEIS/OpportunityReport/v1",
+  "agentId": "raeis-scout-v1",
+  "agentVersion": "1.0.0",
+  "timestamp": "2026-03-14T13:02:13.113Z",
+  "scanSummary": {
+    "bioregionsScanned": 7,
+    "totalActions": 45,
+    "totalTCO2e": 80674.44
+  },
+  "opportunities": [
+    {
+      "bioregionCode": "NT14",
+      "bioregionName": "Northern Andean Montane Forests",
+      "compositeScore": 91,
+      "breakdown": {
+        "gap": 100,
+        "certification": 90,
+        "volume": 75,
+        "completeness": 100
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-21",
+          "title": "Carbono Verde Afforestation Project (BR)",
+          "sourceToken": "0.0.8357484",
+          "tCO2e": 30000,
+          "certifier": "EcoRegistry"
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 90/100 (EcoRegistry). Volume: 75/100 (30000 tCO2e). Completeness: 100/100"
+    },
+    {
+      "bioregionCode": "NA22",
+      "bioregionName": "Central US Mixed Grasslands",
+      "compositeScore": 86,
+      "breakdown": {
+        "gap": 100,
+        "certification": 67,
+        "volume": 100,
+        "completeness": 59
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-14",
+          "title": "Carboneers SRC India (IN)",
+          "sourceToken": "0.0.8113653",
+          "tCO2e": 22562,
+          "certifier": "Global C-Sink Registry"
+        },
+        {
+          "actionId": "hedera-70",
+          "title": "OrbexCO2 — -dThermalCoal Recycled (IL)",
+          "sourceToken": "0.0.9122158",
+          "tCO2e": 10000,
+          "certifier": null
+        },
+        {
+          "actionId": "hedera-17",
+          "title": "CO2 UTILIZATION IN CONCRETE - Removals & Reductions - CarbonCure - U.S. Project #1 (US)",
+          "sourceToken": "0.0.8315235",
+          "tCO2e": 3902,
+          "certifier": "Verra Verified Carbon Standard"
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 67/100 (Verra VCS, Global C-Sink, Capturiant Std). Volume: 100/100 (39754.15 tCO2e). Completeness: 59/100"
+    },
+    {
+      "bioregionCode": "OC1",
+      "bioregionName": "Southeast Asian Tropical Forests",
+      "compositeScore": 79,
+      "breakdown": {
+        "gap": 100,
+        "certification": 100,
+        "volume": 15,
+        "completeness": 100
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-16",
+          "title": "CO2 UTILIZATION IN CONCRETE - REMOVALS & REDUCTIONS – CarbonCure – Asia #1 (SG)",
+          "sourceToken": "0.0.8315201",
+          "tCO2e": 6109,
+          "certifier": "Verra Verified Carbon Standard"
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 100/100 (Verra VCS). Volume: 15/100 (6109 tCO2e). Completeness: 100/100"
+    },
+    {
+      "bioregionCode": "AT7",
+      "bioregionName": "East African Montane Forests",
+      "compositeScore": 69,
+      "breakdown": {
+        "gap": 100,
+        "certification": 100,
+        "volume": 0,
+        "completeness": 63
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-138",
+          "title": "GCR Gold Standard TPDDTEC v1",
+          "sourceToken": "0.0.456858",
+          "tCO2e": 0,
+          "certifier": "Gold Standard Foundation"
+        },
+        {
+          "actionId": "hedera-139",
+          "title": "GCR Gold Standard TPDDTEC v3.1",
+          "sourceToken": "0.0.4546233",
+          "tCO2e": 0,
+          "certifier": "Gold Standard Foundation"
+        },
+        {
+          "actionId": "hedera-143",
+          "title": "Safe Water Project(Rwanda) (Gold Standard TPDDTEC)",
+          "sourceToken": "0.0.5945737",
+          "tCO2e": 0,
+          "certifier": "Gold Standard Foundation"
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 100/100 (Gold Standard). Volume: 0/100 (0 tCO2e). Completeness: 63/100"
+    },
+    {
+      "bioregionCode": "PA1",
+      "bioregionName": "Celtic Broadleaf Forests",
+      "compositeScore": 68,
+      "breakdown": {
+        "gap": 100,
+        "certification": 70,
+        "volume": 2,
+        "completeness": 100
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-4",
+          "title": "Setka Gosheva Farm",
+          "sourceToken": "0.0.617745",
+          "tCO2e": 361.4,
+          "certifier": "DOVU dMRV Standard"
+        },
+        {
+          "actionId": "hedera-5",
+          "title": "Omarchevo Farm",
+          "sourceToken": "0.0.617749",
+          "tCO2e": 241.4,
+          "certifier": "DOVU dMRV Standard"
+        },
+        {
+          "actionId": "hedera-6",
+          "title": "Briyastovo wheat Farm",
+          "sourceToken": "0.0.617754",
+          "tCO2e": 117.2,
+          "certifier": "DOVU dMRV Standard"
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 70/100 (DOVU dMRV). Volume: 2/100 (732.89 tCO2e). Completeness: 100/100"
+    },
+    {
+      "bioregionCode": "PA12",
+      "bioregionName": "Western European Broadleaf Forests",
+      "compositeScore": 67,
+      "breakdown": {
+        "gap": 100,
+        "certification": 70,
+        "volume": 10,
+        "completeness": 80
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-1",
+          "title": "Summerley Hall Fruit Farm",
+          "sourceToken": "0.0.612877",
+          "tCO2e": 2920.36,
+          "certifier": "DOVU dMRV Standard"
+        },
+        {
+          "actionId": "hedera-8",
+          "title": "Red Hill Farm",
+          "sourceToken": "0.0.1061956",
+          "tCO2e": 700,
+          "certifier": "DOVU dMRV Standard"
+        },
+        {
+          "actionId": "hedera-7",
+          "title": "Distillerie Coquerel Vineyard",
+          "sourceToken": "0.0.1018036",
+          "tCO2e": 187.04,
+          "certifier": "DOVU dMRV Standard"
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 70/100 (DOVU dMRV). Volume: 10/100 (4041.4 tCO2e). Completeness: 80/100"
+    },
+    {
+      "bioregionCode": "AA8",
+      "bioregionName": "Eastern Australian Temperate Forests",
+      "compositeScore": 45,
+      "breakdown": {
+        "gap": 100,
+        "certification": 10,
+        "volume": 0,
+        "completeness": 50
+      },
+      "topActions": [
+        {
+          "actionId": "hedera-145",
+          "title": "TYMLEZ — Gold Coast Health Precinct Carbon Measurement",
+          "sourceToken": "0.0.1810776",
+          "tCO2e": 37,
+          "certifier": null
+        }
+      ],
+      "rationale": "Gap: 100/100 (unpriced). Cert: 10/100 (none). Volume: 0/100 (37 tCO2e). Completeness: 50/100"
+    }
+  ],
+  "methodologyTopicId": "0.0.8217610",
+  "sourceTopicIds": [
+    "0.0.8217612",
+    "0.0.8217614",
+    "0.0.8217615",
+    "0.0.8217616",
+    "0.0.8217617",
+    "0.0.8217618",
+    "0.0.8217619"
+  ]
+}

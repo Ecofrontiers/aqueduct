@@ -1,0 +1,3229 @@
+[
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.546Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.546Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Summerley Hall Fruit Farm",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.612877",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 2920.36,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2021",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 148938.36000000002,
+        "high": 554868.4,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Summerley Hall Fruit Farm",
+      "developer": "DOVU",
+      "location": {
+        "lat": 52.15,
+        "lng": -2.22,
+        "jurisdiction": "United Kingdom"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2021-12-10T14:29:30.869Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.612876",
+        "https://hashscan.io/mainnet/topic/0.0.615753",
+        "https://hashscan.io/mainnet/topic/0.0.617740"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.546Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.546Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Setka Gosheva Farm",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.617745",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 361.4,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2021",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 18431.399999999998,
+        "high": 68666,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Setka Gosheva Farm",
+      "developer": "DOVU",
+      "location": {
+        "lat": 42.7,
+        "lng": 25.48,
+        "jurisdiction": "Bulgaria"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2021-12-15T12:38:20.278Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.617744"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.546Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.546Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Omarchevo Farm",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.617749",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 241.4,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2021",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 12311.4,
+        "high": 45866,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Omarchevo Farm",
+      "developer": "DOVU",
+      "location": {
+        "lat": 42.75,
+        "lng": 25.5,
+        "jurisdiction": "Bulgaria"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2021-12-15T12:41:04.359Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.617748"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Briyastovo wheat Farm",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.617754",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 117.2,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2021",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 5977.2,
+        "high": 22268,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Briyastovo wheat Farm",
+      "developer": "DOVU",
+      "location": {
+        "lat": 42.05,
+        "lng": 24.35,
+        "jurisdiction": "Bulgaria"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2021-12-15T12:43:58.559Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.617752"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Distillerie Coquerel Vineyard",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1018036",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 187.04,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2022",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 9539.039999999999,
+        "high": 35537.6,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Distillerie Coquerel Vineyard",
+      "developer": "DOVU",
+      "location": {
+        "lat": 48.85,
+        "lng": -1.15,
+        "jurisdiction": "United Kingdom"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2022-06-23T14:48:45.511Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.1018034"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Red Hill Farm",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1061956",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 700,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2022",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 35700,
+        "high": 133000,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Red Hill Farm",
+      "developer": "DOVU",
+      "location": {
+        "lat": 52.5,
+        "lng": -1.5,
+        "jurisdiction": "United Kingdom"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2022-07-18T16:20:32.064Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.1061955"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Briyastovo Wheat Farm",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1364823",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 1.172,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2022",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 59.772,
+        "high": 222.67999999999998,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Briyastovo Wheat Farm",
+      "developer": "DOVU",
+      "location": {
+        "lat": 42.05,
+        "lng": 24.35,
+        "jurisdiction": "Bulgaria"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2022-10-20T15:56:37.049Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.1364821"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Briyastovo",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1387472",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 11.72,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2022",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 597.72,
+        "high": 2226.8,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Briyastovo",
+      "developer": "DOVU",
+      "location": {
+        "lat": 42.05,
+        "lng": 24.35,
+        "jurisdiction": "Bulgaria"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2022-10-27T09:57:09.399Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.1387470"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Redhill",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1658305",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 70,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2023",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 3570,
+        "high": 13300,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Redhill",
+      "developer": "DOVU",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2023-01-04T17:34:24.140Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.1658303"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.547Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.547Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Soil Carbon",
+      "name": "Summerley",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1719752",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 164,
+          "methodology": "DOVU Generic dMRV Standard v1.0",
+          "vintage": "2023",
+          "standard": "Soil Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 8364,
+        "high": 31160,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "DOVU Generic dMRV Standard v1.0",
+        "source": "DOVU dMRV Standard"
+      }
+    },
+    "origin": {
+      "project": "Summerley",
+      "developer": "DOVU",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "DOVU Generic dMRV Standard v1.0",
+      "startDate": "2023-01-20T14:46:39.986Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / DOVU",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.1719750"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.548Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.548Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "OAxaca IV Wind Energy Project (MX)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.8112020",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 1,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2020",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 51,
+        "high": 190,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "Verra Verified Carbon Standard"
+      }
+    },
+    "origin": {
+      "project": "OAxaca IV Wind Energy Project (MX)",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": 23.63,
+        "lng": -102.55,
+        "jurisdiction": "United States"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2020-01-01T00:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.8112020"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.548Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.548Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "Carboneers SRC India (IN)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.8113653",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 22562,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2024",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 1150662,
+        "high": 4286780,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "Global C-Sink Registry"
+      }
+    },
+    "origin": {
+      "project": "Carboneers SRC India (IN)",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": 20.59,
+        "lng": 78.96,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2024-01-01T00:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.8113653",
+        "https://hashscan.io/mainnet/token/0.0.8351944",
+        "https://hashscan.io/mainnet/token/0.0.8351104",
+        "https://hashscan.io/mainnet/token/0.0.8351309"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.548Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.548Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "CO2 UTILIZATION IN CONCRETE - Removals & Reductions - CarbonCure - U.S & Canada. Project #1 (US)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.8315181",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 201,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2022",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 10251,
+        "high": 38190,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "Verra Verified Carbon Standard"
+      }
+    },
+    "origin": {
+      "project": "CO2 UTILIZATION IN CONCRETE - Removals & Reductions - CarbonCure - U.S & Canada. Project #1 (US)",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": 39.83,
+        "lng": -98.58,
+        "jurisdiction": "United States"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2022-01-01T00:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.8315181"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.548Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.548Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "CO2 UTILIZATION IN CONCRETE - REMOVALS & REDUCTIONS – CarbonCure – Asia #1 (SG)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.8315201",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 6109,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2022",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 311559,
+        "high": 1160710,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "Verra Verified Carbon Standard"
+      }
+    },
+    "origin": {
+      "project": "CO2 UTILIZATION IN CONCRETE - REMOVALS & REDUCTIONS – CarbonCure – Asia #1 (SG)",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": 1.35,
+        "lng": 103.82,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2022-01-03T00:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.8315201"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.548Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.548Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "CO2 UTILIZATION IN CONCRETE - Removals & Reductions - CarbonCure - U.S. Project #1 (US)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.8315235",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 3902,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2023",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 199002,
+        "high": 741380,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "Verra Verified Carbon Standard"
+      }
+    },
+    "origin": {
+      "project": "CO2 UTILIZATION IN CONCRETE - Removals & Reductions - CarbonCure - U.S. Project #1 (US)",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": 39.83,
+        "lng": -98.58,
+        "jurisdiction": "United States"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2023-01-01T00:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.8315235"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.549Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.549Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "Carbono Verde Afforestation Project (BR)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.8357484",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 30000,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2020",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 1530000,
+        "high": 5700000,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "EcoRegistry"
+      }
+    },
+    "origin": {
+      "project": "Carbono Verde Afforestation Project (BR)",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": -14.24,
+        "lng": -51.93,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2020-01-01T00:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.8357484",
+        "https://hashscan.io/mainnet/token/0.0.8357578",
+        "https://hashscan.io/mainnet/token/0.0.8357599"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.549Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.549Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Bridged Credit",
+      "name": "Unknown",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.7642495",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 31,
+          "methodology": "Tolam Earth Multi-Registry Bridge",
+          "vintage": "2024",
+          "standard": "Bridged Credit"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 1581,
+        "high": 5890,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "Tolam Earth Multi-Registry Bridge",
+        "source": "Tolam Earth"
+      }
+    },
+    "origin": {
+      "project": "Unknown",
+      "developer": "Tolam Earth",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Tolam Earth Multi-Registry Bridge",
+      "startDate": "2024-11-26T11:09:48.654Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Tolam Earth",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.7642494",
+        "https://hashscan.io/mainnet/topic/0.0.7642515",
+        "https://hashscan.io/mainnet/topic/0.0.8090689"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.550Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.550Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Forward Carbon",
+      "name": "Miller Mountain Project — Forward Carbon",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.4695628",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0,
+          "methodology": "Capturiant Standard (SEC-regulated)",
+          "vintage": "2023",
+          "standard": "Forward Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0,
+        "high": 0,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "Capturiant Standard (SEC-regulated)",
+        "source": "Capturiant Standard (SEC/FINRA)"
+      }
+    },
+    "origin": {
+      "project": "Miller Mountain Project — Forward Carbon",
+      "developer": "Capturiant",
+      "location": {
+        "lat": 37.8,
+        "lng": -79.5,
+        "jurisdiction": "United States"
+      },
+      "methodology": "Capturiant Standard (SEC-regulated)",
+      "startDate": "2023-10-13T21:07:49.522Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Capturiant",
+      "documentCIDs": [
+        "https://bafkreid3qkjtqhr2peleasbutngrvcnpmfkn2kb3uzhqoj3hhnoqttlv4u.ipfs.w3s.link/",
+        "https://bafkreif2dp4ruzykhjv66n7mbmo4kh45bn24f4ydhzf45c6y3kz2jv5dti.ipfs.w3s.link/",
+        "https://bafkreicxr7zoewt4jbn6mlfvet2bmkglhbsktgnwe6makl3q5fwbg55etq.ipfs.w3s.link/",
+        "https://bafkreifhgs2wsvojbpag4vtmwsby3xpckg2eqt7nqalvfx632sw44rpw6y.ipfs.w3s.link/",
+        "https://bafkreideiyw3z32ws5qwgmy6ke4irmc3ezrmbeoudpu236kopikqtzvkgi.ipfs.w3s.link/",
+        "https://bafkreibomvyf52y4btssgbtnnmqqrabez3hnmaevxqpio6xjlq3vyhcy4q.ipfs.w3s.link/",
+        "https://bafkreihdrc4qryx7e42k5xkyglabxn2r2ivst3yqcyvedhf4y34m23nvnq.ipfs.w3s.link/",
+        "https://bafkreifpzdx2lpdu24axmz5ltobumvmiqxb7qi73n75i2zsnbvotzswkm4.ipfs.w3s.link/",
+        "https://bafkreiaob7sxbfgutobbmqmvhfermxcaib5cnjla6jnlrbwxarwjiw2oai.ipfs.w3s.link/",
+        "https://bafkreidtbgb6oaqhgxuxw6fvw4yzejyn25nrj4scggvxih4oojrxz6u35m.ipfs.w3s.link/",
+        "https://bafkreiecrcp6srb7vc63z3xof5zbv555ai57f2bqb34e4rled63m5khgfq.ipfs.w3s.link/",
+        "https://bafkreiemfvsd4hlbposgygtxucfxxhqko4psvhopsoyt2ethoiupdcltfm.ipfs.w3s.link/",
+        "https://bafkreibbqvn35l7apzsylgwpuzjiqscorpphuo6unr2vlxbyjfqjawmqwm.ipfs.w3s.link/",
+        "https://bafkreidoiefsdg3qbqidlvfvpblu7sdj6l3ok4c3l4l4edv2xemsieknp4.ipfs.w3s.link/",
+        "https://bafkreibqaezmtb5kze2fj5vri7lxnzx4b53t3unwqylisd2hkxek76qnce.ipfs.w3s.link/",
+        "https://bafkreidhmjsfq7w3htvj2imz65tvsjp4f7nix3ucuxfr5upwyfnynmm6x4.ipfs.w3s.link/",
+        "https://bafkreidbn563qjrziha2o6for4b5hv24wi7a5mxxdvamzuzz4hy5leufku.ipfs.w3s.link/",
+        "https://bafkreiagddwyxlo7tuftnkczlbpkmx5rolu46skh4hmfmrra6lsvzohzpu.ipfs.w3s.link/",
+        "https://bafkreid27iets5wlitqxtrpoigrnu7pukmlbusk6hue6ltmxvqlouqwy7m.ipfs.w3s.link/",
+        "https://bafkreiccqjip7urzcwhknepbqra2il7cpiki66sihqzssskjxvjxqmcpwy.ipfs.w3s.link/"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.551Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.551Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Forward Carbon",
+      "name": "Warrior Project — Forward Carbon",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.5116287",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0,
+          "methodology": "Capturiant Standard (SEC-regulated)",
+          "vintage": "2024",
+          "standard": "Forward Carbon"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0,
+        "high": 0,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "Capturiant Standard (SEC-regulated)",
+        "source": "Capturiant Standard (SEC/FINRA)"
+      }
+    },
+    "origin": {
+      "project": "Warrior Project — Forward Carbon",
+      "developer": "Capturiant",
+      "location": {
+        "lat": 35.5,
+        "lng": -82.5,
+        "jurisdiction": "United States"
+      },
+      "methodology": "Capturiant Standard (SEC-regulated)",
+      "startDate": "2024-01-26T06:00:00.000Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / Capturiant",
+      "documentCIDs": [
+        "https://bafkreica36jhk3d5kjo2n3uz5o7ghfsnt4aq527ebekpkqkiaalwzs4xoy.ipfs.w3s.link/",
+        "https://bafkreiaoz6tshzuqivtnr3ej6jds34dxq6z6swmwhv5uukq65bmv73fqnu.ipfs.w3s.link/",
+        "https://bafkreibl5zmukwcqgdx22imc3mu2tominovgfps774dvf32zlhqqrijruy.ipfs.w3s.link/",
+        "https://bafkreigz2prng46ugiu4y4oo2skpccewg7aosqaoavz3chvwzq2zllc7em.ipfs.w3s.link/",
+        "https://bafkreiei22vg52yfyem54o2ic4og7endrgg4a4227wywenullzd6i2h2ni.ipfs.w3s.link/",
+        "https://bafkreicmutjvjoivm4vppjxd45om2eqj5vwzmf5isggsidkewmu3r7rzla.ipfs.w3s.link/",
+        "https://bafkreifxy665n4mntozydy46zu6muxuytqzdo64st4pg4gcg7qzo7p6or4.ipfs.w3s.link/",
+        "https://bafkreidrclbq2yqbjzf2ianami5chgq7x2imxsxqgmvrtsmuzh2zl5mfeq.ipfs.w3s.link/",
+        "https://bafkreictiuj2fmy2jvautmezn3bkfgsxrre2ujqljwbw57a7cverirlpr4.ipfs.w3s.link/",
+        "https://bafkreiagdwn666gxponj7wrxa2zfvbgm3pshxirwgsxrpawvvgdhyqwddi.ipfs.w3s.link/"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.551Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.551Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — Industrial Recycled (AL)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6276539",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.237099,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 12.092049,
+        "high": 45.04881,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — Industrial Recycled (AL)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 32.32,
+        "lng": -86.9,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-06-28T11:40:57.262Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6276431",
+        "https://hashscan.io/mainnet/token/0.0.6276875"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — Industrial Recycled (TN)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6276653",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.205825,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 10.497075,
+        "high": 39.10675,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — Industrial Recycled (TN)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 35.52,
+        "lng": -86.58,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-06-28T12:32:56.974Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.5470559",
+        "https://hashscan.io/mainnet/token/0.0.6262743",
+        "https://hashscan.io/mainnet/token/0.0.6279236",
+        "https://hashscan.io/mainnet/token/0.0.6279239"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — Industrial Recycled (AZ)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6279224",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.12342700000000001,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 6.294777000000001,
+        "high": 23.451130000000003,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — Industrial Recycled (AZ)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 34.05,
+        "lng": -111.09,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-06-29T04:37:09.925Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6262761"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — Industrial Recycled (sample)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6279227",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.011365,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0.579615,
+        "high": 2.15935,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — Industrial Recycled (sample)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-06-29T04:37:52.903Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6262774"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — Industrial Recycled (TX)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6279247",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.0072580000000000006,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0.37015800000000004,
+        "high": 1.3790200000000001,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — Industrial Recycled (TX)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 31.97,
+        "lng": -99.9,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-06-29T04:43:51.490Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6279244"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -Mix Recycled (TX)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6896659",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.15288,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 7.79688,
+        "high": 29.047199999999997,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -Mix Recycled (TX)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 31.97,
+        "lng": -99.9,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-08-29T13:05:39.741Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6896644"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dAluminium Recycled (CA)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6908371",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.07018200000000001,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 3.5792820000000005,
+        "high": 13.33458,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dAluminium Recycled (CA)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 36.78,
+        "lng": -119.42,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-08-30T12:59:46.238Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6908362"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (CA)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6908375",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 1549.1492090000002,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 79006.60965900001,
+        "high": 294338.34971000004,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (CA)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 36.78,
+        "lng": -119.42,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-08-30T13:00:32.717Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6908366",
+        "https://hashscan.io/mainnet/token/0.0.9877995",
+        "https://hashscan.io/mainnet/token/0.0.9878834",
+        "https://hashscan.io/mainnet/token/0.0.10163159",
+        "https://hashscan.io/mainnet/token/0.0.10163164",
+        "https://hashscan.io/mainnet/token/0.0.10163167",
+        "https://hashscan.io/mainnet/token/0.0.10163171",
+        "https://hashscan.io/mainnet/token/0.0.10163177",
+        "https://hashscan.io/mainnet/token/0.0.10163179",
+        "https://hashscan.io/mainnet/token/0.0.10163184",
+        "https://hashscan.io/mainnet/token/0.0.10163174",
+        "https://hashscan.io/mainnet/token/0.0.10177483",
+        "https://hashscan.io/mainnet/token/0.0.10178197",
+        "https://hashscan.io/mainnet/token/0.0.10177481",
+        "https://hashscan.io/mainnet/token/0.0.10162369",
+        "https://hashscan.io/mainnet/token/0.0.10163201",
+        "https://hashscan.io/mainnet/token/0.0.10163202",
+        "https://hashscan.io/mainnet/token/0.0.10163216",
+        "https://hashscan.io/mainnet/token/0.0.10163213",
+        "https://hashscan.io/mainnet/token/0.0.10163222",
+        "https://hashscan.io/mainnet/token/0.0.10163192",
+        "https://hashscan.io/mainnet/token/0.0.10178200",
+        "https://hashscan.io/mainnet/token/0.0.10178208",
+        "https://hashscan.io/mainnet/token/0.0.10163227",
+        "https://hashscan.io/mainnet/token/0.0.10163185",
+        "https://hashscan.io/mainnet/token/0.0.10163231",
+        "https://hashscan.io/mainnet/token/0.0.10178500",
+        "https://hashscan.io/mainnet/token/0.0.10178506",
+        "https://hashscan.io/mainnet/token/0.0.10179882",
+        "https://hashscan.io/mainnet/token/0.0.10179879",
+        "https://hashscan.io/mainnet/token/0.0.10179881"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dAluminium Recycled (GA)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6908438",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.144379,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2024",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 7.363329,
+        "high": 27.432010000000002,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dAluminium Recycled (GA)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 32.17,
+        "lng": -82.91,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2024-08-30T13:37:45.214Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.6908436"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dThermalCoal Recycled (IL)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.9122158",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 10000,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 510000,
+        "high": 1900000,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dThermalCoal Recycled (IL)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 40.63,
+        "lng": -89.4,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-04-23T00:07:48.637Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.9122157"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (PA)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.9878434",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 18.849487,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 961.323837,
+        "high": 3581.40253,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (PA)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 41.2,
+        "lng": -77.19,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-09-17T02:46:17.769Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.9877930",
+        "https://hashscan.io/mainnet/token/0.0.10164266"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dCopper Recycled (NV)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.9878542",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.153374,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 7.822074000000001,
+        "high": 29.141060000000003,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dCopper Recycled (NV)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 38.8,
+        "lng": -116.42,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-09-17T02:54:02.277Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.9878536"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (MO)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10037604",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 66.452489,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 3389.076939,
+        "high": 12625.97291,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (MO)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 38.57,
+        "lng": -92.6,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-10-16T18:00:42.001Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10035662",
+        "https://hashscan.io/mainnet/token/0.0.10178192"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.552Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.552Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dPlastic Recycled (IN)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10042615",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0.176854,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 9.019554000000001,
+        "high": 33.60226,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dPlastic Recycled (IN)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 40.27,
+        "lng": -86.13,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-10-19T19:57:55.022Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10042614"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (GA)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10177993",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 727.572009,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 37106.172459,
+        "high": 138238.68171,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (GA)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 32.17,
+        "lng": -82.91,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T08:54:53.470Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10163160",
+        "https://hashscan.io/mainnet/token/0.0.10163168",
+        "https://hashscan.io/mainnet/token/0.0.10163178",
+        "https://hashscan.io/mainnet/token/0.0.10163220",
+        "https://hashscan.io/mainnet/token/0.0.10163225",
+        "https://hashscan.io/mainnet/token/0.0.10163226",
+        "https://hashscan.io/mainnet/token/0.0.10163228",
+        "https://hashscan.io/mainnet/token/0.0.10178205",
+        "https://hashscan.io/mainnet/token/0.0.10163190",
+        "https://hashscan.io/mainnet/token/0.0.10164272",
+        "https://hashscan.io/mainnet/token/0.0.10178503",
+        "https://hashscan.io/mainnet/token/0.0.10178507",
+        "https://hashscan.io/mainnet/token/0.0.10178857",
+        "https://hashscan.io/mainnet/token/0.0.10178856",
+        "https://hashscan.io/mainnet/token/0.0.10178509",
+        "https://hashscan.io/mainnet/token/0.0.10178846",
+        "https://hashscan.io/mainnet/token/0.0.10179883"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (AZ)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178212",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 114.57196499999999,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 5843.170214999999,
+        "high": 21768.673349999997,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (AZ)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 34.05,
+        "lng": -111.09,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T13:47:03.193Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10163169",
+        "https://hashscan.io/mainnet/token/0.0.10163186"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (TN)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178227",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 158.396368,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 8078.214768,
+        "high": 30095.30992,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (TN)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 35.52,
+        "lng": -86.58,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T13:52:19.198Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10177492",
+        "https://hashscan.io/mainnet/token/0.0.10163207",
+        "https://hashscan.io/mainnet/token/0.0.10163212"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (NV)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178231",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 64.13311,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 3270.78861,
+        "high": 12185.2909,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (NV)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 38.8,
+        "lng": -116.42,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T13:54:16.171Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10178194"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (AL)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178234",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 235.33082100000001,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 12001.871871000001,
+        "high": 44712.855990000004,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (AL)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 32.32,
+        "lng": -86.9,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T13:54:55.713Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10177490",
+        "https://hashscan.io/mainnet/token/0.0.10178196",
+        "https://hashscan.io/mainnet/token/0.0.10177484",
+        "https://hashscan.io/mainnet/token/0.0.10163194"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (FL)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178240",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 56.175159,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 2864.933109,
+        "high": 10673.28021,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (FL)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 27.66,
+        "lng": -81.52,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T13:57:12.870Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10178198"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (OH)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178242",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 49.169837,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 2507.6616870000003,
+        "high": 9342.26903,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (OH)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 40.42,
+        "lng": -82.91,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T13:57:43.602Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10163204"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.553Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.553Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Industrial MRV",
+      "name": "OrbexCO2 — -dFerrous Recycled (TX)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.10178247",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 47.062112000000006,
+          "methodology": "OrbexCO2 Industrial MRV",
+          "vintage": "2025",
+          "standard": "Industrial MRV"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 2400.1677120000004,
+        "high": 8941.801280000001,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "OrbexCO2 Industrial MRV",
+        "source": "OrbexCO2"
+      }
+    },
+    "origin": {
+      "project": "OrbexCO2 — -dFerrous Recycled (TX)",
+      "developer": "OrbexCO2",
+      "location": {
+        "lat": 31.97,
+        "lng": -99.9,
+        "jurisdiction": "United States"
+      },
+      "methodology": "OrbexCO2 Industrial MRV",
+      "startDate": "2025-12-12T14:00:13.503Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / OrbexCO2",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.10163195",
+        "https://hashscan.io/mainnet/token/0.0.10162364"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.556Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.556Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Gold Standard",
+      "name": "GCR Gold Standard TPDDTEC v1",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.456858",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0,
+          "methodology": "Gold Standard TPDDTEC",
+          "vintage": "2021",
+          "standard": "Gold Standard"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0,
+        "high": 0,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Gold Standard TPDDTEC",
+        "source": "Gold Standard Foundation"
+      }
+    },
+    "origin": {
+      "project": "GCR Gold Standard TPDDTEC v1",
+      "developer": "GCR",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Gold Standard TPDDTEC",
+      "startDate": "2021-09-20T22:00:05.445Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / GCR",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.456858",
+        "https://hashscan.io/mainnet/topic/0.0.5125510",
+        "https://hashscan.io/mainnet/topic/0.0.5262062",
+        "https://hashscan.io/mainnet/topic/0.0.5488522"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.556Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.556Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Gold Standard",
+      "name": "GCR Gold Standard TPDDTEC v3.1",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.4546233",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0,
+          "methodology": "Gold Standard TPDDTEC",
+          "vintage": "2024",
+          "standard": "Gold Standard"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0,
+        "high": 0,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Gold Standard TPDDTEC",
+        "source": "Gold Standard Foundation"
+      }
+    },
+    "origin": {
+      "project": "GCR Gold Standard TPDDTEC v3.1",
+      "developer": "GCR",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Gold Standard TPDDTEC",
+      "startDate": "2024-01-24T06:51:35.430Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / GCR",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.4546232"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.556Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.556Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Gold Standard",
+      "name": "Safe Water Project(Rwanda) (Gold Standard TPDDTEC)",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.5945737",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0,
+          "methodology": "Gold Standard TPDDTEC",
+          "vintage": "2024",
+          "standard": "Gold Standard"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0,
+        "high": 0,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Gold Standard TPDDTEC",
+        "source": "Gold Standard Foundation"
+      }
+    },
+    "origin": {
+      "project": "Safe Water Project(Rwanda) (Gold Standard TPDDTEC)",
+      "developer": "GCR",
+      "location": {
+        "lat": -1.94,
+        "lng": 29.87,
+        "jurisdiction": "Rwanda"
+      },
+      "methodology": "Gold Standard TPDDTEC",
+      "startDate": "2024-05-17T00:34:32.201Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / GCR",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.5945736"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.556Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.556Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "Gold Standard",
+      "name": "GCR Gold Standard TPDDTEC v3.1.0",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.6260121",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 0,
+          "methodology": "Gold Standard TPDDTEC",
+          "vintage": "2024",
+          "standard": "Gold Standard"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 0,
+        "high": 0,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "project-specific",
+        "methodologyName": "Gold Standard TPDDTEC",
+        "source": "Gold Standard Foundation"
+      }
+    },
+    "origin": {
+      "project": "GCR Gold Standard TPDDTEC v3.1.0",
+      "developer": "GCR",
+      "location": {
+        "lat": 0,
+        "lng": 0,
+        "jurisdiction": "Unknown"
+      },
+      "methodology": "Gold Standard TPDDTEC",
+      "startDate": "2024-06-24T05:28:58.197Z"
+    },
+    "mrv": {
+      "status": "verified",
+      "provider": "Guardian / GCR",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/topic/0.0.6260119"
+      ]
+    }
+  },
+  {
+    "attestor": "Regen Atlas",
+    "attestedAt": "2026-03-13T14:18:05.556Z",
+    "schemaVersion": "1.0",
+    "source": {
+      "protocol": "hedera",
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens",
+      "queryParams": {},
+      "fetchedAt": "2026-03-13T14:18:05.556Z"
+    },
+    "asset": {
+      "type": "Carbon Credit",
+      "subtype": "GHG Accounting",
+      "name": "TYMLEZ — Gold Coast Health Precinct Carbon Measurement",
+      "chain": "hedera-mainnet",
+      "contractAddress": "0.0.1810776",
+      "mechanismType": "direct-credit",
+      "assetActionClass": "action"
+    },
+    "impact": {
+      "metrics": {
+        "climate": {
+          "tCO2e": 37,
+          "methodology": "GHG Corporate Standard",
+          "vintage": "2023",
+          "standard": "GHG Accounting"
+        }
+      },
+      "creditingPathway": "action"
+    },
+    "valuation": {
+      "methodology": "SCC-EPA-2024",
+      "valuePerUnit": {
+        "low": 51,
+        "high": 190,
+        "unit": "tCO2e",
+        "currency": "USD"
+      },
+      "totalValue": {
+        "low": 1887,
+        "high": 7030,
+        "currency": "USD"
+      },
+      "methodologyTrace": {
+        "tier": "category-default",
+        "methodologyName": "GHG Corporate Standard",
+        "source": "TYMLEZ"
+      }
+    },
+    "origin": {
+      "project": "TYMLEZ — Gold Coast Health Precinct Carbon Measurement",
+      "developer": "TYMLEZ",
+      "location": {
+        "lat": -27.96,
+        "lng": 153.38,
+        "jurisdiction": "Australia"
+      },
+      "methodology": "GHG Corporate Standard",
+      "startDate": "2023-02-03T03:16:36.014Z"
+    },
+    "mrv": {
+      "status": "pending",
+      "provider": "Guardian / TYMLEZ",
+      "documentCIDs": [
+        "https://hashscan.io/mainnet/token/0.0.1810776"
+      ]
+    }
+  }
+]

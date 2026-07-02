@@ -1,0 +1,35 @@
+{
+  "name": "slabclaw-routes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SlabClaw EARN engine — arbitrage spread detector (over the live cross-marketplace oracle), the Nemotron BUY/SKIP brain, and the routes_plan expectimax MDP seed. Decoupled, zero contract dependency.",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types test/run.ts",
+    "test:detector": "node --experimental-strip-types test/spread-detector.test.ts",
+    "test:plan": "node --experimental-strip-types test/routes-plan.test.ts",
+    "test:beezie": "node --experimental-strip-types test/beezie-adapter.test.ts",
+    "test:courtyard": "node --experimental-strip-types test/courtyard-adapter.test.ts",
+    "test:seam": "node --experimental-strip-types test/adapter-seam.test.ts",
+    "test:pnl": "node --experimental-strip-types test/routes-pnl.test.ts",
+    "demo": "node --experimental-strip-types test/demo.ts",
+    "sim": "node --experimental-strip-types scripts/synth-sim.mjs",
+    "beezie:discover": "node --experimental-strip-types scripts/beezie-discover.mjs",
+    "courtyard:discover": "node --experimental-strip-types scripts/courtyard-discover.mjs",
+    "sepolia:roundtrip": "node scripts/sepolia-roundtrip.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@coinbase/cdp-sdk": "^1.51.2",
+    "@lifi/sdk": "^4.0.1",
+    "@opensea/sdk": "^11.1.1",
+    "viem": "^2.53.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.0",
+    "typescript": "^5.5.4"
+  }
+}

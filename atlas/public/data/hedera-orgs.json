@@ -1,0 +1,267 @@
+[
+  {
+    "id": 9001,
+    "name": "DOVU",
+    "status": "PUBLISHED",
+    "link": "https://dovu.earth",
+    "coordinates": {
+      "latitude": 52.15,
+      "longitude": -2.22
+    },
+    "description": "Soil carbon marketplace on Hedera. Guardian-verified dMRV for UK and European farms. Pioneer of tokenized soil carbon credits.",
+    "impact_link": "https://app.dovu.market",
+    "established": "2021",
+    "address": null,
+    "social": [
+      {
+        "platform": "twitter",
+        "link": "https://twitter.com/dovuofficial"
+      }
+    ],
+    "treasury": [
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.610168",
+        "platform": "hedera"
+      },
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.1357309",
+        "platform": "hedera"
+      }
+    ],
+    "main_image": null,
+    "issuers": [],
+    "ecosystems": [
+      {
+        "id": 901,
+        "name": "Hedera Guardian",
+        "status": "PUBLISHED",
+        "icon": ""
+      }
+    ],
+    "assets": [],
+    "country_codes": [
+      "GB",
+      "BG",
+      "FR"
+    ],
+    "bioregion_codes": [
+      "PA12",
+      "PA1"
+    ]
+  },
+  {
+    "id": 9002,
+    "name": "Tolam Earth",
+    "status": "PUBLISHED",
+    "link": "https://tolam.io",
+    "coordinates": {
+      "latitude": 39.83,
+      "longitude": -98.58
+    },
+    "description": "Multi-registry carbon credit bridge on Hedera. Tokenizes Verra VCS, EcoRegistry, and Global C-Sink credits via Guardian.",
+    "impact_link": "https://tolam.io",
+    "established": "2022",
+    "address": null,
+    "social": [
+      {
+        "platform": "twitter",
+        "link": "https://twitter.com/tolamearth"
+      }
+    ],
+    "treasury": [
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.6144372",
+        "platform": "hedera"
+      },
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.6138881",
+        "platform": "hedera"
+      }
+    ],
+    "main_image": null,
+    "issuers": [],
+    "ecosystems": [
+      {
+        "id": 901,
+        "name": "Hedera Guardian",
+        "status": "PUBLISHED",
+        "icon": ""
+      }
+    ],
+    "assets": [],
+    "country_codes": [
+      "MX",
+      "US",
+      "SG",
+      "IN",
+      "BR",
+      "CO"
+    ],
+    "bioregion_codes": []
+  },
+  {
+    "id": 9003,
+    "name": "Capturiant",
+    "status": "PUBLISHED",
+    "link": "https://capturiant.com",
+    "coordinates": {
+      "latitude": 37.8,
+      "longitude": -79.5
+    },
+    "description": "SEC-regulated forward carbon credit marketplace on Hedera. IPFS-backed metadata with Guardian provenance for US forestry projects.",
+    "impact_link": "https://capturiant.offerboard.com",
+    "established": "2023",
+    "address": null,
+    "social": [
+      {
+        "platform": "twitter",
+        "link": "https://twitter.com/capturiant"
+      }
+    ],
+    "treasury": [
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.4640644",
+        "platform": "hedera"
+      },
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.5054978",
+        "platform": "hedera"
+      }
+    ],
+    "main_image": null,
+    "issuers": [],
+    "ecosystems": [
+      {
+        "id": 901,
+        "name": "Hedera Guardian",
+        "status": "PUBLISHED",
+        "icon": ""
+      }
+    ],
+    "assets": [],
+    "country_codes": [
+      "US"
+    ],
+    "bioregion_codes": [
+      "NA22",
+      "NA26"
+    ]
+  },
+  {
+    "id": 9004,
+    "name": "OrbexCO2",
+    "status": "PUBLISHED",
+    "link": "https://orbex.co",
+    "coordinates": {
+      "latitude": 35.52,
+      "longitude": -86.58
+    },
+    "description": "Industrial carbon intensity measurement on Hedera. Paired commodity+CO2 credit tokens for recycled metals across US states. Self-measured MRV.",
+    "impact_link": null,
+    "established": "2023",
+    "address": null,
+    "social": [],
+    "treasury": [
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.4576278",
+        "platform": "hedera"
+      }
+    ],
+    "main_image": null,
+    "issuers": [],
+    "ecosystems": [
+      {
+        "id": 901,
+        "name": "Hedera Guardian",
+        "status": "PUBLISHED",
+        "icon": ""
+      }
+    ],
+    "assets": [],
+    "country_codes": [
+      "US"
+    ],
+    "bioregion_codes": []
+  },
+  {
+    "id": 9005,
+    "name": "GCR",
+    "status": "PUBLISHED",
+    "link": "https://globalclimateregistry.com",
+    "coordinates": {
+      "latitude": -1.94,
+      "longitude": 29.87
+    },
+    "description": "Global Climate Registry — Gold Standard TPDDTEC credit tokenization on Hedera. Safe water and clean cookstove projects in Rwanda.",
+    "impact_link": null,
+    "established": "2023",
+    "address": null,
+    "social": [],
+    "treasury": [
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.3843565",
+        "platform": "hedera"
+      }
+    ],
+    "main_image": null,
+    "issuers": [],
+    "ecosystems": [
+      {
+        "id": 901,
+        "name": "Hedera Guardian",
+        "status": "PUBLISHED",
+        "icon": ""
+      }
+    ],
+    "assets": [],
+    "country_codes": [
+      "RW"
+    ],
+    "bioregion_codes": [
+      "AT7"
+    ]
+  },
+  {
+    "id": 9006,
+    "name": "TYMLEZ",
+    "status": "PUBLISHED",
+    "link": "https://tymlez.com",
+    "coordinates": {
+      "latitude": -27.96,
+      "longitude": 153.38
+    },
+    "description": "GHG Corporate Standard carbon emissions accounting on Hedera. Gold Coast Health & Knowledge Precinct pilot — first carbon measurement on Hedera mainnet.",
+    "impact_link": null,
+    "established": "2022",
+    "address": null,
+    "social": [
+      {
+        "platform": "twitter",
+        "link": "https://twitter.com/tymlezgroup"
+      }
+    ],
+    "treasury": [
+      {
+        "link": "https://hashscan.io/mainnet/account/0.0.1810743",
+        "platform": "hedera"
+      }
+    ],
+    "main_image": null,
+    "issuers": [],
+    "ecosystems": [
+      {
+        "id": 901,
+        "name": "Hedera Guardian",
+        "status": "PUBLISHED",
+        "icon": ""
+      }
+    ],
+    "assets": [],
+    "country_codes": [
+      "AU"
+    ],
+    "bioregion_codes": [
+      "AA8"
+    ]
+  }
+]

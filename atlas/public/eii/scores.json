@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "description": "EII scores keyed by bioregion code. Drop real data here to replace mock values.",
+    "source": "Landbanking Group Ecosystem Integrity Index (ecosystemintegrityindex.org)",
+    "format": {
+      "bioregionId": "string — matches GeoJSON feature code (e.g. NT01, PAL_3)",
+      "epoch": "number — year or period identifier",
+      "eii": "number 0-1 — composite ecosystem integrity score",
+      "pillars": {
+        "function": "number 0-1",
+        "structure": "number 0-1",
+        "composition": "number 0-1"
+      },
+      "limitingPillar": "string — lowest pillar name",
+      "delta": "number (optional) — omit to hide trend arrow in UI",
+      "measuredAt": "number — unix timestamp"
+    }
+  }
+}

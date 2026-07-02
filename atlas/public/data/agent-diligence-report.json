@@ -1,0 +1,237 @@
+{
+  "schema": "RAEIS/DueDiligence/v1",
+  "agentId": "raeis-diligence-v1",
+  "agentVersion": "1.0.0",
+  "timestamp": "2026-03-14T13:02:19.605Z",
+  "sourceReport": {
+    "topicId": "0.0.8218356",
+    "sequenceNumber": 1
+  },
+  "assessments": [
+    {
+      "sourceToken": "0.0.8357484",
+      "bioregionCode": "NT14",
+      "actionTitle": "Carbono Verde Afforestation Project (BR)",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 10000,
+        "hasMemo": false,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.6144372"
+      },
+      "trustTier": "guardian+registry",
+      "verdict": "CAUTION",
+      "rationale": "Token has supply (10000) but no memo or Guardian topic ID. Trust tier: guardian+registry."
+    },
+    {
+      "sourceToken": "0.0.8113653",
+      "bioregionCode": "NA22",
+      "actionTitle": "Carboneers SRC India (IN)",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 1,
+        "hasMemo": false,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.6144372"
+      },
+      "trustTier": "guardian+registry",
+      "verdict": "CAUTION",
+      "rationale": "Token has supply (1) but no memo or Guardian topic ID. Trust tier: guardian+registry."
+    },
+    {
+      "sourceToken": "0.0.9122158",
+      "bioregionCode": "NA22",
+      "actionTitle": "OrbexCO2 — -dThermalCoal Recycled (IL)",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 80640456564,
+        "hasMemo": true,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.4576278"
+      },
+      "trustTier": "bare-hts",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 80640456564, OrbexCO2. Guardian topic: none. Trust tier: bare-hts."
+    },
+    {
+      "sourceToken": "0.0.8315235",
+      "bioregionCode": "NA22",
+      "actionTitle": "CO2 UTILIZATION IN CONCRETE - Removals & Reductions - CarbonCure - U.S. Project #1 (US)",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 3902,
+        "hasMemo": false,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.6144372"
+      },
+      "trustTier": "guardian+registry",
+      "verdict": "CAUTION",
+      "rationale": "Token has supply (3902) but no memo or Guardian topic ID. Trust tier: guardian+registry."
+    },
+    {
+      "sourceToken": "0.0.8315201",
+      "bioregionCode": "OC1",
+      "actionTitle": "CO2 UTILIZATION IN CONCRETE - REMOVALS & REDUCTIONS – CarbonCure – Asia #1 (SG)",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 6109,
+        "hasMemo": false,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.6144372"
+      },
+      "trustTier": "guardian+registry",
+      "verdict": "CAUTION",
+      "rationale": "Token has supply (6109) but no memo or Guardian topic ID. Trust tier: guardian+registry."
+    },
+    {
+      "sourceToken": "0.0.456858",
+      "bioregionCode": "AT7",
+      "actionTitle": "GCR Gold Standard TPDDTEC v1",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 450010110000000,
+        "hasMemo": true,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.439909"
+      },
+      "trustTier": "unknown",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 450010110000000, unknown platform. Guardian topic: none. Trust tier: unknown."
+    },
+    {
+      "sourceToken": "0.0.4546233",
+      "bioregionCode": "AT7",
+      "actionTitle": "GCR Gold Standard TPDDTEC v3.1",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 10,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.4546232",
+        "treasuryAccount": "0.0.3843565"
+      },
+      "trustTier": "guardian+registry",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 10, GCR. Guardian topic: 0.0.4546232. Trust tier: guardian+registry."
+    },
+    {
+      "sourceToken": "0.0.5945737",
+      "bioregionCode": "AT7",
+      "actionTitle": "Safe Water Project(Rwanda) (Gold Standard TPDDTEC)",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 100,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.5945736",
+        "treasuryAccount": "0.0.3843565"
+      },
+      "trustTier": "guardian+registry",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 100, GCR. Guardian topic: 0.0.5945736. Trust tier: guardian+registry."
+    },
+    {
+      "sourceToken": "0.0.617745",
+      "bioregionCode": "PA1",
+      "actionTitle": "Setka Gosheva Farm",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 36140000000,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.617744",
+        "treasuryAccount": "0.0.610168"
+      },
+      "trustTier": "guardian+self",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 36140000000, DOVU. Guardian topic: 0.0.617744. Trust tier: guardian+self."
+    },
+    {
+      "sourceToken": "0.0.617749",
+      "bioregionCode": "PA1",
+      "actionTitle": "Omarchevo Farm",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 24140000000,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.617748",
+        "treasuryAccount": "0.0.610168"
+      },
+      "trustTier": "guardian+self",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 24140000000, DOVU. Guardian topic: 0.0.617748. Trust tier: guardian+self."
+    },
+    {
+      "sourceToken": "0.0.617754",
+      "bioregionCode": "PA1",
+      "actionTitle": "Briyastovo wheat Farm",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 11720000000,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.617752",
+        "treasuryAccount": "0.0.610168"
+      },
+      "trustTier": "guardian+self",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 11720000000, DOVU. Guardian topic: 0.0.617752. Trust tier: guardian+self."
+    },
+    {
+      "sourceToken": "0.0.612877",
+      "bioregionCode": "PA12",
+      "actionTitle": "Summerley Hall Fruit Farm",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 97000000000,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.612876",
+        "treasuryAccount": "0.0.610168"
+      },
+      "trustTier": "guardian+self",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 97000000000, DOVU. Guardian topic: 0.0.612876. Trust tier: guardian+self."
+    },
+    {
+      "sourceToken": "0.0.1061956",
+      "bioregionCode": "PA12",
+      "actionTitle": "Red Hill Farm",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 70000000000,
+        "hasMemo": true,
+        "guardianTopicId": "0.0.1061955",
+        "treasuryAccount": "0.0.610168"
+      },
+      "trustTier": "guardian+self",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 70000000000, DOVU. Guardian topic: 0.0.1061955. Trust tier: guardian+self."
+    },
+    {
+      "sourceToken": "0.0.1018036",
+      "bioregionCode": "PA12",
+      "actionTitle": "Distillerie Coquerel Vineyard",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 1870400000000,
+        "hasMemo": true,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.610168"
+      },
+      "trustTier": "guardian+self",
+      "verdict": "PASS",
+      "rationale": "Token verified: supply 1870400000000, DOVU. Guardian topic: none. Trust tier: guardian+self."
+    },
+    {
+      "sourceToken": "0.0.1810776",
+      "bioregionCode": "AA8",
+      "actionTitle": "TYMLEZ — Gold Coast Health Precinct Carbon Measurement",
+      "verification": {
+        "tokenExists": true,
+        "totalSupply": 3700,
+        "hasMemo": false,
+        "guardianTopicId": null,
+        "treasuryAccount": "0.0.1810743"
+      },
+      "trustTier": "bare-hts",
+      "verdict": "CAUTION",
+      "rationale": "Token has supply (3700) but no memo or Guardian topic ID. Trust tier: bare-hts."
+    }
+  ]
+}

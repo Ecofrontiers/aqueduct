@@ -1,0 +1,97 @@
+.git-broken/
+node_modules/
+.DS_Store
+.env
+.env.local
+integrations/.env
+*.log
+.vscode/
+.idea/
+
+# Build artifacts
+**/dist/
+**/out/
+**/cache/
+**/node_modules/
+contracts/broadcast/
+
+# Foundry
+contracts/foundry.lock
+
+# Subgraph generated
+subgraph/generated/
+subgraph/build/
+
+# Reference docs (large PDFs)
+ref/
+
+# Hackathon submission PDFs (uploaded separately)
+Hedera Hello Future*.pdf
+*Bounty Submission*.pdf
+
+# Claude Code local
+.claude/
+.vercel
+CLAUDE.md
+
+# Private contract source (backed up to ecospatial-private)
+contracts/src/
+contracts/lib/
+.gitmodules
+backend/src/services/keeper.ts
+backend/src/services/subgraph.ts
+backend/src/services/websocket.ts
+subgraph/src/mappings/
+
+# Private specs and planning
+PRD.md
+PRD-HEDERA-INGESTION.md
+ECOSPATIAL_INTEGRATION_PLAN.md
+project-summary.md
+demo-script.md
+submission-answers.md
+PLAN.md
+PLAN.docx
+PLAN.pdf
+docs/OWOCKI_OUTREACH.md
+docs/A2A_INTEGRATION_STRATEGY.md
+docs/A2A_LAYER_SPEC.md
+docs/A2A_SOCIAL_LAYER.md
+docs/AGENT_VALUE_FRAMEWORK.md
+docs/BACKEND_SPEC.md
+docs/BIOREGIONAL_FUNDING_LANDSCAPE.md
+docs/FRONTEND_SPEC.md
+docs/GENERALIZATION_GAP_ANALYSIS.md
+docs/INTERSPECIES_SWARM_SPEC.md
+docs/NETWORK_LAYER_SPEC.md
+docs/PARLIAMENT_WIRING_PLAN.md
+docs/TECHNICAL_SPEC.md
+docs/PRD-impact-intelligence.md
+
+# Contract deployments (addresses)
+contracts/deployments/*.json
+!contracts/deployments/.gitkeep
+
+# Session memory
+memory/
+
+# Simulation (internal)
+simulation/
+simulation/output/
+
+# Deck source (PDF uploaded separately)
+deck/deck.html
+
+# Infographic generation
+infographic/
+
+# Integrations output (generated JSON + SQL)
+integrations/output/
+
+# Submission artifacts (uploaded separately)
+*-submission-answers.docx
+build_submission_doc.py
+
+# Empty scaffold
+regen-atlas-ecospatial/
+.vite

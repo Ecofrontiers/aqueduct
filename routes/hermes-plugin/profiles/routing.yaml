@@ -1,0 +1,131 @@
+# Per-solver toolset attenuation — slabclaw-routes profile routing
+#
+# Design intent: per-solver attenuation as machine-enforced SOUL guardrails, on the
+# principles of attenuated permissions (each agent gets a strict subset of authority)
+# and content quarantine (untrusted-content readers are barred from privileged actions).
+#
+# This is the SOUL guardrails in machine-enforced form. The prose SOUL.md is the
+# immutable narrative guardrail; this file is what the runtime actually enforces.
+# Where they describe the same rule, they MUST agree.
+#
+# THE THREE INVARIANTS, enforced below:
+#   1. Solvers NEVER call `verifyFill` (escrow release is operator-only).
+#   2. Solvers NEVER spend outside the resource-lock / PayGuard envelope
+#      (no wallet/spend tool in a solver's tools.include).
+#   3. Irreversible Vault/Tokenize/Redeem always pass `kanban_block` first
+#      (the human-gate firebreak — privileged executor only).
+#
+# Each profile gets a STRICT SUBSET of authority, never full inheritance.
+# Verify after edits: no grading/logistics solver lists `verifyFill`, `awal`,
+# `x402_pay`, `evalanche`, `send`, `trade`, or any settlement/wallet tool.
+
+version: 0.1.0
+
+# Solver model heterogeneity (avoid diversity collapse). At least three
+# DISTINCT solver models, not one model in three personas. Bound per profile below.
+defaults:
+  hard_bans:                              # apply to EVERY profile unless re-granted
+    - verifyFill                          # escrow release — operator-only, no exceptions
+    - withdraw                            # pull-payment drain — operator-only
+    - setOperator                         # registry authority — operator-only
+
+profiles:
+
+  # ── planner ──────────────────────────────────────────────────────────────────
+  # Plans the route (routes_plan MDP). Reads oracle, narrates policy. Touches NO
+  # money and NO escrow. Cannot fill, cannot spend, cannot release.
+  planner:
+    description: "Route MDP planner — computes the conditional policy. No spend, no fill, no escrow."
+    model: planner-model
+    toolsets: [skills, search, web, todo]
+    tools:
+      include:
+        - routes_plan                     # the in-process expectimax policy solver
+        - get_oracle_price                # read-only oracle (SLABCLAW_API_URL)
+        - get_active_intents              # read-only registry view
+      # NOTE: no verifyFill, no submitFill, no wallet, no spend. Read + plan only.
+
+  # ── grading-solver ───────────────────────────────────────────────────────────
+  # Prices the raw→graded leg (TAG tier EV). Bids the Grade hop. NEVER releases
+  # escrow, NEVER moves money. (invariants 1 + 2).
+  grading-solver:
+    description: "Grading transition specialist — prices the TAG tier EV, bids the Grade hop."
+    model: solver-model-a
+    toolsets: [skills]
+    tools:
+      include:
+        - compute_grading_ev              # grade-ev:computeGradingEV
+        - submit_fill                     # bid/fill its OWN hop (no escrow release)
+        - get_active_intents              # read-only
+      # HARD EXCLUSIONS (mirrors SOUL): NOT verifyFill, NOT any wallet/spend tool.
+      exclude:
+        - verifyFill                      # invariant 1 — never release escrow
+        - awal                            # invariant 2 — no agentic wallet
+        - x402_pay                        # invariant 2 — no x402 settlement
+        - evalanche                       # invariant 2 — no treasury MCP
+        - send                            # invariant 2 — no value movement
+        - trade                           # invariant 2 — no value movement
+
+  # ── logistics-solver ─────────────────────────────────────────────────────────
+  # Quotes shipping, mints the SAMPLE Shippo label, tracks. NEVER releases escrow,
+  # NEVER moves money. (invariants 1 + 2).
+  logistics-solver:
+    description: "Logistics transition specialist — Shippo rate to SAMPLE label to track."
+    model: solver-model-b
+    toolsets: [skills]
+    tools:
+      include:
+        - shippo_rate                     # Shippo MCP rate quote
+        - shippo_label                    # Shippo MCP label (SAMPLE / test-mode)
+        - shippo_track                    # Shippo MCP tracking
+        - submit_fill                     # bid/fill its OWN hop (no escrow release)
+        - get_active_intents              # read-only
+      exclude:
+        - verifyFill                      # invariant 1 — never release escrow
+        - awal                            # invariant 2 — no agentic wallet
+        - x402_pay                        # invariant 2 — no x402 settlement
+        - evalanche                       # invariant 2 — no treasury MCP
+        - send                            # invariant 2 — no value movement
+        - trade                           # invariant 2 — no value movement
+
+  # ── acquisition-solver ───────────────────────────────────────────────────────
+  # Executes the onchain Seaport buy-low leg (chain-state reads only). It MAY
+  # spend on the acquire — but ONLY within the PayGuard envelope (policy.yaml),
+  # and any settlement over the micro limit is STAGED for the external
+  # `payguard approve` stamp. It still NEVER calls verifyFill (invariant 1).
+  acquisition-solver:
+    description: "Acquisition specialist — onchain Seaport buy-low leg, spend gated by PayGuard."
+    model: solver-model-c
+    toolsets: [skills]
+    tools:
+      include:
+        - get_active_intents              # read-only
+        - submit_fill                     # bid/fill its OWN hop
+        - seaport_read                    # onchain Seaport order-data / chain-state reads
+        - x402_pay                        # SPEND — bounded by payguard/policy.yaml; >micro is staged
+      exclude:
+        - verifyFill                      # invariant 1 — never release escrow, even when spending
+        - withdraw                        # never drain escrow
+        - kanban_block                    # cannot author its own human-gate (privileged only)
+
+  # ── privileged-executor ──────────────────────────────────────────────────────
+  # The ONLY profile that holds operator tools. Releases escrow (verifyFill),
+  # withdraws, and authors the human-gate (kanban_block) before any irreversible
+  # Vault/Tokenize/Redeem. This is the separated judge/executor pattern: verifyFill
+  # is onlyOwner = OPERATOR, a distinct key from any agent/solver. It runs behind the
+  # external-approval stamp, not autonomously.
+  privileged-executor:
+    description: "Operator profile — verifyFill / withdraw / human-gate. Behind the approval stamp."
+    model: operator-model
+    grant:                                # re-grants defaults.hard_bans for THIS profile only
+      - verifyFill
+      - withdraw
+      - setOperator
+    toolsets: [skills, terminal]
+    tools:
+      include:
+        - verifyFill                      # escrow release (onlyOwner = OPERATOR key, H7)
+        - withdraw                        # pull-payment claim
+        - kanban_block                    # author the human-gate firebreak (invariant 3)
+        - payguard_approve                # stamp staged spends (out-of-loop operator action)
+        - get_active_intents

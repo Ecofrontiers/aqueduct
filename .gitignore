@@ -1,0 +1,36 @@
+# ── Dependencies (reinstallable) ───────────────────────────────
+node_modules/
+**/node_modules/
+
+# Foundry vendored deps — reinstall with `forge install` (this is why atlas/ is 181M)
+**/contracts/lib/
+**/lib/forge-std/
+**/lib/openzeppelin-contracts*/
+**/lib/chainlink*/
+
+# ── Build / artifacts ──────────────────────────────────────────
+dist/
+build/
+out/
+cache/
+coverage/
+.next/
+broadcast/
+**/contracts/out/
+**/contracts/cache/
+*.tsbuildinfo
+
+# ── Secrets / env (NEVER commit) ───────────────────────────────
+.env
+.env.*
+!.env.example
+*.enc
+*.key
+*.pem
+*.p12
+
+# ── OS / editor ────────────────────────────────────────────────
+.DS_Store
+.vscode/
+.idea/
+*.log

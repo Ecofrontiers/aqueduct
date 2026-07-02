@@ -1,0 +1,143 @@
+# Spend policy — slabclaw acquisition-desk spend cap (the code-level firebreak)
+#
+# Design intent: ONE honest spend cap that the agent SELF-APPROVES up to, with
+# NO external operator stamp on in-cap spends. The cap is the only firebreak.
+#
+# ── Supersession note (2026-06-23) — D11 FULLY-AUTONOMOUS-UNDER-CAP ─────────
+# This file SUPERSEDES the prior PayGuard "stage → external `payguard approve`
+# stamp on any spend > $1" model (v0.1.0). That model is VOID: it forced a human
+# tap on every real buy and directly contradicts FINAL-SPEC.md D11 ("FULLY
+# AUTONOMOUS under the policy.yaml cap — no per-spend human taps; the cap is the
+# only firebreak"). The prior v0.1.0 stanza is preserved at the bottom of this
+# file (commented, `_superseded_v0_1_0`) per the supersession-not-deletion
+# contract so the regression is rollback-able and auditable.
+#
+# WHAT CHANGED (the gradient):
+#   - `approval.self_approve`  false → TRUE  (the agent stamps its own in-cap intent)
+#   - the external `payguard approve` operator command is REMOVED from the in-cap path
+#   - the spend ceiling is a SINGLE per-card / per-window USD cap, code-enforced
+#     in the engine's acquire() path (a guard that blocks-or-commits BEFORE staging),
+#     not a config-only stamp request
+#
+# WHAT STAYS HUMAN (the only legs above the cap's reach — NOT per-spend taps):
+#   - the one-time eBay OAuth "allow" consent (D13) — a scope grant, not a spend
+#   - the physical drop-off / shipment (D7) — inherently human, off-cap
+#   - one-time KYC on physical REDEMPTION (D16) — off the live path, not executed
+#   These are cap-UNBOUNDED legs (no dollar cap can govern a shipment or a consent),
+#   so they keep a human step. In-cap BUY + LIST run with ZERO taps.
+#
+# WHAT THIS IS: the machine-enforced spend envelope for the autonomous arb loop.
+# The agent buys below the grade-matched oracle and lists at the oracle; every BUY
+# and LIST that lands under `per_card` (and within the `window` envelope) commits
+# AUTONOMOUSLY — no stamp, no tap. The cap is the hard line at which the agent
+# STOPS and surfaces to the human, not a per-spend approval gate.
+#
+# LICENSE NOTE. The upstream `nativ3ai/hermes-payguard` plugin has an UNVERIFIED
+# license; we did NOT vendor it. This is our FIRST-PARTY policy file: the spend
+# semantics below are enforced by our own engine acquire()-path guard, not by an
+# imported plugin. If the upstream license is later confirmed permissive
+# (MIT/Apache-2.0), this file remains the policy of record — a mounted plugin
+# reads it, it does not own it.
+
+version: 1.0.0
+
+spend_policy:
+  # ── Chain ──────────────────────────────────────────────────────────────────
+  # Default settlement chain is Base mainnet. Testnet rehearsal runs on Base
+  # Sepolia with the keyless facilitator (see endpoints.testnet below).
+  default_chain: "eip155:8453"          # BASE mainnet
+  asset: USDC                            # 6-decimal USDC; all caps below are USD
+  allowed_chains:
+    - "eip155:8453"                      # Base mainnet (real-$200 run)
+    - "eip155:84532"                     # Base Sepolia (verify-before-mainnet, per P6)
+    - "eip155:137"                       # Polygon (Courtyard buy/list; only USDC settles cross-chain via CCTP, never the asset)
+
+  # ── Signer / facilitator ─────────────────────────────────────────────────────
+  # The Coinbase Agentic Wallet (awal) signs; the CDP facilitator settles. No
+  # wallet secret lives in env — awal stores its session locally. The CDP key
+  # (CDP_API_KEY_ID / CDP_API_KEY_SECRET) is a facilitator credential only.
+  signer:
+    kind: awal                           # Coinbase Agentic Wallet CLI
+    address: "0x232b0056ca0616CF49b33Beb5C3aA131566A05c2"
+  facilitator:
+    mainnet: cdp                         # CDP facilitator (CDP API key, no wallet secret)
+    testnet: keyless                     # x402.org/facilitator — Base Sepolia ONLY
+
+  # ── THE SPEND CAP (the only firebreak — D11) ────────────────────────────────
+  # A single per-card cap + a rolling per-window envelope. The agent SELF-APPROVES
+  # and commits any BUY/LIST under these caps with NO human tap. Hitting a cap is
+  # the ONLY thing that stops the agent and surfaces it to the human — that is the
+  # firebreak. There is no per-spend stamp.
+  caps:
+    per_card:
+      # Hard ceiling for a single acquisition (one card's landed cost). A buy at
+      # or under this commits autonomously. A buy ABOVE it is BLOCKED by the
+      # engine acquire()-path guard and surfaced to the human (cap exceeded —
+      # not a routine approval, an out-of-envelope stop).
+      amount_usd: 100.00
+    window:
+      # Rolling envelope across the whole $200 demo budget. While total spend in
+      # the window stays under `cap_usd`, the agent keeps acquiring autonomously.
+      # Reaching it FREEZES new spend until the window rolls or the human raises
+      # the cap explicitly. This is the budget guardrail, not a per-spend gate.
+      cap_usd: 200.00                    # the agent's full demo budget (D10)
+      window_hours: 24
+
+  # ── Self-approval (D11) ──────────────────────────────────────────────────────
+  # In-cap spends are self-approved and committed by the agent — no external stamp.
+  # The engine acquire()-path guard is the enforcement point: it checks the cap and
+  # either commits the spend or blocks it BEFORE any irreversible action stages.
+  approval:
+    self_approve: true                   # D11 — the agent commits its own in-cap spend, NO tap
+    enforced_in: "engine acquire() path"  # code-level guard (block-or-commit before staging)
+    on_cap_exceeded: "stop_and_surface"   # over-cap → STOP + surface to human (the firebreak), not a routine tap
+    # The ONLY human steps left are cap-UNBOUNDED legs, NOT per-spend taps:
+    human_steps_off_cap:
+      - "eBay OAuth consent (D13) — one-time scope grant, not a spend"
+      - "physical drop-off / shipment (D7) — inherently human"
+      - "KYC on physical redemption (D16) — off the live path, one-time"
+
+  # ── Allowlisted settlement endpoints ─────────────────────────────────────────
+  # Deny-by-default. A staged payment may only target a host on this list.
+  # Marketplace/data READ hosts are intentionally ABSENT — reads are onchain /
+  # public; nothing here grants a scrape path.
+  allowlist:
+    endpoints:
+      # Facilitators (settle the awal-signed payment)
+      - "https://x402.org/facilitator"           # keyless facilitator — Base Sepolia rehearsal ONLY
+      - "https://api.developer.coinbase.com"      # CDP facilitator — mainnet settlement
+    # Onchain contracts a settlement may interact with.
+    contracts:
+      - "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"  # USDC (Base mainnet)
+      - "0xBB5eC6fD4B61723BD45C399840F1d868840ca16F"  # beezie-base token (CCLT) — Beezie acquire leg, USDC-settled
+      - "0x251be3a17af4892035c37ebf5890f4a4d889dcad"  # Courtyard collection (Polygon) — Seaport buy/list, USDC-settled
+
+  # ── Mode ─────────────────────────────────────────────────────────────────────
+  # Demo runs in test mode: testnet rehearsal is the safe default; the real-$200
+  # mainnet run is flipped on deliberately (after Base Sepolia verify + security
+  # pass, per P6/D9), not left hot.
+  mode: test                             # test | live  — gates the trust line
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# _superseded_v0_1_0 — PRESERVED FOR PROVENANCE — DO NOT ENABLE
+# ───────────────────────────────────────────────────────────────────────────────
+# The prior PayGuard model (v0.1.0, 2026-06) required an EXTERNAL operator stamp
+# (`payguard approve`) on any spend > $1.00, with `self_approve: false`. It is
+# superseded by the D11 cap-only model above (no per-spend taps). Kept commented
+# so the regression is auditable and rollback-able:
+#
+#   payguard:
+#     limits:
+#       micro:   { amount_usd: 1.00 }    # autonomous, no-stamp ceiling
+#       per_hop: { upto_usd: 25.00 }     # solver per-hop ceiling (stamp required above micro)
+#       daily:   { cap_usd: 100.00, window_hours: 24 }
+#     approval:
+#       require_above: micro             # stamp required for spend > micro
+#       stamp_command: "payguard approve"  # external operator command (out of model loop)
+#       self_approve: false              # the model NEVER stamps its own intent  ← VOID under D11
+#       gate_maps_to: "kanban_block"
+#
+# Reason superseded: per-spend external stamp contradicts FINAL-SPEC D11
+# (fully autonomous under the cap; no per-spend human taps; the cap is the only
+# firebreak). See AUDIT-FINDINGS #13.
+# ═══════════════════════════════════════════════════════════════════════════════

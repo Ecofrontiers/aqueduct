@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regen Atlas — Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a1a;
+    --bg-card: #12122a;
+    --bg-card-hover: #1a1a3a;
+    --border: #1e1e3e;
+    --border-accent: #2a2a4e;
+    --teal: #4ECDC4;
+    --teal-dim: rgba(78, 205, 196, 0.15);
+    --teal-glow: rgba(78, 205, 196, 0.08);
+    --amber: #F0E68C;
+    --amber-dim: rgba(240, 230, 140, 0.12);
+    --red: #FF6B6B;
+    --white: #EAEAEA;
+    --gray: #8888AA;
+    --gray-dim: #555577;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-accent) var(--bg);
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--white);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(10, 10, 26, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  nav .logo {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    color: var(--teal);
+  }
+  nav .logo span { color: var(--white); }
+  nav .links { display: flex; gap: 1.5rem; }
+  nav .links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav .links a:hover { color: var(--teal); }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 8rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero .badge {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border: 1px solid var(--teal);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 .accent { color: var(--teal); }
+  .hero .sub {
+    font-size: 1.15rem;
+    color: var(--gray);
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    line-height: 1.65;
+  }
+  .hero .stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .hero .stat .num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--teal);
+    font-family: var(--mono);
+  }
+  .hero .stat .label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 0.2rem;
+  }
+
+  /* ── Sections ── */
+  section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.75rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+  .section-desc {
+    color: var(--gray);
+    font-size: 1rem;
+    max-width: 640px;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Cards Grid ── */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .card:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+  }
+  .card .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  .card .icon.teal { background: var(--teal-dim); }
+  .card .icon.amber { background: var(--amber-dim); }
+  .card .icon.red { background: rgba(255, 107, 107, 0.12); }
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .card p {
+    font-size: 0.88rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+  .card.full { grid-column: 1 / -1; }
+
+  /* ── Architecture Diagram ── */
+  .arch {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+  .arch pre {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--gray);
+    white-space: pre;
+  }
+  .arch pre .hl { color: var(--teal); font-weight: 500; }
+  .arch pre .am { color: var(--amber); }
+  .arch pre .rd { color: var(--red); }
+
+  /* ── Pipeline Flow ── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    flex: 1;
+    min-width: 180px;
+    padding: 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .flow-step:first-child { border-radius: 12px 0 0 12px; }
+  .flow-step:last-child { border-radius: 0 12px 12px 0; }
+  .flow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid var(--border-accent);
+    z-index: 1;
+  }
+  .flow-step .step-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+  .flow-step h4 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .flow-step p {
+    font-size: 0.78rem;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* ── Sponsor Tags ── */
+  .sponsors {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+  }
+  .sponsor-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--white);
+    transition: border-color 0.2s;
+  }
+  .sponsor-tag:hover { border-color: var(--teal); }
+  .sponsor-tag .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+  .sponsor-tag .dot.amber { background: var(--amber); }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+  .code-block code {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--gray);
+    line-height: 1.7;
+  }
+  .code-block .kw { color: var(--teal); }
+  .code-block .str { color: var(--amber); }
+  .code-block .comment { color: var(--gray-dim); }
+
+  /* ── Table ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+  th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-accent);
+  }
+  td {
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--white);
+  }
+  td .mono {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--teal);
+  }
+
+  /* ── Agent Grid ── */
+  .agents {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+  .agent {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .agent:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .agent .emoji { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .agent .name { font-size: 0.82rem; font-weight: 600; }
+  .agent .role { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
+
+  /* ── Footer ── */
+  footer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer .left { color: var(--gray); font-size: 0.85rem; }
+  footer .left a { color: var(--teal); text-decoration: none; }
+  footer .right {
+    display: flex;
+    gap: 1.5rem;
+  }
+  footer .right a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+  footer .right a:hover { color: var(--teal); }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 2rem; }
+    .cards { grid-template-columns: 1fr; }
+    .agents { grid-template-columns: repeat(2, 1fr); }
+    .flow { flex-direction: column; }
+    .flow-step { border-radius: 0 !important; }
+    .flow-step:first-child { border-radius: 12px 12px 0 0 !important; }
+    .flow-step:last-child { border-radius: 0 0 12px 12px !important; }
+    .flow-step::after { display: none; }
+  }
+
+  /* ── Glow Effects ── */
+  .glow-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    opacity: 0.3;
+    margin: 3rem auto;
+    max-width: 400px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>Regen</span> Atlas</div>
+  <div class="links">
+    <a href="#provenance">Provenance</a>
+    <a href="#intelligence">Intelligence</a>
+    <a href="#parliament">Parliament</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#changelog">Changelog</a>
+    <a href="https://regenatlas.xyz" target="_blank">App</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="badge">PL_Genesis Hackathon 2026</div>
+  <h1>From Registry to<br><span class="accent">Coordination Layer</span></h1>
+  <p class="sub">
+    The largest curated registry of tokenized green assets in crypto.
+    Now with verifiable provenance, scientific valuation, and an AI governance layer
+    that connects capital deployment to ecosystem health.
+  </p>
+  <div class="stats">
+    <div class="stat">
+      <div class="num">125+</div>
+      <div class="label">Green Assets</div>
+    </div>
+    <div class="stat">
+      <div class="num">17</div>
+      <div class="label">Chains</div>
+    </div>
+    <div class="stat">
+      <div class="num">14</div>
+      <div class="label">Issuers</div>
+    </div>
+    <div class="stat">
+      <div class="num">8</div>
+      <div class="label">Agent Delegates</div>
+    </div>
+  </div>
+</div>
+
+<div class="glow-line"></div>
+
+<!-- ── Problem ── -->
+<section>
+  <div class="section-label">The Problem</div>
+  <h2>Geography is Invisible to Green Finance</h2>
+  <p class="section-desc">
+    Tokenized green assets lack verifiable provenance. A mangrove in Bangladesh prices the same as one in Mexico.
+    Co-benefits go unmeasured. No feedback loop connects capital deployment to ecosystem health.
+    The trust deficit keeps institutional capital on the sidelines.
+  </p>
+</section>
+
+<!-- ── Filecoin Provenance ── -->
+<section id="provenance">
+  <div class="section-label">Layer 1</div>
+  <h2>Filecoin Provenance</h2>
+  <p class="section-desc">
+    Every green asset gets a structured provenance object stored on Filecoin via the Synapse SDK.
+    Content-addressed and independently verifiable. No trust required.
+  </p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon teal">&#9670;</div>
+      <h3>Synapse SDK Integration</h3>
+      <p>Batch upload to Filecoin Calibration Testnet (chain 314159) via <code>@filoz/synapse-sdk</code>. Each provenance object gets a unique CID.</p>
+    </div>
+    <div class="card">
+      <div class="icon teal">&#10003;</div>
+      <h3>Verified on Filecoin Badge</h3>
+      <p>Every asset card shows verification status. Click the badge to open the gateway and inspect the raw provenance JSON independently.</p>
+    </div>
+    <div class="card">
+      <div class="icon amber">&#9733;</div>
+      <h3>Multi-Signal Matching</h3>
+      <p>Contract address, issuer protocol, geo-proximity, name similarity, type compatibility, country and hash distribution matching.</p>
+    </div>
+    <div class="card">
+      <div class="icon teal">&#8614;</div>
+      <h3>Graceful Degradation</h3>
+      <p>Local SHA-256 CID fallback when Filecoin upload is unavailable. Provenance is always computed, storage is best-effort.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <code>
+<span class="comment">// Provenance object structure</span>
+{
+  <span class="kw">"asset_id"</span>: <span class="str">"toucan-bct-001"</span>,
+  <span class="kw">"source_protocol"</span>: <span class="str">"toucan"</span>,
+  <span class="kw">"source_chain"</span>: <span class="str">"polygon"</span>,
+  <span class="kw">"methodology"</span>: <span class="str">"VCS-VM0007"</span>,
+  <span class="kw">"metrics"</span>: { <span class="str">"tCO2e"</span>: 12847, <span class="str">"vintage"</span>: 2023 },
+  <span class="kw">"valuation"</span>: { <span class="str">"scc_low"</span>: 51, <span class="str">"scc_high"</span>: 190, <span class="str">"gap_factor"</span>: 14.2 },
+  <span class="kw">"cid"</span>: <span class="str">"bafybeig..."</span>,
+  <span class="kw">"gateway"</span>: <span class="str">"calibration.filbeam.io/deal/{cid}"</span>
+}
+    </code>
+  </div>
+</section>
+
+<!-- ── Intelligence Pipeline ── -->
+<section id="intelligence">
+  <div class="section-label">Layer 2</div>
+  <h2>Impact Intelligence Pipeline</h2>
+  <p class="section-desc">
+    Cross-protocol ingestion composing verifiable provenance objects from three live data sources,
+    with scientific valuation using EPA and TEEB methodologies.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-num">01 INGEST</div>
+      <h4>Toucan Protocol</h4>
+      <p>Polygon subgraph. TCO2 tokens, pool balances, retirements. tCO2e from totalVintageQuantity.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">02 INGEST</div>
+      <h4>Regen Network</h4>
+      <p>Cosmos LCD. Credit classes, project metadata, batch supply, sell orders.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">03 INGEST</div>
+      <h4>Glow Protocol</h4>
+      <p>Weekly JSON archives. Aggregate network MWh, per-farm audit data, solar panel counts.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">04 VALUE</div>
+      <h4>Scientific Valuation</h4>
+      <p>SCC-EPA 2024 + TEEB biome rates. Ecological Impact Gap ratio exposes capital misallocation.</p>
+    </div>
+  </div>
+
+  <div class="cards" style="margin-top: 1.5rem;">
+    <div class="card full">
+      <h3>Ecological Impact Gap</h3>
+      <p>The ratio between ecosystem service value (what nature provides) and token market price (what the market pays).
+         Most gaps are 10x or higher. This metric exposes where regenerative capital is most underallocated,
+         using 19 methodologies across 4 impact dimensions with NPV scaling (3% discount, 30yr horizon).</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Source</th>
+        <th>Unit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Carbon Retired</td>
+        <td><span class="mono">Toucan</span></td>
+        <td>tCO2e</td>
+      </tr>
+      <tr>
+        <td>Credit Batches</td>
+        <td><span class="mono">Regen Network</span></td>
+        <td>credits</td>
+      </tr>
+      <tr>
+        <td>Solar Generation</td>
+        <td><span class="mono">Glow</span></td>
+        <td>MWh</td>
+      </tr>
+      <tr>
+        <td>Social Cost of Carbon</td>
+        <td><span class="mono">EPA SCC-2024</span></td>
+        <td>USD/tCO2e</td>
+      </tr>
+      <tr>
+        <td>Ecosystem Service Value</td>
+        <td><span class="mono">TEEB</span></td>
+        <td>USD/ha/yr</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── Parliament ── -->
+<section id="parliament">
+  <div class="section-label">Layer 3</div>
+  <h2>Interspecies Parliament</h2>
+  <p class="section-desc">
+    An AI-native governance layer where agents representing species, biomes, and economic models
+    deliberate over bioregional proposals. Collective intelligence emerges as agents adapt to
+    shifting ecological signals across epochs.
+  </p>
+
+  <div class="agents">
+    <div class="agent">
+      <div class="emoji">&#x1F9A9;</div>
+      <div class="name">Flamingo Guardian</div>
+      <div class="role">Species Proxy</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x1F33F;</div>
+      <div class="name">Wetland Sentinel</div>
+      <div class="role">Biome Proxy</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x1F30A;</div>
+      <div class="name">Marine Biologist</div>
+      <div class="role">Salinity Monitor</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x1F33E;</div>
+      <div class="name">Rice Cooperative</div>
+      <div class="role">Agriculture</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x1F4CA;</div>
+      <div class="name">Carbon Accountant</div>
+      <div class="role">Climate System</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x2696;</div>
+      <div class="name">Commons Economist</div>
+      <div class="role">Ostrom Principles</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x1F50D;</div>
+      <div class="name">Sentinel Watcher</div>
+      <div class="role">Compliance Audit</div>
+    </div>
+    <div class="agent">
+      <div class="emoji">&#x1F331;</div>
+      <div class="name">7th Generation</div>
+      <div class="role">Long-term Elder</div>
+    </div>
+  </div>
+
+  <h3 style="margin: 2rem 0 1rem;">7-Phase Epoch Architecture</h3>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-num">PHASE 1</div>
+      <h4>Intelligence</h4>
+      <p>Atlas context, EII scores, previous epoch memory loaded.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">PHASE 2</div>
+      <h4>Sensing</h4>
+      <p>Agents observe bioregion state, identify the limiting EII pillar.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">PHASE 3</div>
+      <h4>Deliberation</h4>
+      <p>Multi-round debate. Dynamic proposals emerge from agent arguments.</p>
+    </div>
+  </div>
+  <div class="flow" style="margin-top: 0;">
+    <div class="flow-step">
+      <div class="step-num">PHASE 4</div>
+      <h4>Bounties</h4>
+      <p>Agents post tasks for human ground-truth verification.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">PHASE 5</div>
+      <h4>Staking</h4>
+      <p>Informed by deliberation digest. Agents allocate to proposals.</p>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">PHASE 6</div>
+      <h4>Settlement</h4>
+      <p>EII updated with decay, noise, cross-pillar coupling.</p>
+    </div>
+  </div>
+
+  <div class="cards" style="margin-top: 1.5rem;">
+    <div class="card">
+      <div class="icon teal">&#x21BB;</div>
+      <h3>EII Carry-Forward</h3>
+      <p>Ecosystem Integrity Index carries forward between epochs with natural decay (0.005/pillar) and stochastic noise. Creates adaptive pressure that forces agent reorganization.</p>
+    </div>
+    <div class="card">
+      <div class="icon amber">&#x1F4AC;</div>
+      <h3>Deliberation-Informed Staking</h3>
+      <p>Staking phase receives a digest of all deliberation arguments. Agents reference each other's positions. Visible coordination, not parallel independent voting.</p>
+    </div>
+    <div class="card">
+      <div class="icon teal">&#x1F9E0;</div>
+      <h3>Cross-Agent Memory</h3>
+      <p>Agents access ally/rival intelligence from previous epochs. A flamingo that learns rice agriculture keeps winning adapts its counter-strategy.</p>
+    </div>
+    <div class="card">
+      <div class="icon amber">&#x1F4E6;</div>
+      <h3>Storacha Provenance Chain</h3>
+      <p>Every epoch content-addressed on Storacha. Provenance chain links each epoch to the last. Settlement decisions, EII deltas, agent memories -- all verifiable via gateway.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Architecture ── -->
+<section id="architecture">
+  <div class="section-label">System Design</div>
+  <h2>Architecture</h2>
+
+  <div class="arch">
+    <pre>
+<span class="hl">FRONTEND</span>                    <span class="hl">SIMULATION</span>                 <span class="hl">STORAGE</span>
+
+React 19 + TypeScript       Node.js server             <span class="am">Filecoin</span> (Synapse SDK)
+Vite + MapLibre GL          7-phase epoch runner        Calibration Testnet
+React Query                 OpenRouter LLM calls        Per-asset CIDs
+Recharts + D3               Recursive memory system
+TailwindCSS                 SSE streaming               <span class="am">Storacha</span>
+                                                        Per-epoch CIDs
+<span class="hl">INTELLIGENCE</span>                <span class="hl">VALUATION</span>                  Gateway verification
+
+Toucan subgraph             SCC-EPA 2024               <span class="rd">IndexedDB</span>
+Regen Network LCD           TEEB biome rates            Agent PFP cache
+Glow JSON archives          19 methodologies            Epoch data cache
+Multi-signal matching       Ecological Impact Gap
+    </pre>
+  </div>
+
+  <div class="sponsors">
+    <div class="sponsor-tag"><div class="dot"></div>Filecoin Synapse SDK</div>
+    <div class="sponsor-tag"><div class="dot"></div>Storacha</div>
+    <div class="sponsor-tag"><div class="dot amber"></div>OpenRouter</div>
+    <div class="sponsor-tag"><div class="dot amber"></div>MapLibre GL</div>
+    <div class="sponsor-tag"><div class="dot"></div>Vite</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Technology</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Frontend</td>
+        <td><span class="mono">React 19, TypeScript, Vite</span></td>
+        <td>Asset explorer, Parliament UI, Impact dashboard</td>
+      </tr>
+      <tr>
+        <td>Map Layer</td>
+        <td><span class="mono">MapLibre GL JS</span></td>
+        <td>125+ asset markers with bioregion overlays</td>
+      </tr>
+      <tr>
+        <td>Provenance</td>
+        <td><span class="mono">@filoz/synapse-sdk</span></td>
+        <td>Filecoin Calibration Testnet storage</td>
+      </tr>
+      <tr>
+        <td>Governance</td>
+        <td><span class="mono">Storacha + SSE</span></td>
+        <td>Epoch archives, real-time streaming</td>
+      </tr>
+      <tr>
+        <td>Agent LLM</td>
+        <td><span class="mono">OpenRouter (Claude Haiku)</span></td>
+        <td>Agent deliberation, staking, memory</td>
+      </tr>
+      <tr>
+        <td>Valuation</td>
+        <td><span class="mono">Custom engine</span></td>
+        <td>SCC-EPA, TEEB, Impact Gap</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── Getting Started ── -->
+<section>
+  <div class="section-label">Developer Guide</div>
+  <h2>Getting Started</h2>
+
+  <div class="code-block">
+    <code>
+<span class="comment"># Clone and install</span>
+git clone https://github.com/Regen-Atlas/regen-atlas-ecospatial.git
+cd regen-atlas-ecospatial
+npm install
+
+<span class="comment"># Start the app</span>
+npm run dev          <span class="comment"># Vite dev server at localhost:5173</span>
+
+<span class="comment"># Start the Parliament simulation server</span>
+cd simulation && node server.js   <span class="comment"># API at localhost:3001</span>
+
+<span class="comment"># Build for production</span>
+npm run build        <span class="comment"># Output to dist/</span>
+    </code>
+  </div>
+
+  <div class="cards" style="margin-top: 1.5rem;">
+    <div class="card full">
+      <h3>Environment Variables</h3>
+      <p style="font-family: var(--mono); font-size: 0.82rem; line-height: 2;">
+        VITE_MAPBOX_TOKEN &mdash; MapLibre GL map tiles<br>
+        VITE_FILECOIN_RPC &mdash; Calibration Testnet RPC<br>
+        OPENROUTER_API_KEY &mdash; Agent deliberation LLM calls<br>
+        STORACHA_KEY &mdash; Epoch archive storage
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Hackathon Changelog ── -->
+<section id="changelog">
+  <div class="section-label">Existing Code Track</div>
+  <h2>PL_Genesis Hackathon Changelog</h2>
+  <p class="section-desc">
+    New features built during the hackathon period (Feb 10 &ndash; Mar 16, 2026).
+    Regen Atlas v1 (static registry) was the starting point. Everything below is new.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Sponsor Integration</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Filecoin Provenance Layer</strong><br><span style="color: var(--gray); font-size: 0.82rem;">Structured provenance objects for 125+ assets, multi-signal matching, batch upload, "Verified on Filecoin" badges, gateway verification</span></td>
+        <td><span class="mono">Filecoin Synapse SDK</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+      <tr>
+        <td><strong>Impact Intelligence Pipeline</strong><br><span style="color: var(--gray); font-size: 0.82rem;">Cross-protocol ingestion from Toucan (Polygon), Regen Network (Cosmos), Glow (solar). Source chain metadata, impact metrics, MRV status</span></td>
+        <td><span class="mono">Filecoin (provenance storage)</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+      <tr>
+        <td><strong>Scientific Valuation Engine</strong><br><span style="color: var(--gray); font-size: 0.82rem;">SCC-EPA 2024, TEEB biome rates, 19 methodologies, Ecological Impact Gap analysis, NPV scaling</span></td>
+        <td><span class="mono">&mdash;</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+      <tr>
+        <td><strong>Interspecies Parliament</strong><br><span style="color: var(--gray); font-size: 0.82rem;">8 AI agents, 7-phase epochs, multi-round deliberation, dynamic proposals, bounty posting, staking, settlement</span></td>
+        <td><span class="mono">Storacha (epoch archives)</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+      <tr>
+        <td><strong>Collective Intelligence Feedback Loops</strong><br><span style="color: var(--gray); font-size: 0.82rem;">EII carry-forward, natural decay + noise, cross-pillar coupling, deliberation-informed staking, cross-agent memory</span></td>
+        <td><span class="mono">&mdash;</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+      <tr>
+        <td><strong>Storacha Governance Records</strong><br><span style="color: var(--gray); font-size: 0.82rem;">Per-epoch content-addressing, provenance chain linking, gateway-verifiable settlement decisions and agent memories</span></td>
+        <td><span class="mono">Storacha</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+      <tr>
+        <td><strong>Agent Profile System</strong><br><span style="color: var(--gray); font-size: 0.82rem;">Replicate-generated PFPs cached as base64 in IndexedDB, agent detail pages with bond graphs and memory chains</span></td>
+        <td><span class="mono">&mdash;</span></td>
+        <td style="color: var(--teal);">Complete</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── Classification ── -->
+<section>
+  <div class="section-label">Submission</div>
+  <h2>Track &amp; Classification</h2>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon teal">&#9670;</div>
+      <h3>Track</h3>
+      <p>Infrastructure &amp; Digital Rights</p>
+    </div>
+    <div class="card">
+      <div class="icon teal">&#8594;</div>
+      <h3>Category</h3>
+      <p>Existing Code</p>
+    </div>
+    <div class="card">
+      <div class="icon amber">&#9733;</div>
+      <h3>Sponsor Bounty</h3>
+      <p>Filecoin (Synapse SDK)</p>
+    </div>
+    <div class="card">
+      <div class="icon teal">&#9872;</div>
+      <h3>License</h3>
+      <p>MIT</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="left">Built by <a href="#">Ecofrontiers</a> for PL_Genesis 2026</div>
+  <div class="right">
+    <a href="https://regenatlas.xyz">App</a>
+    <a href="https://github.com/Regen-Atlas">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>

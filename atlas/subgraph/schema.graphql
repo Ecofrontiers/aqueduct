@@ -1,0 +1,502 @@
+# Ecospatial Vault Protocol - Subgraph Schema
+# Entities indexed from onchain events
+
+# ============================================================================
+# CORE ENTITIES
+# ============================================================================
+
+type Bioregion @entity {
+  id: ID!                           # bytes32 bioregionId
+  name: String!
+  vault: Vault
+  esvToken: ESVToken
+  currentEII: BigDecimal!
+  previousEII: BigDecimal
+  eiiDelta: BigDecimal
+  currentEpoch: Int!
+  totalDeposited: BigDecimal!
+  totalYieldDistributed: BigDecimal!
+  totalESVMinted: BigDecimal!
+  proposalCount: Int!
+  activeProposalCount: Int!
+  agentCount: Int!
+
+  # Relations
+  eiiHistory: [EIIReading!]! @derivedFrom(field: "bioregion")
+  proposals: [Proposal!]! @derivedFrom(field: "bioregion")
+  agents: [Agent!]! @derivedFrom(field: "bioregion")
+  bounties: [Bounty!]! @derivedFrom(field: "bioregion")
+  tournaments: [Tournament!]! @derivedFrom(field: "bioregions")
+  emissions: [EpochEmission!]! @derivedFrom(field: "bioregion")
+
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+type Vault @entity {
+  id: ID!                           # Contract address
+  bioregion: Bioregion!
+  esvToken: ESVToken!
+  totalReserve: BigDecimal!
+  pendingYield: BigDecimal!
+  currentEpoch: Int!
+  epochStartTimestamp: BigInt!
+  epochDuration: BigInt!
+
+  # Config
+  minStake: BigDecimal!
+  maxStake: BigDecimal!
+  maxProposalsPerEpoch: Int!
+  challengePeriod: BigInt!
+
+  # Relations
+  deposits: [Deposit!]! @derivedFrom(field: "vault")
+  withdrawals: [Withdrawal!]! @derivedFrom(field: "vault")
+
+  createdAt: BigInt!
+}
+
+type ESVToken @entity {
+  id: ID!                           # Contract address
+  bioregion: Bioregion!
+  name: String!
+  symbol: String!
+  totalSupply: BigDecimal!
+  totalMinted: BigDecimal!
+  totalSlashed: BigDecimal!
+  holderCount: Int!
+
+  # Relations
+  holders: [TokenHolder!]! @derivedFrom(field: "token")
+
+  createdAt: BigInt!
+}
+
+type TokenHolder @entity {
+  id: ID!                           # token-address
+  token: ESVToken!
+  address: Bytes!
+  balance: BigDecimal!
+  stakedBalance: BigDecimal!
+  delegatedBalance: BigDecimal!
+  reputation: Int!
+
+  updatedAt: BigInt!
+}
+
+# ============================================================================
+# EII MEASUREMENTS
+# ============================================================================
+
+type EIIReading @entity {
+  id: ID!                           # bioregion-epoch
+  bioregion: Bioregion!
+  epoch: Int!
+  eii: BigDecimal!
+  functionPillar: BigDecimal!
+  structurePillar: BigDecimal!
+  compositionPillar: BigDecimal!
+  limitingPillar: String
+  delta: BigDecimal
+
+  # Oracle metadata
+  oracleAddress: Bytes!
+  txHash: Bytes!
+
+  measuredAt: BigInt!
+}
+
+# ============================================================================
+# PROPOSALS
+# ============================================================================
+
+type Proposal @entity {
+  id: ID!                           # vault-proposalId
+  onchainId: BigInt!
+  bioregion: Bioregion!
+  vault: Vault!
+  submitter: Bytes!
+  targetPillar: Int!
+  descriptionHash: String!
+  locationProofHash: String
+  latitude: BigDecimal
+  longitude: BigDecimal
+  radius: Int
+
+  # Staking
+  stakeAmount: BigDecimal!
+  fundedAmount: BigDecimal!
+  fundingTarget: BigDecimal!
+  fundingRatio: BigDecimal!
+
+  # Lifecycle
+  epoch: Int!
+  status: ProposalStatus!
+
+  # Settlement
+  eiiDelta: BigDecimal
+  rewardAmount: BigDecimal
+  slashAmount: BigDecimal
+
+  # Relations
+  funders: [ProposalFunding!]! @derivedFrom(field: "proposal")
+  challenges: [Challenge!]! @derivedFrom(field: "proposal")
+  votes: [Vote!]! @derivedFrom(field: "proposal")
+
+  createdAt: BigInt!
+  settledAt: BigInt
+}
+
+enum ProposalStatus {
+  Pending
+  Active
+  Funded
+  Executed
+  Settled
+  Slashed
+  Cancelled
+}
+
+type ProposalFunding @entity {
+  id: ID!                           # proposal-funder
+  proposal: Proposal!
+  funder: Bytes!
+  amount: BigDecimal!
+
+  createdAt: BigInt!
+}
+
+# ============================================================================
+# GOVERNANCE
+# ============================================================================
+
+type Vote @entity {
+  id: ID!                           # proposal-voter
+  proposal: Proposal!
+  voter: Bytes!
+  votingPower: BigDecimal!
+  support: Boolean
+  commitmentHash: Bytes           # For private votes
+  revealed: Boolean!
+  tokenAmount: BigDecimal!
+
+  createdAt: BigInt!
+}
+
+type Sanction @entity {
+  id: ID!                           # bioregion-target-index
+  bioregion: Bioregion!
+  target: Bytes!
+  level: Int!                       # 0=warning, 1=penalty, 2=suspension, 3=exclusion
+  reasonHash: String
+  reputationCost: Int!
+  penaltyAmount: BigDecimal
+  suspensionUntil: BigInt
+  epoch: Int!
+  appealed: Boolean!
+  appealOutcome: String
+  decayed: Boolean!
+
+  createdAt: BigInt!
+}
+
+# ============================================================================
+# EMISSIONS
+# ============================================================================
+
+type EpochEmission @entity {
+  id: ID!                           # bioregion-epoch
+  bioregion: Bioregion!
+  epoch: Int!
+  eiiDelta: BigDecimal!
+  esvMinted: BigDecimal!
+  totalContributors: Int!
+
+  # Distribution
+  proposerShare: BigDecimal!
+  verifierShare: BigDecimal!
+  yieldShare: BigDecimal!
+  agentShare: BigDecimal!
+
+  # Relations
+  shares: [EmissionShare!]! @derivedFrom(field: "emission")
+
+  createdAt: BigInt!
+}
+
+type EmissionShare @entity {
+  id: ID!                           # emission-recipient
+  emission: EpochEmission!
+  recipient: Bytes!
+  shareType: String!                # proposal, verification, yield, agent
+  amount: BigDecimal!
+  claimed: Boolean!
+
+  claimedAt: BigInt
+}
+
+# ============================================================================
+# AGENTS
+# ============================================================================
+
+type Agent @entity {
+  id: ID!                           # Contract address
+  address: Bytes!
+  agentType: String!
+  name: String
+  bioregion: Bioregion
+  cardHash: String
+  capabilities: [String!]
+
+  # Commitment
+  yieldDelegation: Int!
+  commitmentStart: BigInt
+  commitmentEnd: BigInt
+
+  # Economics
+  esvStaked: BigDecimal!
+  esvEarned: BigDecimal!
+  reputation: BigDecimal!
+  actionsCompleted: Int!
+  slashCount: Int!
+  active: Boolean!
+
+  # Relations
+  bounties: [Bounty!]! @derivedFrom(field: "creator")
+  tournamentEntries: [TournamentStanding!]! @derivedFrom(field: "participant")
+
+  registeredAt: BigInt!
+  lastActiveAt: BigInt!
+}
+
+type Bounty @entity {
+  id: ID!                           # bioregion-bountyId
+  onchainId: BigInt!
+  creator: Agent!
+  bioregion: Bioregion!
+  bountyType: String!
+  latitude: BigDecimal!
+  longitude: BigDecimal!
+  radius: Int!
+  reward: BigDecimal!
+  deadline: BigInt!
+  requirementsHash: String
+  minReputation: BigDecimal!
+
+  status: BountyStatus!
+  assignedOperative: Bytes
+  submissionProofHash: String
+  submissionEvidenceHash: String
+
+  postedAt: BigInt!
+  verifiedAt: BigInt
+}
+
+enum BountyStatus {
+  Open
+  Assigned
+  Submitted
+  Verified
+  Rejected
+  Expired
+}
+
+# ============================================================================
+# TOURNAMENTS
+# ============================================================================
+
+type Tournament @entity {
+  id: ID!                           # tournamentId
+  onchainId: BigInt!
+  creator: Bytes!
+  tournamentType: String!
+  bioregions: [Bioregion!]!
+
+  startTimestamp: BigInt!
+  endTimestamp: BigInt!
+  currentRound: Int!
+  totalRounds: Int!
+  eliminationType: String
+  prizeDistribution: String!
+
+  entryStake: BigDecimal!
+  prizePool: BigDecimal!
+  targetPillar: Int
+  targetDelta: BigDecimal
+
+  participantCount: Int!
+  activeCount: Int!
+  status: TournamentStatus!
+
+  # Relations
+  standings: [TournamentStanding!]! @derivedFrom(field: "tournament")
+
+  createdAt: BigInt!
+  settledAt: BigInt
+}
+
+enum TournamentStatus {
+  Created
+  Registration
+  Active
+  Completed
+  Cancelled
+}
+
+type TournamentStanding @entity {
+  id: ID!                           # tournament-participant
+  tournament: Tournament!
+  participant: Agent!
+  bioregion: Bioregion
+  score: BigDecimal!
+  eiiDelta: BigDecimal
+  rank: Int
+  eliminated: Boolean!
+  eliminatedRound: Int
+  prizeAmount: BigDecimal
+  prizeClaimed: Boolean!
+}
+
+# ============================================================================
+# CHALLENGES
+# ============================================================================
+
+type Challenge @entity {
+  id: ID!                           # challengeId
+  onchainId: BigInt!
+  challenger: Bytes!
+  defendant: Bytes!
+  proposal: Proposal
+  bioregion: Bioregion!
+  challengeType: String!
+
+  challengerStake: BigDecimal!
+  defendantStake: BigDecimal!
+
+  phase: ChallengePhase!
+  phaseDeadline: BigInt!
+  jurorCount: Int!
+  votesUpheld: Int!
+  votesRejected: Int!
+
+  resolved: Boolean!
+  upheld: Boolean
+  slashedAmount: BigDecimal
+
+  # Relations
+  evidence: [Evidence!]! @derivedFrom(field: "challenge")
+
+  createdAt: BigInt!
+  resolvedAt: BigInt
+}
+
+enum ChallengePhase {
+  Evidence
+  Deliberation
+  Voting
+  Resolved
+}
+
+type Evidence @entity {
+  id: ID!                           # challenge-index
+  challenge: Challenge!
+  submitter: Bytes!
+  evidenceHash: String!
+  evidenceType: String!
+  fromChallenger: Boolean!
+
+  createdAt: BigInt!
+}
+
+# ============================================================================
+# FINANCIAL INSTRUMENTS
+# ============================================================================
+
+type PredictionMarket @entity {
+  id: ID!                           # marketId
+  onchainId: BigInt!
+  bioregion: Bioregion!
+  targetEpoch: Int!
+  strikeEII: BigDecimal!
+  expiryTimestamp: BigInt!
+
+  longPool: BigDecimal!
+  shortPool: BigDecimal!
+  longShares: BigDecimal!
+  shortShares: BigDecimal!
+  impliedProbability: BigDecimal!
+
+  finalEII: BigDecimal
+  status: MarketStatus!
+
+  # Relations
+  positions: [MarketPosition!]! @derivedFrom(field: "market")
+
+  createdAt: BigInt!
+  settledAt: BigInt
+}
+
+enum MarketStatus {
+  Active
+  Expired
+  Settled
+}
+
+type MarketPosition @entity {
+  id: ID!                           # market-trader-side
+  market: PredictionMarket!
+  trader: Bytes!
+  isLong: Boolean!
+  shares: BigDecimal!
+  avgPrice: BigDecimal!
+
+  openedAt: BigInt!
+}
+
+# ============================================================================
+# DEPOSITS & WITHDRAWALS
+# ============================================================================
+
+type Deposit @entity {
+  id: ID!                           # txHash-logIndex
+  vault: Vault!
+  depositor: Bytes!
+  amount: BigDecimal!
+  shares: BigDecimal!
+
+  txHash: Bytes!
+  createdAt: BigInt!
+}
+
+type Withdrawal @entity {
+  id: ID!                           # txHash-logIndex
+  vault: Vault!
+  withdrawer: Bytes!
+  amount: BigDecimal!
+  shares: BigDecimal!
+
+  txHash: Bytes!
+  createdAt: BigInt!
+}
+
+# ============================================================================
+# MILESTONE NFTS
+# ============================================================================
+
+type MilestoneNFT @entity {
+  id: ID!                           # tokenId
+  tokenId: BigInt!
+  bioregion: Bioregion!
+  milestoneType: String!
+  recipient: Bytes!
+  metadataHash: String
+  relatedId: BigInt
+  eiiDelta: BigDecimal
+  threshold: BigDecimal
+
+  salePrice: BigDecimal
+  soldTo: Bytes
+  soldAt: BigInt
+
+  mintedAt: BigInt!
+}

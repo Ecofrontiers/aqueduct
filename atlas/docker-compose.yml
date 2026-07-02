@@ -1,0 +1,137 @@
+version: "3.8"
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: ecospatial-postgres
+    environment:
+      POSTGRES_USER: ecospatial
+      POSTGRES_PASSWORD: ecospatial_dev
+      POSTGRES_DB: ecospatial
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecospatial"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: ecospatial-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Local Ethereum node (Anvil)
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: ecospatial-anvil
+    ports:
+      - "8545:8545"
+    entrypoint: ["anvil", "--host", "0.0.0.0", "--chain-id", "31337", "--block-time", "2"]
+    healthcheck:
+      test: ["CMD", "cast", "block-number", "--rpc-url", "http://localhost:8545"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Graph Node (local subgraph indexer)
+  graph-node:
+    image: graphprotocol/graph-node:v0.34.1
+    container_name: ecospatial-graph-node
+    ports:
+      - "8000:8000"   # GraphQL HTTP
+      - "8001:8001"   # GraphQL WS
+      - "8020:8020"   # JSON-RPC admin
+      - "8030:8030"   # Index node
+      - "8040:8040"   # Metrics
+    depends_on:
+      postgres:
+        condition: service_healthy
+      anvil:
+        condition: service_healthy
+    environment:
+      postgres_host: postgres
+      postgres_user: ecospatial
+      postgres_pass: ecospatial_dev
+      postgres_db: graph-node
+      ipfs: "https://ipfs.network.thegraph.com"
+      ethereum: "anvil:http://anvil:8545"
+      GRAPH_LOG: info
+      GRAPH_ALLOW_NON_DETERMINISTIC_IPFS: "true"
+
+  # IPFS (for local development)
+  ipfs:
+    image: ipfs/kubo:v0.27.0
+    container_name: ecospatial-ipfs
+    ports:
+      - "5001:5001"   # API
+      - "8080:8080"   # Gateway
+    volumes:
+      - ipfs_data:/data/ipfs
+
+  # Backend API (Node.js)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: ecospatial-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgres://ecospatial:ecospatial_dev@postgres:5432/ecospatial
+      REDIS_URL: redis://redis:6379
+      RPC_URL: http://anvil:8545
+      PORT: 3000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: npm run dev
+
+  # Frontend (Vite dev server)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: ecospatial-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    environment:
+      VITE_API_URL: http://localhost:3000
+      VITE_RPC_URL: http://localhost:8545
+      VITE_CHAIN_ID: "31337"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - /app/node_modules
+    command: npm run dev -- --host
+
+volumes:
+  postgres_data:
+  redis_data:
+  ipfs_data:
+
+networks:
+  default:
+    name: ecospatial-network

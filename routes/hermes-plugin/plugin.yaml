@@ -1,0 +1,20 @@
+name: slabclaw-routes
+version: 0.1.0
+description: >-
+  SlabClaw Acquisition Desk — the agentic card-acquisition loop as Hermes tools.
+  Registers the planner/solver/privileged-executor tool surface (routes_plan,
+  get_active_intents, submit_fill, kanban_block, verify_fill, approve_gate) under
+  the `routes` toolset, each backed by the real engine (computePolicy expectimax +
+  the proven Base Sepolia Seaport settle). TESTNET / TEST-MODE ONLY (chain 84532,
+  MockUSDC). Per-solver attenuation lives in profiles/routing.yaml; the three hard
+  invariants (solvers never verifyFill, no solver spend, kanban_block before
+  irreversible) are enforced in the tool handlers.
+author: SlabClaw
+requires_env: []
+provides_tools:
+  - routes_plan
+  - get_active_intents
+  - submit_fill
+  - kanban_block
+  - verify_fill
+  - approve_gate
