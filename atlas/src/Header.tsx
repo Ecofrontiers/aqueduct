@@ -8,11 +8,12 @@ import { router } from "./main";
 import clsx from "clsx";
 import { analytics } from "./modules/analytics";
 
-type NavKey = "map" | "ledger" | "about";
+type NavKey = "map" | "ledger" | "financing" | "about";
 
 const primaryNav: { key: NavKey; name: string; link: string }[] = [
   { key: "map", name: "Map", link: "/" },
   { key: "ledger", name: "Ledger", link: "/ledger" },
+  { key: "financing", name: "Financing", link: "/financing" },
   { key: "about", name: "About", link: "/about" },
 ];
 

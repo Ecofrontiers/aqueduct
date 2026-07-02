@@ -16,6 +16,7 @@
 // require human review."
 
 import { FAILURE_MODE_IDS, resolveFailureMode } from "./failureModes.mjs";
+import { resolveStandard } from "./standardsRegistry.mjs";
 
 /** Any single logic axis below this on a triggered rule flags the verdict for review,
  *  independent of eligibility/margin effect — the Governance Logics Triad safeguard. */
@@ -27,10 +28,12 @@ const CLEAN_LOGIC_SCORE = { hierarchy: 10, market: 10, network: 10 };
 
 /**
  * @typedef {{hierarchy: number, market: number, network: number}} LogicScore
+ * @typedef {{source: string, code: string}} StandardCitation
  *
  * @typedef {{
  *   id: string,
  *   citesFailureMode: string,
+ *   citesStandards?: StandardCitation[],
  *   logicScore: LogicScore,
  *   condition: (lot: object) => number,
  *   effect: { type: "decline"|"reprice"|"flag", marginAdjustmentBps?: number, note: string },
@@ -49,7 +52,8 @@ const CLEAN_LOGIC_SCORE = { hierarchy: 10, market: 10, network: 10 };
  *   logicScores: LogicScore,
  *   requiresReview: boolean,
  *   citedFailureModes: string[],
- *   triggeredRules: Array<{id: string, citesFailureMode: string, effectType: string, severity: number, note: string}>,
+ *   citedStandards: StandardCitation[],
+ *   triggeredRules: Array<{id: string, citesFailureMode: string, citesStandards: StandardCitation[], effectType: string, severity: number, note: string}>,
  *   note: string,
  * }} PolicyVerdict
  */
@@ -59,6 +63,9 @@ function validateRule(rule) {
     throw new Error(
       `sim/policy.mjs: PolicyRule "${rule.id}" cites unknown failure mode "${rule.citesFailureMode}" — check failureModes.mjs, do not invent an id.`,
     );
+  }
+  for (const citation of rule.citesStandards ?? []) {
+    resolveStandard(citation); // throws on an unresolvable citation — fail loud, not silent
   }
 }
 
@@ -84,6 +91,7 @@ export function evaluatePolicy(lot, institutionPolicy) {
     triggeredRules.push({
       id: rule.id,
       citesFailureMode: rule.citesFailureMode,
+      citesStandards: rule.citesStandards ?? [],
       effectType: rule.effect.type,
       severity,
       note: rule.effect.note,
@@ -107,6 +115,7 @@ export function evaluatePolicy(lot, institutionPolicy) {
     logicScores.network < REQUIRES_REVIEW_THRESHOLD;
 
   const citedFailureModes = [...new Set(triggeredRules.map((r) => r.citesFailureMode))];
+  const citedStandards = dedupeCitations(triggeredRules.flatMap((r) => r.citesStandards));
 
   const note =
     triggeredRules.length === 0
@@ -120,9 +129,22 @@ export function evaluatePolicy(lot, institutionPolicy) {
     logicScores,
     requiresReview,
     citedFailureModes,
+    citedStandards,
     triggeredRules,
     note,
   };
+}
+
+function dedupeCitations(citations) {
+  const seen = new Set();
+  const out = [];
+  for (const c of citations) {
+    const key = `${c.source}:${c.code}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(c);
+  }
+  return out;
 }
 
 /** Resolve a verdict's cited failure modes to their full catalog entries, for display
@@ -131,4 +153,10 @@ export function evaluatePolicy(lot, institutionPolicy) {
  *  resolved on demand, not baked into the verdict itself. */
 export function explainVerdict(verdict) {
   return verdict.citedFailureModes.map(resolveFailureMode);
+}
+
+/** Resolve a verdict's cited external standards (e.g. GIIN/IRIS+ metrics) to their real
+ *  entries, same on-demand-resolution discipline as explainVerdict. */
+export function explainStandards(verdict) {
+  return verdict.citedStandards.map(resolveStandard);
 }

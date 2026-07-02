@@ -23,3 +23,30 @@ export function eudrUnverifiedFraction(lot) {
 export function isEudrFullyConfirmed(lot) {
   return eudrUnverifiedFraction(lot) === 0;
 }
+
+// ── Condition factories for buyer/grant/fund matching (sim/buyerRoster.mjs) ──
+// Same polarity as the risk-desk rules above: a factory's condition triggers (severity
+// > 0) when the lot FAILS the requirement, so it composes with policy.mjs's existing
+// "triggered decline rule => ineligible" semantics without any special-casing for
+// "matching" vs "risk-gating" — a buyer's minimum-quality bar and a solver's EUDR bar
+// are the same kind of rule, evaluated the same way.
+
+/** Fails (severity 1) when sca_score is below `min`, or absent. Non-coffee lots (no
+ *  sca_score) never pass a quality-floor rule — a real quality-graded buyer wouldn't
+ *  accept an ungraded lot either. */
+export function qualityBelow(min) {
+  return (lot) => ((lot.quality?.sca_score ?? Number.NEGATIVE_INFINITY) < min ? 1 : 0);
+}
+
+/** Fails when the lot's commodity isn't in the allowed set. */
+export function commodityNotIn(allowed) {
+  const set = new Set(allowed);
+  return (lot) => (lot.commodity && !set.has(lot.commodity) ? 1 : 0);
+}
+
+/** Fails when the lot's declared weight is below a minimum — grants/funds sized for
+ *  aggregated volume, not micro-lots. Real EthicHub lots (no weight_kg field) pass by
+ *  default rather than fail on a field that surface doesn't carry. */
+export function weightBelowKg(minKg) {
+  return (lot) => (lot.weight_kg != null && lot.weight_kg < minKg ? 1 : 0);
+}
