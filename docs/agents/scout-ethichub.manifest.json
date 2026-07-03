@@ -1,0 +1,28 @@
+{
+  "$comment": "DRAFT agent manifest — prepared for publication to an open agent registry (e.g. Sentient GRID). Status: draft; not yet published. The agent itself runs in production inside AqueductX today (scripts/scout-ethichub.mjs); this manifest is the composability surface for running it as a standalone, registry-listed agent.",
+  "name": "scout-ethichub",
+  "version": "0.1.0-draft",
+  "role": "aggregate",
+  "description": "Reads public smallholder coffee-lot listings from EthicHub's shop surface and emits canonical, content-addressed lot records with dated provenance. One of AqueductX's swarm roles: the scout performs the 'aggregate' step of aggregate → verify → price → publish → fill → settle.",
+  "task_shape": "Given a public marketplace/lending surface, return canonical lot records a stranger can re-verify: commodity, weight, origin (community-approximate coordinates only — plot geometry never leaves the producer's side, see privacy contract), price as published, quality score where published, and a source URL + fetch timestamp on every record.",
+  "inputs": [
+    { "name": "source_url", "type": "string", "example": "https://greencoffee.ethichub.com/en/shop" }
+  ],
+  "outputs": [
+    {
+      "name": "lots",
+      "type": "CanonicalLot[]",
+      "schema": "atlas/src/aqueduct/schema/canonicalLot.mjs — schema and content-addressed lot-ID spec are CC0 public-domain dedicated (distinct from the MIT code grant): the namespace is the algorithm, not us",
+      "provenance": "every record carries provenance (LIVE | SNAPSHOT) and fetched_at; names redacted to initials by design"
+    }
+  ],
+  "honesty_contract": [
+    "never emits a capability or field it did not actually read (no invented certs, grades, or coordinates)",
+    "renders compliance status, never plot geometry (docs/research/13-privacy-and-swarm-coordination.md)",
+    "producer names appear as initials only (redactName is a policy enforcement point, not cosmetic truncation)"
+  ],
+  "license": { "code": "MIT", "schema_and_id_spec": "CC0-1.0" },
+  "repository": "https://github.com/Ecofrontiers/aqueduct (public at submission)",
+  "runtime": "node >= 20, no API keys required (public reads only)",
+  "maintainer": "Ecofrontiers SARL"
+}

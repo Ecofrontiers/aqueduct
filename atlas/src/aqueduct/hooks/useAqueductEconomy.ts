@@ -58,6 +58,17 @@ export interface AqueductIntent {
   coordinates?: { longitude: number; latitude: number };
   inputResource?: AqueductIntentInputResource;
   claim?: AqueductFinanceClaim;
+  /** WP16 (doc 14 §6) — carried by user-authored steward drafts only. The steward is
+   *  the custody boundary: it holds the seat's real inputs (quantity, floor) and speaks
+   *  the resulting commitment outward. `floorEurPerKg` is the reserve the ask-card line
+   *  and the solver race both respect; `seatId` scopes the draft to its coop seat. */
+  authored?: {
+    seatId: string;
+    commodity: "coffee" | "cacao" | "honey";
+    quantityKg: number;
+    floorEurPerKg: number | null;
+    note?: string;
+  };
 }
 
 export interface AqueductActor {

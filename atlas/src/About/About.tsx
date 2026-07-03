@@ -19,8 +19,8 @@ import Header from "../Header";
 const LIST_PROJECT_URL = "/list";
 
 const stats = [
-  { value: "1", label: "Live Platform Read" },
-  { value: "1,250+", label: "Seeded Lots at Scale" },
+  { value: "2", label: "Live Platform Reads" },
+  { value: "1,263", label: "Lots Across Two Verticals" },
   { value: "50", label: "Cited Failure Modes" },
   { value: "$50K", label: "Sentient Foundation Ask" },
 ];

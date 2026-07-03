@@ -23,7 +23,7 @@ import { deriveEudrStatus } from "../state/aqueductFiltersStore";
  * gives its plain-language definition and its AqueductX type, and renders a
  * REAL example straight from `useAqueductEconomy` — an actual lot, an actual
  * open intent with its Kiva-template ask line, an actual typed Claim carrying
- * EthicHub's real 9.9% rate. No lorem: everything below the definitions is the
+ * the EthicHub / Heifer facility's real 9.9% rate. No lorem: everything below the definitions is the
  * same data the map draws. The argument this page only states lives in
  * docs/research/12-value-chain-and-swarm-thesis.md.
  */

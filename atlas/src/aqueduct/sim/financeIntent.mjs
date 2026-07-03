@@ -70,7 +70,9 @@ export function buildFinanceIntent(lot) {
   const totalEur = Math.round(seedlings * eurPerSeedling);
 
   const venuePolicy = VENUE_POLICIES[venue.handle];
-  const policyVerdict = venuePolicy ? evaluatePolicy(lot, venuePolicy) : null;
+  // No lot -> no verdict (policy conditions read lot.eudr): callers are guarded
+  // today, but a null verdict is the honest degenerate value, not a crash.
+  const policyVerdict = venuePolicy && lot ? evaluatePolicy(lot, venuePolicy) : null;
 
   return {
     intentType: "finance-this-planting",
@@ -95,7 +97,7 @@ export function buildFinanceIntent(lot) {
       termMonths: 12,
       confidence: "reported",
       source:
-        "Heifer/EthicHub credit line rate ceiling (application Q2(d) research); EthicHub Line 2 real repay cycle 192,600→212,369.79 USDC",
+        "EthicHub / Heifer facility rate ceiling (application Q2(b) research); EthicHub Line 2 real repay cycle 192,600→212,369.79 USDC",
     }),
   };
 }

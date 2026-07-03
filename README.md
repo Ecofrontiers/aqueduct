@@ -1,22 +1,22 @@
-# Aqueduct
+# AqueductX
 
-**The open aggregation + intent layer for regenerative agriculture.**
+**A generalized peer-to-peer logistics and finance layer for smallholder farmers** — a swarm decision-support system for agricultural trade finance. Runs locally today (`npm run dev`); the hosted demo lands at [aqueductx.trade](https://aqueductx.trade) at submission.
 
-Aqueduct makes the fragmented regen-ag / ReFi ecosystem legible, and lets a smallholder or co-op publish **one intent** — *sell this lot · finance this planting · prove this origin* — that the existing platforms' solvers compete to fill. It aggregates the proof and routes the intent to whoever already fills it, instead of inserting a new intermediary between farmer and buyer/lender.
+Small, single-purpose agents **aggregate** commodity lots, **verify** them, and **price** them; a smallholder or co-op publishes **one intent** — *sell this lot · finance this planting · finance this farm* — and solvers compete to **fill** it. AqueductX routes the intent and feeds a capital-allocation decision a human or institution still owns, instead of inserting a new intermediary between farmer and counterparty.
 
-Built by Ecofrontiers SARL. MIT licensed — openness is structural, not a promise.
+Built by Ecofrontiers SARL. MIT licensed — openness is structural, not a promise: the repo is public at submission, and a reviewer who wants to verify sooner can request a read-only snapshot or the current commit hash.
 
 ---
 
 ## Why
 
-A smallholder carries her harvest to the one buyer she can reach and takes the price she is given, because she cannot prove it is worth more. Smallholders grow ~a third of the world's food and routinely lose 30-60% of a crop's worth to intermediaries. The middleman's functions — grade, vouch, know the buyer, know the price, move the lot — are now automatable judgment tasks. The failure mode is the tool becoming the new middleman and extracting the same rent. **Open is the only version where the value and the data stay with the farmers.**
+A smallholder carries her harvest to the one buyer she can reach and takes the price she is given, because she cannot prove it is worth more. Smallholders grow ~a third of the world's food, yet capture a thin slice of what their crop is finally worth. The middleman's functions — grade, vouch, know the buyer, know the price, move the lot — are now automatable judgment tasks. The failure mode is the tool becoming the new middleman and extracting the same rent. **Open is the only version where the value and the data stay with the farmers.**
 
 ## The gap (why this doesn't exist yet)
 
-- **Intents are DeFi-only.** ERC-7683 / Open Intents / x402 move tokens across chains; nobody publishes farmer/produce/credential intents.
-- **Aggregation exists only inside carbon** (Toucan, KlimaDAO, Carbonmark). There is no *registry of registries* spanning EthicHub + Regen + Silvi + AgroforestDAO + Astral into one legible farmer/lot view.
-- So the same farmer is **re-onboarded and re-siloed on every platform** — a planting proven on Silvi can't be spent to request a loan on EthicHub or sell an ecocredit on Regen.
+- **Intents are DeFi-only.** ERC-7683 / Open Intents / x402 move tokens across chains; nobody publishes a farmer/lot/credential intent a solver can fill.
+- **Smallholder proof is siloed per platform.** A lot verified on one platform can't be priced, financed, or sold on another — the farmer is re-onboarded and re-siloed everywhere, and the margin stays with the intermediary.
+- **No one aggregates smallholder commodity lots across verticals** into one legible, financeable view. AqueductX does, reading two live today: EthicHub coffee (Chiapas) and Glow solar.
 
 ## Why now
 
@@ -33,30 +33,38 @@ Three layers, mapping to the two codebases forked in as our starting point:
 |---|---|---|
 | **READ / aggregation** | Make platforms, entities, and certifications legible on a bioregion map — the discovery + provenance surface. | [`atlas/`](atlas/) — forked from **Regen Atlas / Ecospatial** (React + Vite + Mapbox + Supabase; already aggregates 500+ tokenized green assets across 7+ protocols, provenance on Filecoin). |
 | **WRITE / intents + solver-transport** | Publish a farmer/co-op intent; a solver + transport network fills it (buy, finance, move) over a landed-cost graph. | [`routes/`](routes/) — forked from **SlabClaw Routes** (the intents + route-cost + solver engine, proven on physical goods). |
-| **Tokenized farm assets** | The portable **farmer-lot attestation** (who / where / what / proof-hash) an intent references and any buyer can re-verify. | EAS + Astral Location Protocol on **Celo** (the shared substrate). |
+| **Attestation + provenance** | The proof layer: every rendered element carries a provenance chip (LIVE / SNAPSHOT / SIM / TESTNET / TO-BUILD) and a confidence tag, and a curated certifier registry maps each citation to a verified firm. A portable certifier attestation object (VC/BBS+) is **TO-BUILD**. | `atlas/src/aqueduct/connectors/` + [`components/Chips.tsx`](atlas/src/aqueduct/components/Chips.tsx) |
 
-**The substrate is already shared.** Silvi, AgroforestDAO, Astral, and Regen Atlas are all on **Celo**, and **EAS on Celo** can carry a portable farmer-lot attestation. That is why aggregation is feasible now rather than a rebuild.
+**The reads are already live.** EthicHub settles smallholder coffee credit on **Celo** (real USDC credit lines), and Glow publishes solar-farm audits plus an onchain GLW price — two independent, verifiable sources AqueductX reads today. That is why aggregation is demonstrable now rather than a rebuild.
 
-## First platforms to aggregate
+## What reads live today
 
-Read-real today: **Regen Network** (ecocredit gRPC/REST), **EthicHub** (onchain smallholder loans), **Astral** (EAS location proofs), **Toucan** (carbon subgraph). Fillable via a small EAS-on-Celo attestation adapter: **Silvi** (planting claims), **AgroforestDAO** (Proof-of-Succession). Each maps to a concrete farmer intent (finance / sell ecocredit / prove origin / pre-sell carbon).
+Two verticals, both real reads:
+
+- **EthicHub — coffee (Chiapas).** The scout reads three public surfaces: the Odoo shop HTML, the lending JSON API, and a Celo `CreditLine` `eth_call` ([`connectors/ethichub.mjs`](atlas/src/aqueduct/connectors/ethichub.mjs)). Real 9.9% EthicHub / Heifer facility rate; a completed 192,600 → 212,369.79 USDC repay cycle. Chip: **LIVE / SNAPSHOT**.
+- **Glow — solar.** 124 audited farms (10 curated on-map), a live GLW price (~$0.2825) read from an onchain UniV2 pool, and Glow Miner terms graded `reported` ([`connectors/glow.mjs`](atlas/src/aqueduct/connectors/glow.mjs)). The GCC price register is honestly reported degenerate (drained auction, dust pool) — no number is fabricated.
+
+Supporting snapshots, each carrying a `verifiedAt` date and source URL: a certifier registry of real TIC + sustainability firms ([`connectors/certifiers.mjs`](atlas/src/aqueduct/connectors/certifiers.mjs)) and verified GIIN IRIS+ metric codes ([`connectors/giin.mjs`](atlas/src/aqueduct/connectors/giin.mjs)).
 
 ## Anti-middleman by construction
 
 - **Aggregate, don't disintermediate** — route the intent to platforms that already fill it; never sit between farmer and counterparty.
 - **The farmer owns the proof** — a content-addressed attestation she carries across platforms, not a record locked in our DB.
 - **MIT + self-hostable** — anyone can run it; no operator can enclose the layer.
+- **The standard is unownable** — the canonical lot schema and the content-addressed lot-ID spec carry a CC0 public-domain dedication, distinct from the MIT grant on the code, so the namespace nobody owns cannot be enclosed or rented back.
 - **Credibility spine** — respects the scientific-credibility rules for nature markets (public shapefiles, additionality, independent verification, spatially-explicit data); we don't blend incommensurable scores.
 
 ## The demo (what runs today)
 
-One app: **Aqueduct**, wearing Regen Atlas's body. The layers above are wired — the
+One app: **AqueductX**, wearing Regen Atlas's body. The layers above are wired — the
 `routes/` landed-cost engine computes real solver bids inside the `atlas/` map UI.
 
 - **Map** (`/`) — the network graph: 3 real EthicHub coffee lots (LIVE reads, Chiapas)
-  inside a seeded synthetic economy of ~1,250 SIM lots across 21 real smallholder
-  origins, with coop→hub flow arcs, demand hubs, venues, and a docked judge tour
-  ("One lot, end to end": aggregate → verify → price → publish → fill → settle → ask).
+  and 10 real Glow solar farms, inside a seeded synthetic economy of 1,250 SIM lots
+  across 21 real smallholder origins — 1,253 coffee/sim lots + 10 solar = 1,263 in the
+  Lots rail, across two verticals — with coop→hub flow arcs, demand hubs, venues, and a
+  docked judge tour ("One lot, end to end": aggregate → verify → price → publish → fill
+  → settle → ask).
 - **Coop seat** (`/coops/:coopId`) — the same engine from the cooperative's chair:
   publish a sell intent and watch solvers compete on YOUR route; tokenized trade
   finance (structured receivable → policy-engine eligibility → advance) benchmarked
@@ -65,14 +73,23 @@ One app: **Aqueduct**, wearing Regen Atlas's body. The layers above are wired �
 - **Financing** (`/financing`) — capital formations: buyers/grants/funds matched to the
   lot population by the same (institution, rule, condition, effect) policy engine,
   citing verified GIIN IRIS+ metrics.
-- **Ledger** (`/ledger`) — the real-vs-sim receipts. Every element in the app carries a
-  provenance chip: **LIVE / SNAPSHOT / SIM / TESTNET / TO-BUILD**. A real EUDR check
+- **Receipts, inline** — every element in the app carries a provenance chip: **LIVE /
+  SNAPSHOT / SIM / TESTNET / TO-BUILD**. There's no separate ledger page; the settle
+  payload lives in the header's dev-mode bar and every real source read (ethichub.com,
+  the Celo credit line) links out from the lot it belongs to. A real EUDR check
   finding real gaps renders PARTIAL — nothing is invented to look complete.
 
 The synthetic economy is deterministic (one seed, no runtime randomness — replays
 identically) and calibrated to the research in [`docs/research/`](docs/research/):
 solver-market concentration per measured CoW/Across data, coffee price bands anchored
 by the real EthicHub lots, cacao/honey labeled as coarse.
+
+- **The data model** (`/ontology`) — the REA (Resource–Event–Agent) ontology as a living
+  page: each of the five concepts with its plain-language definition, its AqueductX type,
+  and a real example rendered straight from the economy.
+- **System architecture** — [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) describes the
+  aggregate → verify → price → publish → fill → settle loop, the connector/provenance
+  discipline, the REA data model, and the settlement path, every claim citing code.
 
 ## Quickstart
 
@@ -95,11 +112,11 @@ VITE_SUPABASE_ANON_KEY=     # optional
 
 ```
 aqueduct/
-├── atlas/                  # the app — forked Regen Atlas, now Aqueduct
+├── atlas/                  # the app — forked Regen Atlas, now AqueductX
 │   └── src/aqueduct/       # connectors, canonical lot schema, sim economy,
 │                           #   policy engine, trade finance, pages
 ├── routes/                 # forked SlabClaw Routes — the landed-cost/solver engine
-├── docs/                   # research (9 cited reports), application, specs
+├── docs/                   # research (14 cited reports), application, specs
 └── LICENSE                 # MIT
 ```
 
@@ -109,3 +126,8 @@ Routes — forked as the starting point, credited in-app.
 ## License
 
 MIT — © 2026 Pat Rawson (Ecofrontiers SARL). See [`LICENSE`](LICENSE).
+
+Both forked components are our own prior work, not third-party code: `atlas/`
+(Regen Atlas / Ecospatial) and `routes/` (SlabClaw Routes) are each © Pat Rawson
+(Ecofrontiers SARL) and are included here under this same MIT license — so nothing
+in the tree carries an unstated or incompatible license.

@@ -17,6 +17,7 @@ import { REFERENCE_PROFILE, computeReferenceBid } from "../../../../routes/engin
 import Footer from "../../Footer";
 import Header from "../../Header";
 import { ProvenanceChip } from "../components/Chips";
+import { StewardPanel } from "../components/steward/StewardPanel";
 import { useAqueductEconomy } from "../hooks/useAqueductEconomy";
 import { runSolverRace } from "../sim/solverRoster.mjs";
 import {
@@ -49,7 +50,7 @@ export default function AqueductCoopSeat(): React.ReactElement {
   if (loading) {
     return (
       <div className="w-svw h-svh flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg" />
       </div>
     );
   }
@@ -162,6 +163,11 @@ export default function AqueductCoopSeat(): React.ReactElement {
             )}
           </div>
 
+          {/* ── The seat's steward: take a seat, post an intent (WP16, doc 14 §6) ── */}
+          <div className="mb-4">
+            <StewardPanel seat={seat as unknown as Parameters<typeof StewardPanel>[0]["seat"]} avgFob={avgFob} />
+          </div>
+
           <div className="grid md:grid-cols-2 gap-4">
             {/* ── Your lots + publish intent ── */}
             <div className="bg-cardBackground border border-gray-200 px-5 py-4">
@@ -176,6 +182,7 @@ export default function AqueductCoopSeat(): React.ReactElement {
               </div>
               {!race ? (
                 <button
+                  type="button"
                   onClick={publishIntent}
                   className="w-full py-2 bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-colors"
                 >
@@ -200,7 +207,7 @@ export default function AqueductCoopSeat(): React.ReactElement {
                             <span
                               className={`text-[11px] aq-mono ${b.handle === race.winner?.handle ? "font-bold text-green-700" : "text-gray-600"}`}
                             >
-                              €{b.bid!.landedEurPerKg.toFixed(3)}/kg landed
+                              €{b.bid?.landedEurPerKg.toFixed(3)}/kg landed
                             </span>
                           )}
                         </span>
