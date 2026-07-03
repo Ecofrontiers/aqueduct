@@ -2,7 +2,8 @@
 
 `aqueductx-deck.html` — a self-contained, 13-slide funder brief for the Sentient
 Foundation Open-Source AGI grant. One file, no external assets (system font stack,
-inline CSS, HTML/CSS diagrams — no images, no web fonts, no scripts). 16:9 slides at
+inline CSS, HTML/CSS diagrams, two base64-embedded JPEG screenshots — no web fonts,
+no scripts, nothing fetched over the network). 16:9 slides at
 1280×720, styled in the app's quiet technical language (white ground, gray-900 text,
 the account palette as the only accents: sienna goods / indigo capital / purple
 venue / emerald endogenous).
@@ -28,10 +29,10 @@ venue / emerald endogenous).
 13. **Open, composable, crypto-native. Fund the hardening.** (the $50k ask + dated Q5
     deliverables)
 
-Two screenshot placeholders are marked in the HTML as visible dashed insets, for the
-WP7 QA screenshots to drop into: `[screenshot: map world-view]` (slide 4) and
-`[screenshot: lot detail]` (slide 7). They are intentionally small proof insets, not
-heroes — the drawn HTML/CSS diagrams carry the deck.
+Slides 4 and 7 now carry the real WP7 QA screenshots, embedded as two base64 JPEG
+`<img>` data URIs (map world-view on slide 4, lot detail on slide 7) — the dashed
+placeholders are gone. They are intentionally small proof insets, not heroes — the
+drawn HTML/CSS diagrams still carry the deck.
 
 ## Render / view
 
@@ -55,8 +56,8 @@ with **background graphics ON** and margins **None**. The `@page { size: 1280px 
   "file://$(pwd)/docs/deck/aqueductx-deck.html"
 ```
 
-Produces a 13-page PDF (~1.1 MB), well under the grant form's 10 MB upload limit.
-The source HTML is ~50 KB.
+Produces a 13-page PDF (~1.2 MB), well under the grant form's 10 MB upload limit.
+The source HTML is ~174 KB (the two embedded raster screenshots dominate the size).
 
 ## Notes
 
@@ -64,7 +65,8 @@ The source HTML is ~50 KB.
   (LIVE / SNAPSHOT / SIM / TESTNET / TO-BUILD). Nothing is claimed live that isn't.
 - Numbers and claims trace to `docs/APPLICATION-V2.md`, `docs/DEMO-SPEC.md`, and
   `docs/research/02, 06, 08, 12, 13`. Where the plan's message spine and the docs
-  differ, the spine wins (e.g. 1,253 lots).
+  differ, the spine wins (e.g. 1,253 coffee/sim lots — the rail total is 1,263
+  including 10 Glow solar farms).
 - To re-theme, edit the `:root` custom properties at the top of the `<style>` block —
   the account palette matches the app's `ACCOUNT_COLORS`.
 </content>

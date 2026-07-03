@@ -6,10 +6,12 @@ export function AskScreen({
   onReplay,
   lotsAggregated,
   settleTxHref,
+  stewardHref,
 }: {
   onReplay: () => void;
   lotsAggregated: number;
   settleTxHref: string | null;
+  stewardHref?: string | null;
 }): React.ReactElement {
   return (
     <div className="flex flex-col gap-3">
@@ -37,11 +39,15 @@ export function AskScreen({
       </div>
 
       <div className="flex gap-4 flex-wrap">
-        <Kpi value={String(lotsAggregated)} unit="lots aggregated" />
+        <Kpi value={String(lotsAggregated)} unit="real onchain aggregations" />
         <Kpi value="1" unit="platform read live" />
-        <Kpi value="€6.63 floor" unit="vs €17.00 asking — the specialty premium made legible" />
+        <Kpi value="€6.63 → €17.00" unit="commodity floor → specialty asking — the premium made legible" />
         <Kpi value={settleTxHref ? "1" : "0"} unit="real settle tx" />
       </div>
+
+      <p className="text-[11px] text-gray-500 leading-relaxed">
+        The same spine carries solar — the Glow farms on the map price through this exact loop.
+      </p>
 
       <p className="text-[11px] text-gray-400 leading-relaxed border-t border-gray-100 pt-2">
         The RCT record: matching without price-info-alone is the unlock — an intent/solver layer, not a price feed, is
@@ -55,6 +61,14 @@ export function AskScreen({
         >
           Replay the fill
         </button>
+        {stewardHref && (
+          <Link
+            to={stewardHref}
+            className="px-3 py-1.5 text-[11px] font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Meet the steward — the farmer's lever →
+          </Link>
+        )}
         <Link
           to="/"
           className="px-3 py-1.5 text-[11px] font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"

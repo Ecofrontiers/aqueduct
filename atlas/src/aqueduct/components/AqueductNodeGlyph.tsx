@@ -1,6 +1,6 @@
 import { Bank, Buildings, Coffee, Cpu, SolarPanel, Storefront, Users } from "@phosphor-icons/react";
 import type React from "react";
-import { ACCOUNT_COLORS } from "./AqueductNetworkLayer";
+import { ACCOUNT_COLORS } from "./accountColors";
 
 /**
  * Typed node glyph — a Phosphor icon (regular weight) centered in a white

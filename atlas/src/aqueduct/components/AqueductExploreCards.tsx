@@ -5,6 +5,7 @@ import {
   Coffee,
   Cpu,
   Flower,
+  MapPin,
   Plant,
   Storefront,
   Users,
@@ -35,9 +36,12 @@ export function LotExploreCard({
   const origin = [lot.origin.region, lot.origin.country].filter(Boolean).join(", ");
   const CommodityIcon = COMMODITY_ICONS[lot.commodity ?? "coffee"];
   return (
-    <div
-      className="group bg-cardBackground border border-gray-100 hover:border-gray-300 transition-all cursor-pointer overflow-hidden"
-      onClick={onLocate}
+    // The whole card is the "tell me more" gesture → the lot detail page (the
+    // natural click that used to dead-end). The map fly-to lives on the dedicated
+    // pin button only, so locating and navigating are two distinct affordances.
+    <Link
+      to={`/lots/${lot.aqueduct_id}`}
+      className="group block bg-cardBackground border border-gray-100 hover:border-gray-300 transition-all cursor-pointer overflow-hidden"
     >
       <div className="flex">
         <div className="w-1 flex-shrink-0" style={{ backgroundColor: color }} />
@@ -75,18 +79,23 @@ export function LotExploreCard({
           </div>
           <div className="flex items-center justify-between gap-2">
             <h4 className="text-sm font-semibold text-gray-900 truncate">{lot.title_redacted}</h4>
-            <Link
-              to={`/lots/${lot.aqueduct_id}`}
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              title="Locate on map"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onLocate();
+              }}
               className="flex-shrink-0 text-gray-300 hover:text-gray-600 transition-colors"
             >
-              <ArrowRight size={14} />
-            </Link>
+              <MapPin size={14} />
+            </button>
           </div>
           <p className="text-[11px] text-gray-500 truncate">{origin || "—"}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

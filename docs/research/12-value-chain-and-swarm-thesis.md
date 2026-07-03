@@ -17,9 +17,8 @@ object (the Claim) that was missing entirely and is now built.
 ## 2. REA/Valueflows mapping — what exists, what was missing
 
 REA (Resource–Event–Agent; McCarthy 1982, operationalized by Valueflows and hREA on
-Holochain — see Pat's own research at
-`~/Desktop/2_resources/.../nondominium-coordination-layer.md`, the SENSORICA/Nondominium
-lineage) models any economy as Agents making Commitments about Resources, fulfilled by
+Holochain, in the SENSORICA/Nondominium lineage) models any economy as Agents making
+Commitments about Resources, fulfilled by
 Economic Events, with **Claims** carrying deferred reciprocity.
 
 | REA concept | AqueductX today | Status |
@@ -41,7 +40,7 @@ concurrent. A `finance-this-planting` intent is **not** — capital moves now, r
 happens later, at a rate and term. REA calls the deferred half a Claim, and AqueductX's own
 anchor data already contained a *redeemed* one: EthicHub Line 2's real repay cycle,
 192,600 → 212,369.79 USDC. The typed claim uses EthicHub's real cited rate ceiling
-(Heifer/EthicHub facility: **9.9%**, $420,000 — application Q2(d) research) with
+(Heifer/EthicHub facility: **9.9%**, $420,000 — application Q2(b) research) with
 `confidence: "reported"`, matching the confidence-tagging convention
 (`commodity-landed-cost.mjs`: confirmed / reported / estimate). No invented numbers.
 

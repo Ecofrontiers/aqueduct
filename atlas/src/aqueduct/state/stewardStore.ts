@@ -35,7 +35,19 @@ interface StewardState {
    *  scope a seat's own drafts with `selectSeatDrafts`. */
   draftIntents: AqueductIntent[];
   prefsBySeat: Record<string, SeatPrefs>;
+  /** Financier-side lever (mirror of the steward's): session-only SIM pledges toward an
+   *  assurance round, keyed by opportunity id → cumulative EUR pledged. Deterministic
+   *  (+SIM_PLEDGE_STEP_EUR per click, no RNG), never a real transaction — the money is
+   *  simulated and the button says so. Backer count derives from EUR / step. */
+  simPledges: Record<string, number>;
+  /** Session-only "express interest" log for the honestly-non-transactional cards
+   *  (trade-credit / Miner / pre-sale), keyed by opportunity id → click count. */
+  simInterests: Record<string, number>;
 }
+
+/** One SIM pledge click adds this many EUR to the round's fill (deterministic, no RNG).
+ *  Backer count for an opportunity = simPledges[id] / SIM_PLEDGE_STEP_EUR. */
+export const SIM_PLEDGE_STEP_EUR = 50;
 
 /** doc 13 §3: the two competitively-sensitive tiers are structurally locked, never a toggle. */
 export const LOCKED_DISCLOSURE_NOTE = "plot geometry never leaves the seat — see /ontology and docs/research/13";
@@ -47,7 +59,7 @@ function defaultPrefs(): SeatPrefs {
   };
 }
 
-let state: StewardState = { draftIntents: [], prefsBySeat: {} };
+let state: StewardState = { draftIntents: [], prefsBySeat: {}, simPledges: {}, simInterests: {} };
 let _draftCounter = 0;
 
 const listeners = new Set<() => void>();
@@ -97,6 +109,45 @@ export function setShareEudrStatus(seatId: string, value: boolean) {
       [seatId]: { ...prev, disclosure: { ...prev.disclosure, shareEudrStatus: value } },
     },
   });
+}
+
+/**
+ * Back an assurance round (financier's lever, mirror of the steward's post-intent verb).
+ * Increments a session-only SIM pledge by `eur` (default one SIM_PLEDGE_STEP_EUR step);
+ * the fill bar and backer count read straight off this. Deterministic, no RNG, never a
+ * real transaction — the SIM chip on the button is the honest signal. `capEur` (the
+ * round's threshold) clamps the running total so the fill never overruns to > 100%.
+ */
+export function addSimPledge(id: string, eur: number = SIM_PLEDGE_STEP_EUR, capEur?: number) {
+  const prev = state.simPledges[id] ?? 0;
+  const next = capEur != null ? Math.min(prev + eur, capEur) : prev + eur;
+  setState({ simPledges: { ...state.simPledges, [id]: next } });
+}
+
+/** Express interest in an honestly-non-transactional opportunity (trade-credit / Miner /
+ *  pre-sale). Logs a session-only click count to the same store; shows as a quiet count. */
+export function addSimInterest(id: string) {
+  const prev = state.simInterests[id] ?? 0;
+  setState({ simInterests: { ...state.simInterests, [id]: prev + 1 } });
+}
+
+/** Cumulative SIM EUR pledged toward one opportunity this session (0 if untouched). */
+export function selectSimPledge(s: StewardState, id: string): number {
+  return s.simPledges[id] ?? 0;
+}
+
+/** "Express interest" click count for one opportunity this session (0 if untouched). */
+export function selectSimInterest(s: StewardState, id: string): number {
+  return s.simInterests[id] ?? 0;
+}
+
+/** Total session-only financier interactions across all opportunities — the
+ *  "backers-this-session" figure the aggregate band leads with. Each SIM_PLEDGE_STEP_EUR
+ *  of pledge is one backer; each express-interest click is one. */
+export function selectSessionBackers(s: StewardState): number {
+  const pledgeBackers = Object.values(s.simPledges).reduce((n, eur) => n + Math.round(eur / SIM_PLEDGE_STEP_EUR), 0);
+  const interestBackers = Object.values(s.simInterests).reduce((n, c) => n + c, 0);
+  return pledgeBackers + interestBackers;
 }
 
 function subscribe(cb: () => void) {

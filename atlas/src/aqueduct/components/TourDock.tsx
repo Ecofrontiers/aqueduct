@@ -3,6 +3,7 @@ import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { MapRef } from "react-map-gl";
 import { useAqueductLots } from "../hooks/useAqueductLots";
+import { buildCoopRegistry } from "../sim/tradeFinance.mjs";
 import {
   CHAPTERS,
   type ChapterKey,
@@ -13,6 +14,7 @@ import {
   selectActiveChapter,
   selectChapterStatus,
   setAnchorLot,
+  setDockOpen,
   useTourStore,
 } from "../state/tourStore";
 import { AskScreen } from "./AskScreen";
@@ -27,7 +29,9 @@ import { type Provenance, ProvenanceChip } from "./Chips";
 export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React.ReactElement | null {
   const tour = useTourStore();
   const { lots } = useAqueductLots({ liveRefetch: false });
-  const [open, setOpen] = useState(true);
+  // Dock visibility lives in the store — the trigger is the Header's
+  // Tour/Docs/Deck pill group. When closed, this component renders nothing.
+  const open = tour.dockOpen;
 
   // Feed the anchor lot into the store once the real reads land.
   useEffect(() => {
@@ -36,6 +40,13 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
 
   const activeChapter = selectActiveChapter(tour);
   const chapterStatus = useMemo(() => selectChapterStatus(tour), [tour]);
+
+  // The anchor coop's seat — resolved exactly the way the seat page does, so the
+  // Ask's "meet the steward" link always lands on a real /coops/:id (no hardcode).
+  const stewardHref = useMemo(() => {
+    const coopId = buildCoopRegistry(lots ?? [])[0]?.id;
+    return coopId ? `/coops/${coopId}` : null;
+  }, [lots]);
 
   // Camera choreography per beat.
   useEffect(() => {
@@ -57,6 +68,18 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
           ],
           { padding: 60, duration: 1600 },
         ),
+      // Generalize: leave Chiapas entirely and fly to the US Glow solar cluster —
+      // the two Florida farms (Auric Peninsula ~-81.58,26.53; Golden Crossing
+      // ~-80.41,27.62). Their solar glyphs are always on the map (GlowFarmsLayer),
+      // so the claim "same loop, second commodity" is shown, not just told.
+      generalize: () =>
+        map.fitBounds(
+          [
+            [-81.58 - 1.2, 26.53 - 1.2],
+            [-80.41 + 1.2, 27.62 + 1.2],
+          ],
+          { padding: 70, duration: 1600 },
+        ),
     };
     presets[activeChapter]?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,17 +90,8 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
   const chapterEvents = revealed.filter((e: { chapter: string }) => e.chapter === activeChapter).slice(-5);
   const done = tour.revealCount >= events.length && events.length > 0;
 
-  if (!open) {
-    return (
-      <button
-        onClick={() => setOpen(true)}
-        className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 text-white text-xs font-medium shadow-md hover:bg-blue-700 transition-colors rounded-full"
-      >
-        <Path size={14} />
-        Take the tour
-      </button>
-    );
-  }
+  // Closed: render nothing — the Header's Tour button reopens the dock.
+  if (!open) return null;
 
   return (
     <div className="absolute bottom-4 right-4 z-10 w-[340px] max-h-[70%] flex flex-col bg-cardBackground border border-gray-200 shadow-lg overflow-hidden">
@@ -100,14 +114,17 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
               <ArrowCounterClockwise size={13} />
             </button>
           )}
-          <button onClick={() => setOpen(false)} className="p-1.5 text-gray-400 hover:text-gray-700" title="Close">
+          <button onClick={() => setDockOpen(false)} className="p-1.5 text-gray-400 hover:text-gray-700" title="Close">
             <X size={13} />
           </button>
         </div>
       </div>
 
       {/* Chapter stepper */}
-      <div className="flex items-center gap-1 px-3 py-2 border-b border-gray-100 overflow-x-auto shrink-0">
+      {/* All 8 chapters visible at once (wrap, don't scroll) — the Generalize and
+          Ask beats are the strongest content; hiding them off the right edge
+          undersold the tour (certification finding, 2026-07-03). */}
+      <div className="flex items-center flex-wrap gap-1 px-3 py-2 border-b border-gray-100 shrink-0">
         {CHAPTERS.map((ch, i) => {
           const status = chapterStatus[ch.key];
           return (
@@ -134,8 +151,9 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
           <div className="space-y-3">
             <p className="text-xs text-gray-600 leading-relaxed">
               Watch agents take one real coffee lot end to end: scouts read it live from EthicHub, a diligence agent
-              checks it, an oracle floors it, solvers race to fill it, and the settle leg is prepared onchain. Live
-              reads and simulation are labeled at every step.
+              checks it, an oracle floors it, solvers race to fill it, and the settle leg is prepared onchain—posted by
+              the farmer's steward, which negotiates but never settles. The same loop then jumps to real Glow solar
+              farms: two commodities, one schema. Live reads and simulation are labeled at every step.
             </p>
             <button
               onClick={playTour}
@@ -147,9 +165,21 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
             {tour.cascadeError && <p className="text-[11px] text-red-600">{tour.cascadeError}</p>}
           </div>
         ) : tour.showAsk ? (
-          <AskScreen onReplay={replayTour} lotsAggregated={tour.vaultCount} settleTxHref={null} />
+          <AskScreen
+            onReplay={replayTour}
+            lotsAggregated={tour.vaultCount}
+            settleTxHref={null}
+            stewardHref={stewardHref}
+          />
         ) : (
           <div className="space-y-1.5">
+            {activeChapter === "generalize" && (
+              <p className="text-[11px] text-gray-600 leading-relaxed mb-1">
+                Same loop, second commodity. These are real Glow solar farms — live public reads: coordinates, panels,
+                output. A finance-this-farm intent carries real observed terms ($399 → ~43.6 GLW/week × 89 weeks,
+                reported). Reads live; fills simulated and labeled — one settled over oceans, one over wires.
+              </p>
+            )}
             {chapterEvents.length === 0 && (
               <p className="text-[11px] text-gray-400">Playing — events land here beat by beat.</p>
             )}

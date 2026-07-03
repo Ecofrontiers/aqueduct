@@ -2,7 +2,7 @@ import { ArrowRight, CaretDown, CaretUp, MapTrifold } from "@phosphor-icons/reac
 import type React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ACCOUNT_COLORS } from "./AqueductNetworkLayer";
+import { ACCOUNT_COLORS } from "./accountColors";
 
 /**
  * Reading the map — the balance-of-payments legend. Two circuits over one

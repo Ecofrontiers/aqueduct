@@ -142,7 +142,7 @@ export function LotCard({ lot, events = [] }: { lot: AqueductAnyLot; events?: Aq
         <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-[10px] text-gray-400 uppercase tracking-wide">
-              {lot.price ? lot.price.incoterm : "price on match"}
+              {lot.price ? `${lot.price.incoterm} farmgate` : "price on match"}
             </div>
             <div className="text-2xl font-bold text-gray-900 aq-mono leading-tight">
               {priceEur !== null ? fmtEur(priceEur) : "—"}
@@ -245,6 +245,11 @@ export function LotCard({ lot, events = [] }: { lot: AqueductAnyLot; events?: Aq
           </a>
         )}
       </div>
+      {lot.source.url && (
+        <p className="px-4 pt-1 text-[11px] text-gray-400 leading-relaxed">
+          opens EthicHub — the source platform publishes the producer's full name; Aqueduct anonymizes on-page.
+        </p>
+      )}
 
       {/* ── Signal pills ── */}
       <div className="px-4 pt-2 pb-3 flex items-center gap-1.5 flex-wrap">
@@ -410,10 +415,10 @@ export function LotCard({ lot, events = [] }: { lot: AqueductAnyLot; events?: Aq
                 ))}
               </div>
               <Link
-                to="/financing"
+                to={`/financing#lot-${lot.aqueduct_id}`}
                 className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-700 transition-colors"
               >
-                <HandCoins size={12} /> Financing that could fund this →
+                <HandCoins size={12} /> Back this lot on Financing →
               </Link>
               {lot.onchain && (
                 <div className="bg-gray-50 px-3 py-2">

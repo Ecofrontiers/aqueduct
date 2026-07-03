@@ -1,11 +1,69 @@
-import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowUpRight, Cpu, Repeat, ShieldCheck, Truck, Users } from "@phosphor-icons/react";
 import type React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 import Header from "../../Header";
-import { ACCOUNT_COLORS } from "../components/AqueductNetworkLayer";
 import { ProvenanceChip } from "../components/Chips";
+import { ACCOUNT_COLORS } from "../components/accountColors";
+
+const stats = [
+  { value: "2", label: "Live Platform Reads" },
+  { value: "1,263", label: "Lots Across Two Verticals" },
+  { value: "50", label: "Cited Failure Modes" },
+  { value: "$50K", label: "Sentient Foundation Ask" },
+];
+
+const coordinationVectors = [
+  {
+    name: "Price",
+    detail: "One shared landed-cost function every solver bids through, not five private negotiations.",
+  },
+  {
+    name: "Risk signal",
+    detail: "One canonical, verified lot read once by every institution, not re-diligenced N times.",
+  },
+  {
+    name: "Capital search",
+    detail: "One posted intent, matched against every buyer, grant, and fund at once, not sequential shopping.",
+  },
+  {
+    name: "Collateral integrity",
+    detail: "A content-addressed lot id makes double-pledging visible instead of invisible.",
+  },
+  {
+    name: "Compliance reporting",
+    detail: "A real GIIN/IRIS+ citation, measured once, referenced by any funder who accepts that standard.",
+  },
+];
+
+const whyRows = [
+  {
+    icon: Cpu,
+    name: "Cited declines",
+    body: "Every institutional decline or reprice cites a real, checkable source — a GIIN/IRIS+ standard, or a named failure mode from the AI Mechanism Atlas, not an invented risk score.",
+  },
+  {
+    icon: Truck,
+    name: "One blended quote",
+    body: "Freight, customs, and certification are one blended quote from the same shared reference engine every solver bids through, never invented for the page that shows it.",
+  },
+  {
+    icon: Repeat,
+    name: "One economic grammar",
+    body: "A lot is an economic resource, an intent a commitment, a fill an event; financing creates a claim — capital now, repayment later at a stated rate and term. Selling a lot and financing a planting are the same kind of exchange, not two unrelated features.",
+  },
+  {
+    icon: Users,
+    name: "Swarm decision-support",
+    body: "In category terms, a swarm decision-support system for agricultural trade finance: many small agents aggregate, verify, price, and match; people and institutions make the allocation call; settlement is the action taken.",
+  },
+  {
+    icon: ShieldCheck,
+    name: "Privacy by design",
+    body: "The map proves EUDR status without exposing the farmer behind it — status renders, plot geometry never does, names appear as initials by design. Knowledge sufficient to enable a right, and no more.",
+  },
+];
 
 /**
  * Reading the map — the full documentation of Aqueduct's visual language.
@@ -17,10 +75,10 @@ export default function AqueductMapGuide(): React.ReactElement {
   return (
     <>
       <Helmet>
-        <title>Reading the map · Aqueduct</title>
+        <title>Docs · AqueductX</title>
         <meta
           name="description"
-          content="Aqueduct's map is a balance of payments: the current account (goods), the capital account (exogenous investment and endogenous credit), and the settle leg — documented."
+          content="What AqueductX is, what it coordinates, and how to read the map it draws — a peer-to-peer logistics and finance layer for smallholder farmers, documented as a balance of payments."
         />
       </Helmet>
       <Header />
@@ -30,10 +88,86 @@ export default function AqueductMapGuide(): React.ReactElement {
             <ArrowLeft size={12} /> Back to the map
           </Link>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Reading the map</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Docs</h1>
           <p className="text-sm text-gray-500 mb-6">
-            Aqueduct's map is not a logistics diagram. It is a balance of payments, drawn.
+            What AqueductX is, what it coordinates, and how to read the map it draws.
           </p>
+
+          {/* ── What this is ── */}
+          <Section title="What this is">
+            <p>
+              AqueductX is a generalized peer-to-peer logistics and finance layer for smallholder farmers: agents
+              aggregate, verify, and price commodity lots, and intents match and settle them. A common API for green
+              investment — real where it touches the world, simulated and labeled where it doesn't yet.
+            </p>
+            <p>
+              The global trade-finance gap is $2.5 trillion (ADB, 2022, still $2.5T in the January 2026 survey).
+              Smallholder finance alone is short $200B+ a year: ~$323B in demand against ~$95B in supply (ISF Advisors,
+              2025). Reported trade-finance fraud topped $10B in 2020 (GLEIF/MonetaGo). The gap is a legibility gap
+              before it's a capital gap — lenders reject smallholders not for lack of capital but for lack of a way to
+              verify who's real. Aggregating, verifying, pricing, matching, and settling are exactly the tasks AI now
+              performs cheaply, at any scale.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100 border border-gray-100 mt-1">
+              {stats.map((s) => (
+                <div key={s.label} className="bg-white px-3 py-4 text-center">
+                  <div className="text-xl font-bold tracking-tight text-gray-900">{s.value}</div>
+                  <div className="text-[10px] uppercase tracking-[0.12em] text-gray-400 mt-1">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          {/* ── What it coordinates ── */}
+          <Section title="What it coordinates">
+            <p>
+              An intent isn't one number. It's five vectors that normally get renegotiated separately at every hop
+              between a smallholder's lot and the market that consumes it. Posting them together, once, is where the
+              saving lives.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+              {coordinationVectors.map((v) => (
+                <div key={v.name} className="bg-white border border-gray-100 px-3.5 py-3">
+                  <div className="text-xs font-semibold text-gray-900 mb-0.5">{v.name}</div>
+                  <div className="text-xs text-gray-500 leading-relaxed">{v.detail}</div>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          {/* ── Why this, not another platform ── */}
+          <Section title="Why this, not another platform">
+            <p>
+              Komgo, we.trade, Marco Polo, and Contour — every closed, bank-consortium trade-finance blockchain from the
+              2018–19 wave failed or pivoted away from blockchain entirely. No competing institution fully trusts a rail
+              a rival co-owns. AqueductX is a read-only aggregator over platforms that already exist: it never asks a
+              competitor to change anything or hand over control, so it can't die that death. The RWA tokenization
+              giants — Centrifuge, Maple, Goldfinch, Ondo — don't touch agricultural commodities at all, and none solve
+              the smallholder-lot verification problem underneath the capital they'd happily deploy.
+            </p>
+            <div className="space-y-1.5 pt-1">
+              {whyRows.map((r) => {
+                const Icon = r.icon;
+                return (
+                  <div key={r.name} className="flex items-start gap-2.5 bg-white border border-gray-100 px-3.5 py-3">
+                    <Icon size={16} className="text-primary-300 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold text-gray-900 mb-0.5">{r.name}</div>
+                      <div className="text-xs text-gray-500 leading-relaxed">{r.body}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+
+          {/* ── Reading the map ── */}
+          <div className="border-t border-gray-200 pt-7">
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">Reading the map</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              Aqueduct's map is not a logistics diagram. It is a balance of payments, drawn.
+            </p>
+          </div>
 
           {/* ── 1. The premise ── */}
           <Section title="One earth, two circuits">
@@ -360,6 +494,16 @@ export default function AqueductMapGuide(): React.ReactElement {
                 Financing
               </Link>{" "}
               shows it from the allocator's. The map is the thesis: structure the lot, and both circuits can find it.
+            </p>
+          </Section>
+
+          <Section title="See also">
+            <p>
+              The vocabulary underneath — resource, intent, event, claim — is formalized in the{" "}
+              <Link to="/ontology" className="text-blue-500 hover:text-blue-700">
+                ontology
+              </Link>
+              .
             </p>
           </Section>
 

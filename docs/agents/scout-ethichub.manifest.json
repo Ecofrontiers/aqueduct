@@ -1,5 +1,5 @@
 {
-  "$comment": "DRAFT agent manifest — prepared for publication to an open agent registry (e.g. Sentient GRID). Status: draft; not yet published. The agent itself runs in production inside AqueductX today (scripts/scout-ethichub.mjs); this manifest is the composability surface for running it as a standalone, registry-listed agent.",
+  "$comment": "DRAFT agent manifest — prepared for publication to an open agent registry (e.g. Sentient GRID). Status: draft; not yet published. The agent itself runs in production inside AqueductX today (atlas/scripts/scout-ethichub.mjs); this manifest is the composability surface for running it as a standalone, registry-listed agent.",
   "name": "scout-ethichub",
   "version": "0.1.0-draft",
   "role": "aggregate",

@@ -1,137 +1,194 @@
 import { SimplePage } from "../shared/components/SimplePage";
 
+/**
+ * Privacy notice for AqueductX. Written to be TRUE to what the code actually
+ * does (see the data-practices audit): no analytics run on aqueductx.trade
+ * (Google Analytics is initialised only on regenatlas.xyz/localhost and only
+ * when VITE_GOOGLE_ANALYTICS_ID is set — neither holds here), no accounts, no
+ * tracking cookies, no consent banner mounted. The only browser-side storage is
+ * device-local UI state (tour vault count, dev-mode toggle) that is never
+ * transmitted. The /list form (Formspree) is the one place a visitor can hand us
+ * personal data, and it is described below.
+ *
+ * DRAFT — NOT LEGAL ADVICE. [PLACEHOLDER — Pat: …] markers are facts to confirm.
+ * Read by counsel before relying on it.
+ */
 export const PrivacyPolicy: React.FC = () => {
   return (
     <SimplePage>
       <div className="prose">
-        <h1>Privacy & Cookie Policies</h1>
+        <h1>Privacy Notice</h1>
         <p>
-          <strong>Updated:</strong> Feb 25, 2026
+          <strong>Updated:</strong> [PLACEHOLDER — Pat: publication date]
         </p>
         <p>
-          <strong>Regen Atlas</strong> ("The Atlas", "us", "we", or "our") is a
-          part of <strong>Ecofrontiers SARL</strong> and operates{" "}
-          <a href="http://www.regenatlas.xyz" target="_blank">
-            http://www.regenatlas.xyz
-          </a>{" "}
-          ("website"). This privacy policy will explain how we use the personal
-          data we collect from you when you use our website.
+          <strong>AqueductX</strong> (
+          <a href="https://aqueductx.trade" target="_blank" rel="noopener noreferrer">
+            aqueductx.trade
+          </a>
+          ) is a simulated demonstration prototype operated by <strong>Ecofrontiers SARL</strong>. This notice describes
+          what happens to personal data when you use the site. It is written to be accurate to what the software
+          actually does — the site is a prototype, and the notice reads like one.
         </p>
-        <h2>The Data We Collect</h2>
-        <p>We collect the following data:</p>
-        <ul>
-          <li>Cookies</li>
-          <li>Analytics Data</li>
-          <li>Your email address</li>
-        </ul>
-        <h2>How We Collect Your Data</h2>
         <p>
-          You directly provide us with most of the data we collect. We collect
-          data and process data when you:
+          <strong>Data controller:</strong> Ecofrontiers SARL, [PLACEHOLDER — Pat: registered office address]. Contact:{" "}
+          <a href="mailto:pat@ecofrontiers.xyz">pat@ecofrontiers.xyz</a>.
         </p>
+
+        <h2>The short version</h2>
         <ul>
-          <li>Use or view our website via your browser's cookies</li>
-          <li>Use or view our website via Google Analytics</li>
-          <li>Sign up for our newsletter</li>
-          <li>Contact us via email</li>
-        </ul>
-        <p>
-          Our Company may also receive your data indirectly from the following
-          sources:
-        </p>
-        <ul>
-          <li>Google Analytics</li>
-        </ul>
-        <h2>How We Use Your Data</h2>
-        <p>We collect your data so that we can:</p>
-        <ul>
-          <li>Debug and improve our website</li>
+          <li>No accounts, no login, no password.</li>
+          <li>No analytics and no tracking cookies run on this site.</li>
           <li>
-            Email you with special offers on other products and services we
-            think you might like
+            The only data stored in your browser is device-local interface state (a tour counter and a "dev mode"
+            toggle). It never leaves your device and is not sent to us.
           </li>
-          <li>Email you our newsletter</li>
+          <li>We do not collect personal data unless you choose to submit the "List your project" form.</li>
+          <li>We never sell personal data.</li>
         </ul>
+
+        <h2>What is processed, and by whom</h2>
+
+        <h3>1. Server logs (hosting)</h3>
         <p>
-          If you agree, we will share your data with our partner companies so
-          that they may offer you their products and services.
+          The site is served by our host, <strong>Vercel Inc.</strong> Like any web host, Vercel processes technical
+          request data — including your IP address, browser user-agent, and the pages requested — in server logs, to
+          deliver the site and for security. See{" "}
+          <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
+            Vercel's privacy policy
+          </a>
+          .
         </p>
-        <ul>
-          <li>Google</li>
-        </ul>
-        <p>We will never sell your personal information to any third party.</p>
-        <h2>How We Store Your Data</h2>
+
+        <h3>2. Third parties your browser contacts directly</h3>
         <p>
-          We securely store your data on our servers. All of your information is
-          encrypted and password protected.
-        </p>
-        <h2>Marketing</h2>
-        <p>
-          We would like to send you information about products and services of
-          ours that we think you might like.
-        </p>
-        <p>
-          If you have agreed to receive marketing, you may always opt out at a
-          later date.
-        </p>
-        <p>
-          You have the right at any time to stop us from contacting you for
-          marketing purposes.
-        </p>
-        <p>
-          If you no longer wish to be contacted for marketing purposes, please
-          contact us at{" "}
-          <a href="mailto:info@ecofrontiers.xyz">info@ecofrontiers.xyz</a>.
-        </p>
-        <h2>Your Data Protection Rights</h2>
-        <p>
-          We would like to make sure you are fully aware of all of your data
-          protection rights. Every user is entitled to the following:
+          To draw the map and load public data, your browser fetches resources from the services below. When it does,
+          those services necessarily see your IP address and the request. We do not control their processing; each has
+          its own policy.
         </p>
         <ul>
           <li>
-            <strong>The right to access</strong> - You have the right to request
-            copies of your personal data. We may charge you a small fee for this
-            service.
+            <strong>Mapbox</strong> — map tiles and geocoding (sees your IP and map usage).{" "}
+            <a href="https://www.mapbox.com/legal/privacy" target="_blank" rel="noopener noreferrer">
+              Policy
+            </a>
           </li>
           <li>
-            <strong>The right to rectification</strong> - You have the right to
-            request that we correct any information you believe is inaccurate.
-            You also have the right to request us to complete information you
-            believe is incomplete.
+            <strong>Supabase</strong> — the inherited asset-registry dataset that populates the map.{" "}
+            <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">
+              Policy
+            </a>
           </li>
           <li>
-            <strong>The right to erasure</strong> - You have the right to
-            request that we erase your personal data under certain conditions.
+            <strong>Cloudflare R2</strong> — archived Glow solar-project data.{" "}
+            <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">
+              Policy
+            </a>
           </li>
           <li>
-            <strong>The right to restrict processing</strong> - You have the
-            right to request that we restrict the processing of your personal
-            data under certain conditions.
-          </li>
-          <li>
-            <strong>The right to object to processing</strong> - You have the
-            right to object to our processing of your personal data under
-            certain conditions.
-          </li>
-          <li>
-            <strong>The right to data portability</strong> - You have the right
-            to request that we transfer the data that we have collected to
-            another organization or directly to you under certain conditions.
+            <strong>EthicHub</strong> and <strong>Glow</strong> — public coffee-lot and solar data read from their
+            public pages.{" "}
+            <a href="https://www.ethichub.com/en/privacy-policy" target="_blank" rel="noopener noreferrer">
+              EthicHub policy
+            </a>
           </li>
         </ul>
-        <p>If you make a request, we have one month to respond to you.</p>
-        <p>
-          If you would like to exercise any of these rights, please contact us
-          at our email:{" "}
-          <a href="mailto:info@ecofrontiers.xyz">info@ecofrontiers.xyz</a>
+        <p className="text-sm">
+          Inherited registry features may also read from public data endpoints (for example CoinGecko, DexScreener, The
+          Graph, and public blockchain RPCs). These are public data reads; the same IP exposure applies. [PLACEHOLDER —
+          Pat: confirm which of these still run on the live site, or remove the ones that don't.]
         </p>
-        <p>Or write us at:</p>
-        Ecofrontiers SARL
-        <br />
-        23 Chemin du Coupereau, Le Canebas
-        <br />
-        83320 Carqueiranne
+
+        <h3>3. Browser storage (device-only, never transmitted)</h3>
+        <p>
+          The site uses your browser's <code>localStorage</code> to remember small pieces of interface state between
+          visits: the tour's simulated vault count and total, and whether you have opened "dev mode". This data stays on
+          your device, is not a cookie, is not used to track you, and is never sent to us or anyone else. You can clear
+          it at any time through your browser.
+        </p>
+
+        <h3>4. Analytics — none run here</h3>
+        <p>
+          The codebase inherits an optional Google Analytics integration, but it is disabled on this site: it
+          initialises only on other domains and only when an analytics key is configured, and neither condition holds on
+          aqueductx.trade. No consent banner is shown because no analytics or tracking cookies run. [PLACEHOLDER — Pat:
+          if you ever set an analytics key or enable it on this domain, this section and a consent banner must be
+          restored.]
+        </p>
+
+        <h3>5. The "List your project" form</h3>
+        <p>
+          If you submit the <a href="/list">List your project</a> form, you provide personal data — your name and email
+          address, plus whatever project details you enter. The form is delivered through <strong>Formspree</strong>, a
+          form-processing service, which forwards it to us by email (a copy is sent to a company address). We use it
+          only to review your submission and respond. See{" "}
+          <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
+            Formspree's privacy policy
+          </a>
+          . [PLACEHOLDER — Pat: decide whether to keep this form live; if not, the /list route should be unrouted and
+          this section removed.]
+        </p>
+
+        <h2>Legal bases (GDPR)</h2>
+        <ul>
+          <li>
+            <strong>Serving the site and keeping it secure</strong> (server logs) — our legitimate interest in operating
+            and protecting the service (Art. 6(1)(f)).
+          </li>
+          <li>
+            <strong>Handling a form submission</strong> — your submission is a request we act on at your initiative, and
+            our legitimate interest in responding (Art. 6(1)(b)/(f)).
+          </li>
+          <li>
+            <strong>Device-local interface state</strong> — strictly necessary for the interface you asked for; no
+            consent needed and no personal data involved.
+          </li>
+        </ul>
+
+        <h2>Retention</h2>
+        <p>
+          Host server logs are retained per Vercel's own schedule. Form submissions are kept only as long as needed to
+          review and respond, and then deleted. [PLACEHOLDER — Pat: state a concrete retention period for form
+          submissions, e.g. 12 months.]
+        </p>
+
+        <h2>Data transfers</h2>
+        <p>
+          Some processors named above (for example Vercel and Formspree) are based in the United States. Where personal
+          data is transferred outside the EEA, it is protected by the relevant safeguards (such as the EU–US Data
+          Privacy Framework or Standard Contractual Clauses). [PLACEHOLDER — Pat: counsel to confirm the transfer
+          mechanism relied on for each US processor.]
+        </p>
+
+        <h2>We never sell your data</h2>
+        <p>We do not sell personal data and do not use it for advertising.</p>
+
+        <h2>Your rights</h2>
+        <p>
+          Under the GDPR you have the right to access, rectify, erase, restrict, and object to the processing of your
+          personal data, and the right to data portability. To exercise any of these, email{" "}
+          <a href="mailto:pat@ecofrontiers.xyz">pat@ecofrontiers.xyz</a>. You also have the right to lodge a complaint
+          with the French supervisory authority, the CNIL (
+          <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">
+            cnil.fr
+          </a>
+          ).
+        </p>
+
+        <h2>Demonstration disclaimer</h2>
+        <p>
+          AqueductX is a simulated demonstration prototype. Most figures shown — prices, floors, APRs, receivables,
+          pledges, "back this round" amounts, backer counts — are simulated, deterministic values, labeled as simulated
+          in the interface. Nothing on the site is an offer, solicitation, recommendation, or provision of any
+          financial, investment, payment, or advisory service, and nothing here should be relied on for any financial
+          decision. The few elements that read live public data or prepare a testnet transaction are labeled as such. No
+          real money moves through this site.
+        </p>
+
+        <p className="text-sm">
+          This notice is a draft prepared for review and is not legal advice. The bracketed fields must be completed and
+          the whole notice confirmed by counsel before it is relied upon.
+        </p>
       </div>
     </SimplePage>
   );

@@ -1,5 +1,10 @@
 // Aqueduct — canonical lot schema helpers.
 //
+// LICENSING: the schema (field vocabulary/structure) and the content-addressed
+// lot-identifier specification defined here are dedicated to the public domain
+// under CC0 1.0 — see /LICENSE-SCHEMA at the repo root. The CODE in this file
+// remains MIT (/LICENSE). The namespace is the algorithm, not us.
+//
 // Isomorphic (runs in the Node connector script AND the Vite/browser bundle):
 // only uses `globalThis.crypto.subtle` + `TextEncoder`, both present in
 // Node >=19 and every modern browser. No Node-only APIs here.

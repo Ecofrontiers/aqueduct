@@ -245,6 +245,15 @@ export default function AqueductCoopSeat(): React.ReactElement {
                 Advance rate is a declared assumption, not a citation. Eligibility below is the real policy-engine
                 verdict — the same (institution, rule, condition, effect) machinery the solver race uses.
               </p>
+              <Link
+                to={`/financing#assurance-${seat.id}`}
+                className="mb-2 flex items-center justify-between gap-2 bg-gray-50 hover:bg-gray-100 px-3 py-2 transition-colors"
+              >
+                <span className="text-[11px] text-gray-700">
+                  Open a threshold pledge round — nobody pays unless the full €1,120 assembles
+                </span>
+                <ArrowUpRight size={12} className="text-gray-500 shrink-0" />
+              </Link>
               <div className="space-y-1">
                 {projection.eligibleActors.map(
                   (a: {

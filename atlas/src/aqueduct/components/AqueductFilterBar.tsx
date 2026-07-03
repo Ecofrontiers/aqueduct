@@ -409,7 +409,7 @@ export function AqueductFilterBar(): React.ReactElement {
         <button
           type="button"
           onClick={toggleAtlasOverlay}
-          title="Overlay base-Atlas investable assets & funds on top of the Aqueduct network"
+          title="Show Atlas green-investment assets alongside the corridor (context layer)"
           className={clsx(
             "h-6 flex items-center px-2 rounded border text-[11px] transition-colors cursor-pointer",
             filters.atlasInvestableOverlay

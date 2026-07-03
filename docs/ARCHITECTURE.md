@@ -53,7 +53,7 @@ flowchart TD
   HOOK["useAqueductEconomy.ts<br/>merge + normalize — real anchors FIRST,<br/>every synthetic entity SIM-chipped"]
   HOOK --> STORE["aqueductFiltersStore.ts (module singleton)<br/>+ filterPredicates.mjs<br/>matchesLot · matchesIntent · matchesInstitution"]
   STORE --> MAP["Map layers<br/>AqueductNetworkLayer · AqueductLotsLayer"]
-  STORE --> RAIL["7-section accordion rail"]
+  STORE --> RAIL["4-section rail: Bioregions + Lots / Routes / Institutions"]
   STORE --> PAGES["Pages<br/>/lots · /coops · /financing · /ontology"]
 ```
 
@@ -69,10 +69,11 @@ count, and the bar count cannot disagree.
 
 One hook is the single assembly point. It merges the real EthicHub anchors (loaded snapshot-first
 by `useAqueductLots.ts`, best-effort live re-fetch) ahead of the seeded economy, stamps
-`commodity: "coffee"` onto raw real rows, folds `ledger.json`'s real per-event source URLs into
-the event stream (parsing the ISO `ts` to epoch-ms before a numeric sort — the latent NaN-sort
-bug of the old ledger page is not reproduced, `useAqueductEconomy.ts:347-377`), and returns typed
-arrays: `lots`, `realLots`, `intents`, `actors`, `events`, `flows`, `hubs`, `coops`, `routes`.
+`commodity: "coffee"` onto raw real rows, and folds `ledger.json`'s real per-event source URLs into
+the event stream. That merge parses each ISO `ts` to epoch-ms before the numeric sort, so the
+latent NaN-sort bug of the old ledger page is not reproduced (`useAqueductEconomy.ts:347-377`). The
+hook returns typed arrays: `lots`, `realLots`, `intents`, `actors`, `events`, `flows`, `hubs`,
+`coops`, `routes`.
 The AqueductX types it exports (`AqueductAnyLot`, `AqueductActor`, `AqueductIntent`,
 `AqueductEvent`, and the `AqueductFinanceClaim` union) are the labeled REA model of §5.
 

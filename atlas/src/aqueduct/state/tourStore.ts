@@ -5,10 +5,11 @@ import { buildCascade } from "../sim/cascade.mjs";
 export const CHAPTERS = [
   { key: "aggregate", label: "Aggregate" },
   { key: "verify", label: "Verify" },
-  { key: "price", label: "Price" },
-  { key: "publish", label: "Publish" },
+  { key: "price", label: "Floor" },
+  { key: "publish", label: "List" },
   { key: "fill", label: "Fill" },
   { key: "settle", label: "Settle" },
+  { key: "generalize", label: "Generalize" },
   { key: "ask", label: "Ask" },
 ] as const;
 
@@ -23,6 +24,14 @@ interface TourState {
   started: boolean;
   welcomeDismissed: boolean;
   showAsk: boolean;
+  /** True once the tour has reached the Ask this session (module-singleton, no
+   *  localStorage). On a remount the dock reads this to reopen compact (a pill)
+   *  instead of replaying the full welcome card. */
+  completed: boolean;
+  /** Whether the tour dock is visible. Session-only. The trigger lives in the
+   *  Header's Tour/Docs/Deck pill group (Pat, 2026-07-03) — when closed, the
+   *  dock renders nothing; the header button reopens it. */
+  dockOpen: boolean;
   vaultCount: number;
   vaultTotalEur: number;
   runToken: number;
@@ -67,6 +76,8 @@ let state: TourState = {
   started: false,
   welcomeDismissed: false,
   showAsk: false,
+  completed: false,
+  dockOpen: true,
   vaultCount: _initialVault.count,
   vaultTotalEur: _initialVault.totalEur,
   runToken: 0,
@@ -100,6 +111,15 @@ function startTimer() {
     if (state.revealCount >= events.length) {
       setState({ playing: false });
       stopTimer();
+      // Auto-land the passive "Start → watch" path on the Ask, after a short
+      // beat so the Settle leg lands visually first. Guarded so a replay during
+      // the beat (which zeroes revealCount / flips showAsk) cancels the landing.
+      const total = events.length;
+      setTimeout(() => {
+        if (state.revealCount >= total && total > 0 && !state.showAsk) {
+          setState({ showAsk: true, completed: true });
+        }
+      }, 1200);
       return;
     }
     const newCount = state.revealCount + 1;
@@ -125,6 +145,10 @@ export function setAnchorLot(anchor: AqueductLotSnapshot) {
     .catch((err) => setState({ cascadeError: String(err?.message ?? err) }));
 }
 
+export function setDockOpen(open: boolean) {
+  setState({ dockOpen: open });
+}
+
 export function dismissWelcome() {
   setState({ welcomeDismissed: true });
 }
@@ -147,7 +171,7 @@ export function replayTour() {
 
 export function jumpToChapter(key: ChapterKey) {
   if (key === "ask") {
-    setState({ showAsk: true, playing: false });
+    setState({ showAsk: true, playing: false, completed: true });
     stopTimer();
     return;
   }

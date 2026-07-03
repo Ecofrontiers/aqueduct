@@ -2,15 +2,14 @@ import { List } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { RealVsSimNotice } from "./aqueduct/components/RealVsSimNotice";
+import { setDockOpen } from "./aqueduct/state/tourStore";
 import { router } from "./main";
 import { analytics } from "./modules/analytics";
 import { Modal } from "./shared/components/Modal";
 
-type NavKey = "map" | "financing" | "about";
+type NavKey = "map" | "financing";
 
 const primaryNav: { key: NavKey; name: string; link: string }[] = [
-  { key: "about", name: "About", link: "/about" },
   { key: "map", name: "Map", link: "/" },
   { key: "financing", name: "Financing", link: "/financing" },
 ];
@@ -62,8 +61,8 @@ export default (): React.ReactElement => {
         <div className="flex items-center h-[60px] lg:h-[36px]">
           <Link className="font-extrabold tracking-[0.04em] text-[17px] lg:text-[15px] leading-none select-none" to="/">
             AQUEDUCT
-            <span className="text-[#9333ea]" title="exchange">
-              X
+            <span className="text-[#9333ea]/80 font-semibold text-[0.9em]" title="exchange">
+              x
             </span>
           </Link>
 
@@ -89,8 +88,33 @@ export default (): React.ReactElement => {
             ))}
           </nav>
 
-          <div className="hidden lg:flex items-center ml-auto h-full">
-            <RealVsSimNotice />
+          {/* Tour / Docs / Deck pill group (Pat, 2026-07-03) — the tour trigger
+              moved up from the map corner; the simulation disclaimer moved to
+              the footer. */}
+          <div className="hidden lg:flex items-center ml-auto h-full gap-0 text-[11px] font-medium">
+            <button
+              type="button"
+              className="h-full px-3 hover:bg-gray-100 transition-colors"
+              onClick={() => {
+                if (location.pathname !== "/") router.navigate("/").then(() => setDockOpen(true));
+                else setDockOpen(true);
+              }}
+            >
+              Tour
+            </button>
+            <div className="w-px h-1/2 bg-gray-400/50 self-center" />
+            <Link className="h-full px-3 flex items-center hover:bg-gray-100 transition-colors" to="/guide">
+              Docs
+            </Link>
+            <div className="w-px h-1/2 bg-gray-400/50 self-center" />
+            <a
+              className="h-full px-3 flex items-center hover:bg-gray-100 transition-colors"
+              href="/deck.html"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Deck
+            </a>
           </div>
 
           <button

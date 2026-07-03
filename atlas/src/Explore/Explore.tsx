@@ -27,6 +27,7 @@ import {
   matchesLot,
   useAqueductFilters,
 } from "../aqueduct/state/aqueductFiltersStore";
+import { useTourStore } from "../aqueduct/state/tourStore";
 import { useNewFiltersDispatch, useNewFiltersState } from "../context/filters";
 import type { ActorTypeKey, EntityType, EntityTypeKey } from "../context/filters/filtersContext";
 import { useMapState } from "../context/map";
@@ -508,6 +509,15 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   // Aqueduct economy — lots / intents & routes / solvers & venues for the rail
   const economy = useAqueductEconomy();
 
+  // Tour state — gates cold-load surfaces so "Start the cascade" is the one
+  // unmistakable action on first read (ActivityPanel + quiet arcs until start).
+  const tour = useTourStore();
+
+  // The anchor coffee lot (Soconusco/Chiapas) — real reads are always first in
+  // economy.lots, so realLots[0] is the demo's anchor; pinned to the top of the
+  // coffee list below so the first row the eye hits is the lot the demo is about.
+  const anchorLotId = economy.realLots?.[0]?.aqueduct_id;
+
   // The rail reads through the SAME predicate module the map layers do (one
   // predicate, three consumers → rail/map/bar counts always agree). Memoized on
   // the economy slice + the filter snapshot; the snapshot changes only on a user
@@ -704,7 +714,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
               </MapBox>
               {/* Docked tour + activity pulse + legend — in-layout, this view only */}
               <TourDock mapRef={mapRef as React.RefObject<MapRef>} />
-              <ActivityPanel events={economy.events} />
+              {tour.started && <ActivityPanel events={economy.events} />}
               <MapLegend />
             </div>
           </div>
@@ -910,7 +920,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     {openSection === "lot" &&
                       (() => {
                         const q = accordionSearch.toLowerCase();
-                        const items = q
+                        const matchedLots = q
                           ? filteredLots.filter(
                               (l) =>
                                 l.title_redacted.toLowerCase().includes(q) ||
@@ -918,11 +928,33 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                                 (l.origin.country ?? "").toLowerCase().includes(q),
                             )
                           : filteredLots;
+                        // Pin the anchor Chiapas lot to the top of the coffee list —
+                        // the real lot the demo is about is the first row the eye hits.
+                        const items = anchorLotId
+                          ? [...matchedLots].sort((a, b) =>
+                              a.aqueduct_id === anchorLotId ? -1 : b.aqueduct_id === anchorLotId ? 1 : 0,
+                            )
+                          : matchedLots;
                         // Solar farms share the Lots section (second vertical). Few
-                        // (≤10), so they render in full above the capped coffee list.
+                        // (≤10), so they render in full BELOW the on-message coffee
+                        // list (the anchor coffee lot must be the first read).
+                        // Match solar farms the way a reviewer actually types: by name,
+                        // the commodity word "solar", the platform "glow", and the
+                        // location / state / country strings — the rail promises "coffee
+                        // and solar lots", so "solar" and "Glow" must both find all 10.
                         const solarItems = q
-                          ? filteredGlowFarms.filter(
-                              (f) => f.farm.name.toLowerCase().includes(q) || f.farm.location.toLowerCase().includes(q),
+                          ? filteredGlowFarms.filter((f) =>
+                              [
+                                f.farm.name,
+                                f.commodity, // "solar"
+                                f.source.platform, // "glow"
+                                f.farm.location,
+                                f.origin.region,
+                                f.origin.country,
+                              ]
+                                .join(" ")
+                                .toLowerCase()
+                                .includes(q),
                             )
                           : filteredGlowFarms;
                         return (
@@ -944,19 +976,6 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                               />
                             </div>
                             <div className="flex-1 min-h-0 overflow-y-auto">
-                              {solarItems.map((farmLot) => (
-                                <SolarFarmRow
-                                  key={farmLot.aqueduct_id}
-                                  farmLot={farmLot}
-                                  onLocate={() => {
-                                    mapRef?.current?.flyTo({
-                                      center: [farmLot.map_marker.longitude, farmLot.map_marker.latitude],
-                                      zoom: 9,
-                                      duration: 900,
-                                    });
-                                  }}
-                                />
-                              ))}
                               {items.slice(0, 80).map((lot) => (
                                 <LotExploreCard
                                   key={lot.aqueduct_id}
@@ -969,6 +988,19 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                                         duration: 900,
                                       });
                                     }
+                                  }}
+                                />
+                              ))}
+                              {solarItems.map((farmLot) => (
+                                <SolarFarmRow
+                                  key={farmLot.aqueduct_id}
+                                  farmLot={farmLot}
+                                  onLocate={() => {
+                                    mapRef?.current?.flyTo({
+                                      center: [farmLot.map_marker.longitude, farmLot.map_marker.latitude],
+                                      zoom: 9,
+                                      duration: 900,
+                                    });
                                   }}
                                 />
                               ))}

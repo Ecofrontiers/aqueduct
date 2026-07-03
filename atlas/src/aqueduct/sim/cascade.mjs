@@ -8,6 +8,7 @@
 // presented as live" (this cascade is honestly presented as a replay of a
 // real computation, not as a live independent run each time).
 
+import { getMinerTerms, listGlowFarms } from "../connectors/glow.mjs";
 import { evaluateBuyerMatch } from "./buyerAgent.mjs";
 import { buildFinanceIntent } from "./financeIntent.mjs";
 import { priceLot } from "./oracle.mjs";
@@ -430,6 +431,61 @@ export async function buildCascade(lot) {
     valueText: lot.price ? `€${(lot.price.amount * 70).toFixed(0)}` : "—",
     status: "OK",
     parentId: passthroughId,
+  });
+
+  // ---- Chapter 7: Generalize (B9 — second commodity, same loop) ----
+  // The gate-closer, shown not told: the SAME aggregate → verify → price →
+  // publish → fill → settle loop the coffee lot just ran also runs on Glow solar
+  // farms (farm = lot, GCA audit = certifier, GLW/GCC = oracle registers). The
+  // farm reads are real public reads (glow.org/api/audits, SNAPSHOT); the
+  // finance-this-farm fill stays SIM and labeled, exactly like the coffee fills.
+  // Deterministic — listGlowFarms()/getMinerTerms() are dated snapshots, no RNG.
+  const glowFarms = listGlowFarms();
+  const flFarms = glowFarms.filter((f) => f.location.includes("FL"));
+  const miner = getMinerTerms();
+  const glowReadId = push({
+    chapter: "generalize",
+    beat: "B9",
+    prov: "SNAPSHOT",
+    agent: "@scout-glow",
+    verb: "read",
+    object: `${glowFarms.length} Glow solar farms — public audits`,
+    detail: `coordinates, panels, output — ${flFarms.map((f) => f.name).join(" + ")} in Florida`,
+    valueText: `SNAPSHOT ${miner.fetched_at}`,
+    status: "OK",
+    parentId: vaultId,
+    expand: {
+      headline:
+        "Same loop, second commodity: the Glow scout read real solar-farm audits — coordinates, panel counts, weekly output — from Glow's public audits API. Farm = lot, GCA audit = certifier, GLW/GCC = oracle registers.",
+      sections: [
+        { label: "tool call", value: "GET glow.org/api/audits" },
+        { label: "farms read", value: `${glowFarms.length} (SNAPSHOT ${miner.fetched_at})` },
+        { label: "Florida cluster", value: flFarms.map((f) => `${f.name} (${f.location})`).join("; ") },
+      ],
+      sourceUrl: "https://glow.org/api/audits",
+    },
+  });
+  push({
+    chapter: "generalize",
+    beat: "B9",
+    prov: "SIM",
+    agent: "@intent-registry",
+    verb: "published",
+    object: "finance-this-farm intent — Glow solar",
+    detail: `$${miner.principalUsd} → ~${miner.glwPerWeek} GLW/week × ${miner.termWeeks} weeks (${miner.confidence})`,
+    valueText: "SIM fill",
+    status: "FILLED",
+    parentId: glowReadId,
+    expand: {
+      headline:
+        "A finance-this-farm intent carries the real observed Miner terms — reads live, fill simulated and labeled, exactly like the coffee fills. One loop settled over oceans, one over wires.",
+      sections: [
+        { label: "principal", value: `$${miner.principalUsd} USDC (${miner.confidence})` },
+        { label: "reward stream", value: `~${miner.glwPerWeek} GLW/week × ${miner.termWeeks} weeks` },
+        { label: "source", value: miner.source },
+        { label: "corroboration", value: miner.corroboration },
+      ],
+    },
   });
 
   return {

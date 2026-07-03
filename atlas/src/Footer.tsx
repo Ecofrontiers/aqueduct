@@ -1,6 +1,7 @@
 import { GithubLogo, X } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { RealVsSimNotice } from "./aqueduct/components/RealVsSimNotice";
 import { analytics } from "./modules/analytics";
 
 function LegalModal({ onClose }: { onClose: () => void }) {
@@ -42,35 +43,13 @@ export default (): React.ReactElement => {
         {/* Center: List Project — hidden on small screens */}
         <div className="hidden md:flex items-center h-full group/list">
           <div className="w-px h-1/2 bg-gray-400/50 group-hover/list:bg-gray-400 transition-colors self-center" />
-          <a
-            className="h-full flex items-center px-6 text-[11px] font-medium hover:bg-gray-100 transition-colors"
-            href="/guide"
-            onClick={() => {
-              analytics.sendEvent({
-                category: "Link Click",
-                action: "Docs",
-                label: "Footer",
-              });
-            }}
-          >
-            Docs
-          </a>
-          <div className="w-px h-1/2 bg-gray-400/50 transition-colors self-center" />
-          <a
-            className="h-full flex items-center px-6 text-[11px] font-medium hover:bg-gray-100 transition-colors"
-            href="/deck.html"
-            target="_blank"
-            onClick={() => {
-              analytics.sendEvent({
-                category: "Link Click",
-                action: "Deck",
-                label: "Footer",
-              });
-            }}
-            rel="noreferrer"
-          >
-            Deck
-          </a>
+          <div className="flex items-center gap-2 px-4">
+            <RealVsSimNotice />
+            <span className="text-[10px] text-gray-400">
+              Simulated prototype — most values are simulated; real reads, testnet settles, and estimates are labeled
+              throughout.
+            </span>
+          </div>
           <div className="w-px h-1/2 bg-gray-400/50 group-hover/list:bg-gray-400 transition-colors self-center" />
         </div>
 

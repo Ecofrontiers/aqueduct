@@ -29,7 +29,7 @@ A smallholder carries her harvest to the one buyer she can reach and takes the p
 
 Three layers, mapping to the two codebases forked in as our starting point:
 
-| Layer | What it does | Fork |
+| Layer | What it does | Fork / where it lives |
 |---|---|---|
 | **READ / aggregation** | Make platforms, entities, and certifications legible on a bioregion map — the discovery + provenance surface. | [`atlas/`](atlas/) — forked from **Regen Atlas / Ecospatial** (React + Vite + Mapbox + Supabase; already aggregates 500+ tokenized green assets across 7+ protocols, provenance on Filecoin). |
 | **WRITE / intents + solver-transport** | Publish a farmer/co-op intent; a solver + transport network fills it (buy, finance, move) over a landed-cost graph. | [`routes/`](routes/) — forked from **SlabClaw Routes** (the intents + route-cost + solver engine, proven on physical goods). |
@@ -125,7 +125,12 @@ Routes — forked as the starting point, credited in-app.
 
 ## License
 
-MIT — © 2026 Pat Rawson (Ecofrontiers SARL). See [`LICENSE`](LICENSE).
+Two grants, deliberately distinct:
+
+- **Code:** MIT — © 2026 Pat Rawson (Ecofrontiers SARL). See [`LICENSE`](LICENSE).
+- **Standard:** the canonical lot schema and the content-addressed lot-ID spec are
+  dedicated to the public domain under CC0 1.0 — see [`LICENSE-SCHEMA`](LICENSE-SCHEMA).
+  Unownable, not merely unowned.
 
 Both forked components are our own prior work, not third-party code: `atlas/`
 (Regen Atlas / Ecospatial) and `routes/` (SlabClaw Routes) are each © Pat Rawson

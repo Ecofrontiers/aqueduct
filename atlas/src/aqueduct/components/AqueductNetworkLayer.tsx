@@ -67,13 +67,8 @@ type ClusterFeature = {
  * destination, width ∝ quantity, paired opposite curvature for two-way pairs).
  */
 
-export const ACCOUNT_COLORS = {
-  goods: "#b45309",
-  capitalExo: "#4f46e5",
-  capitalEndo: "#059669",
-  settle: "rgb(23, 127, 224)",
-  venue: "#9333ea",
-} as const;
+export { ACCOUNT_COLORS } from "./accountColors";
+import { ACCOUNT_COLORS } from "./accountColors";
 
 type AccountKind = "goods" | "capitalExo" | "settle";
 
@@ -435,7 +430,9 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
           paint={{
             "line-color": ["get", "color"],
             "line-width": ["get", "width"],
-            "line-opacity": 0.9,
+            // Quiet the animated circuits pre-cascade (cold load reads as decoration
+            // otherwise); they resolve to full flow the moment the tour starts.
+            "line-opacity": tour.started ? 0.9 : 0.25,
             "line-dasharray": DASH_STEPS[dashStep],
           }}
           layout={{ "line-cap": "round", "line-join": "round" }}

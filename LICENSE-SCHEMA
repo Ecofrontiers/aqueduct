@@ -1,0 +1,33 @@
+CC0 1.0 Universal — Public Domain Dedication
+
+Scope of this dedication
+------------------------
+This dedication applies to the following specifications (the "Specifications"),
+as distinct from the source code of this repository (which is licensed under
+the MIT License, see ./LICENSE):
+
+  1. The canonical lot schema — the field vocabulary and structure for
+     describing a commodity lot, as defined in
+     atlas/src/aqueduct/schema/canonicalLot.mjs.
+  2. The content-addressed lot-identifier specification — the method of
+     deriving a lot identifier from the lot's own canonical data, as defined
+     in the same module.
+
+Dedication
+----------
+To the greatest extent permitted by law, Ecofrontiers SARL waives all
+copyright and related or neighboring rights in the Specifications and
+dedicates them to the public domain worldwide, under the terms of the
+Creative Commons CC0 1.0 Universal Public Domain Dedication.
+
+Full legal code: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+Human-readable deed: https://creativecommons.org/publicdomain/zero/1.0/
+
+Intent
+------
+Anyone may use, implement, extend, or derive identifiers from the
+Specifications for any purpose, commercial or non-commercial, without
+permission, attribution, or fee. The namespace is the algorithm, not us:
+an identifier scheme nobody owns cannot be enclosed or rented back.
+
+This dedication is irrevocable.

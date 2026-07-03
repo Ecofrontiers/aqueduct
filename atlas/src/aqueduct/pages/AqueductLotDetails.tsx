@@ -12,6 +12,7 @@ import { MapBox } from "../../shared/components/MapBox";
 import { ProvenanceChip } from "../components/Chips";
 import { LotCard } from "../components/LotCard";
 import { type AqueductAnyLot, useAqueductEconomy } from "../hooks/useAqueductEconomy";
+import { buildCoopRegistry } from "../sim/tradeFinance.mjs";
 
 /**
  * Aqueduct extended lot page — /lots/:lotId. Reuses the Atlas asset-page
@@ -23,9 +24,21 @@ import { type AqueductAnyLot, useAqueductEconomy } from "../hooks/useAqueductEco
 export default function AqueductLotDetails(): React.ReactElement {
   const { lotId } = useParams<{ lotId: string }>();
   const { mapStyle } = useMapState();
-  const { lots, events, loading } = useAqueductEconomy();
+  const { lots, realLots, events, loading } = useAqueductEconomy();
 
   const lot = lots.find((l) => l.aqueduct_id === lotId || l.source?.platform_lot_id === lotId);
+
+  // If this lot's coop runs an assurance round on Financing, deep-link straight to it. The
+  // seat id is buildCoopRegistry's own (coop-real-<hash>), resolved here rather than
+  // recomputed — so the anchor always matches Card A's id="assurance-<seatId>".
+  const assuranceSeatId = useMemo(() => {
+    if (!lot) return null;
+    const seat = buildCoopRegistry(realLots ?? []).find(
+      (s: { real: boolean; lots: Array<{ aqueduct_id: string }> }) =>
+        s.real && s.lots.some((l) => l.aqueduct_id === lot.aqueduct_id),
+    );
+    return seat?.id ?? null;
+  }, [lot, realLots]);
 
   // This lot's own slice of the events memo — real reads (ethichub.com, onchain) plus
   // seeded-economy events, filtered to lotId. The ex-/ledger page's source links now
@@ -112,12 +125,22 @@ export default function AqueductLotDetails(): React.ReactElement {
 
               <RoutesPanel lot={lot} />
               <SimilarLots lot={lot} allLots={lots} />
-              <Link
-                to="/financing"
-                className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 px-1 transition-colors"
-              >
-                <HandCoins size={13} /> Financing that could fund lots like this →
-              </Link>
+              <div className="flex flex-col gap-1 px-1">
+                <Link
+                  to={`/financing#lot-${lotId}`}
+                  className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  <HandCoins size={13} /> Back this lot — pre-sale, receivable, or its coop's assurance round →
+                </Link>
+                {assuranceSeatId && (
+                  <Link
+                    to={`/financing#assurance-${assuranceSeatId}`}
+                    className="flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-gray-800 transition-colors"
+                  >
+                    <HandCoins size={12} /> Open its threshold pledge round →
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
           <div className="hidden md:block">
@@ -151,7 +174,7 @@ function RoutesPanel({
         <span className="text-[10px] text-gray-400">reference quote, projection</span>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100 mb-2">
-        <RouteStat label="Blended cost" value={`€${blendedEurPerKg.toFixed(3)}/kg`} />
+        <RouteStat label="Landed ceiling" value={`€${blendedEurPerKg.toFixed(3)}/kg`} />
         <RouteStat
           label={`Insurance (${((bid.insuredValuePct ?? 1.1) * 100).toFixed(0)}% CIF)`}
           value={insuranceLine ? `€${insuranceLine.eurPerKg.toFixed(4)}/kg` : "—"}

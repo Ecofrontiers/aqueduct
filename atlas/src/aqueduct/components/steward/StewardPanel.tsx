@@ -81,7 +81,11 @@ export function StewardPanel({ seat, avgFob }: { seat: SeatView; avgFob: number 
   ) as Commodity;
 
   return (
-    <div className="bg-cardBackground border border-gray-200 px-5 py-4" style={{ borderLeft: `2px solid ${INTENT}` }}>
+    <div
+      id="steward"
+      className="scroll-mt-20 bg-cardBackground border border-gray-200 px-5 py-4"
+      style={{ borderLeft: `2px solid ${INTENT}` }}
+    >
       <div className="flex items-center gap-1.5 mb-1">
         <Megaphone size={14} style={{ color: INTENT }} />
         <h2 className="text-xs font-bold text-gray-900">Your steward — post an intent</h2>
@@ -386,13 +390,22 @@ function DraftCard({ draft, seat, avgFob }: { draft: AqueductIntent; seat: SeatV
             on the financing side: institutional buyers, grants, and funds, matched against your lots by the same policy
             engine.
           </p>
-          <Link
-            to="/financing"
-            className="inline-flex items-center gap-1 text-[11px] font-medium"
-            style={{ color: INTENT }}
-          >
-            See who could fund it on Financing <ArrowRight size={11} />
-          </Link>
+          <div className="flex flex-col gap-1">
+            <Link
+              to="/financing"
+              className="inline-flex items-center gap-1 text-[11px] font-medium"
+              style={{ color: INTENT }}
+            >
+              See who could fund it on Financing <ArrowRight size={11} />
+            </Link>
+            <Link
+              to={`/financing#assurance-${seat.id}`}
+              className="inline-flex items-center gap-1 text-[11px] font-medium"
+              style={{ color: INTENT }}
+            >
+              See this as an assurance round on Financing <ArrowRight size={11} />
+            </Link>
+          </div>
         </div>
       )}
 

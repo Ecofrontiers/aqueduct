@@ -11,7 +11,6 @@ import { config } from "./wagmi.ts";
 
 import "./index.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import About from "./About/About.tsx";
 import ActionDetails from "./Actions/ActionDetails.tsx";
 import AddAsset from "./AddAsset.tsx";
 import AgentDetails from "./Agents/AgentDetails.tsx";
@@ -86,8 +85,9 @@ export const router = createBrowserRouter([
         element: <AssetDetails />,
       },
       {
+        // About folded into /guide (Docs) — old links land on the docs page.
         path: "/about",
-        element: <About />,
+        element: <Navigate to="/guide" replace />,
       },
       {
         path: "/privacy-policy",
@@ -169,6 +169,13 @@ export const router = createBrowserRouter([
         // The ledger page folded into per-lot event trails + the dev-mode bar
         // (docs/research/12 ledger migration) — old links land on the map.
         path: "/ledger",
+        element: <Navigate to="/" replace />,
+      },
+      {
+        // Any unknown path (typos, stale deep links) lands on the map rather than
+        // the error boundary — generalizes the /ledger redirect so an off-path
+        // never dead-ends. The error boundary still catches real render crashes.
+        path: "*",
         element: <Navigate to="/" replace />,
       },
     ],
