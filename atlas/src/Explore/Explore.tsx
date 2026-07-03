@@ -927,6 +927,9 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                           : filteredGlowFarms;
                         return (
                           <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="px-4 pt-2 pb-2 text-xs text-gray-400 shrink-0">
+                              coffee and solar lots the swarm can price — real reads labeled
+                            </div>
                             <div className="relative shrink-0 border-b border-gray-200">
                               <MagnifyingGlass
                                 size={14}
@@ -992,7 +995,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     >
                       <span className="flex items-center gap-1.5">
                         <ArrowsLeftRight size={14} style={{ color: AQUEDUCT_SECTION_COLORS.intent }} />
-                        Intents & Routes{" "}
+                        Routes{" "}
                         <span className="font-normal text-gray-400">({filteredIntents.length.toLocaleString()})</span>
                       </span>
                       <CaretDown
@@ -1010,6 +1013,9 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                           : filteredIntents;
                         return (
                           <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="px-4 pt-2 pb-2 text-xs text-gray-400 shrink-0">
+                              asks to sell or finance, and the shipments that fill them
+                            </div>
                             <div className="relative shrink-0 border-b border-gray-200">
                               <MagnifyingGlass
                                 size={14}
@@ -1063,7 +1069,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     >
                       <span className="flex items-center gap-1.5">
                         <Cpu size={14} style={{ color: AQUEDUCT_SECTION_COLORS.actor }} />
-                        Solvers & Venues <span className="font-normal text-gray-400">({filteredActors.length})</span>
+                        Institutions <span className="font-normal text-gray-400">({filteredActors.length})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1080,6 +1086,9 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                           : filteredActors;
                         return (
                           <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="px-4 pt-2 pb-2 text-xs text-gray-400 shrink-0">
+                              coops, buyers, marketplaces, and the agents that serve them
+                            </div>
                             <div className="relative shrink-0 border-b border-gray-200">
                               <MagnifyingGlass
                                 size={14}
@@ -1089,7 +1098,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                                 type="text"
                                 value={accordionSearch}
                                 onChange={(e) => setAccordionSearch(e.target.value)}
-                                placeholder="Search solvers & venues..."
+                                placeholder="Search institutions..."
                                 className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
                               />
                             </div>

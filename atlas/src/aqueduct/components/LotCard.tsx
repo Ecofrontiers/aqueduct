@@ -17,6 +17,7 @@ import {
 } from "@phosphor-icons/react";
 import type React from "react";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { CollapsibleSection } from "../../shared/components/CollapsibleSection";
 import type { AqueductAnyLot, AqueductEvent } from "../hooks/useAqueductEconomy";
 import { runSolverRace } from "../sim/solverRoster.mjs";
@@ -91,7 +92,7 @@ export function LotCard({ lot, events = [] }: { lot: AqueductAnyLot; events?: Aq
   const eudrComplete = eudrChecks.every((c) => c.present);
 
   return (
-    <div className="aq-layer bg-cardBackground border border-gray-200 overflow-hidden flex flex-col">
+    <div className="aq-layer bg-cardBackground border border-gray-100 overflow-hidden flex flex-col">
       {/* ── Hero header ── */}
       <div className="relative overflow-hidden">
         {lot.image && (
@@ -408,6 +409,12 @@ export function LotCard({ lot, events = [] }: { lot: AqueductAnyLot; events?: Aq
                   </div>
                 ))}
               </div>
+              <Link
+                to="/financing"
+                className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-700 transition-colors"
+              >
+                <HandCoins size={12} /> Financing that could fund this →
+              </Link>
               {lot.onchain && (
                 <div className="bg-gray-50 px-3 py-2">
                   <div className="flex items-center justify-between">

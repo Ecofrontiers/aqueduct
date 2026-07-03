@@ -1,9 +1,7 @@
 import { List } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { ConnectKitButton } from "connectkit";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAccount } from "wagmi";
 import { RealVsSimNotice } from "./aqueduct/components/RealVsSimNotice";
 import { router } from "./main";
 import { analytics } from "./modules/analytics";
@@ -19,8 +17,12 @@ const primaryNav: { key: NavKey; name: string; link: string }[] = [
 
 const secondaryLinks = [
   {
-    name: "List Project",
-    url: "/list",
+    name: "Docs",
+    url: "/guide",
+  },
+  {
+    name: "Deck",
+    url: "/deck.html",
   },
 ];
 
@@ -45,9 +47,7 @@ function isActive(pathname: string, link: string): boolean {
 
 export default (): React.ReactElement => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showBmwiNotice, setShowBmwiNotice] = useState(false);
   const location = useLocation();
-  const { chain, isConnected: walletConnected } = useAccount();
 
   return (
     <>
@@ -89,29 +89,8 @@ export default (): React.ReactElement => {
             ))}
           </nav>
 
-          <div className="hidden lg:flex items-center ml-auto h-full group/wallet">
+          <div className="hidden lg:flex items-center ml-auto h-full">
             <RealVsSimNotice />
-            <div className="w-px h-1/2 bg-gray-400/50 self-center mr-1" />
-            {walletConnected && chain && (
-              <>
-                <div className="flex items-center gap-1.5 px-3 text-[10px] text-gray-400">
-                  <div className={clsx("w-1.5 h-1.5 rounded-full", chain.testnet ? "bg-amber-400" : "bg-green-400")} />
-                  <span>{chain.name}</span>
-                </div>
-                <div className="w-px h-1/2 bg-gray-400/50 self-center" />
-              </>
-            )}
-            <div className="w-px h-1/2 bg-gray-400/50 group-hover/wallet:bg-gray-400 transition-colors self-center" />
-            <ConnectKitButton.Custom>
-              {({ isConnected, show, truncatedAddress, ensName }) => (
-                <button
-                  onClick={show}
-                  className="h-full px-4 text-[11px] font-medium hover:bg-gray-100 transition-colors flex items-center"
-                >
-                  {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
-                </button>
-              )}
-            </ConnectKitButton.Custom>
           </div>
 
           <button
@@ -161,7 +140,8 @@ export default (): React.ReactElement => {
                           action: item.name,
                           label: "Mobile Menu",
                         });
-                        if (!item.url.startsWith("http")) {
+                        // .html targets are static files (deck) — browser handles them, not the SPA router
+                        if (!item.url.startsWith("http") && !item.url.endsWith(".html")) {
                           e.preventDefault();
                           router.navigate(item.url).then(() => setIsModalOpen(false));
                         }
@@ -175,7 +155,7 @@ export default (): React.ReactElement => {
 
               {/* Footer — pinned to bottom */}
               <div className="flex flex-col items-center pb-8 text-xs text-gray-500">
-                <p>&copy; AqueductX 2026 &middot; built on Regen Atlas</p>
+                <p>&copy; AqueductX 2026</p>
                 <div className="flex gap-4 mt-2">
                   {legalLinks.map((item) => (
                     <div
@@ -188,30 +168,8 @@ export default (): React.ReactElement => {
                       {item.name}
                     </div>
                   ))}
-                  <div className="cursor-pointer hover:text-gray-900" onClick={() => setShowBmwiNotice(true)}>
-                    BMWi Notice
-                  </div>
                 </div>
               </div>
-            </div>
-          </Modal>
-        )}
-
-        {/* BMWi Notice modal */}
-        {showBmwiNotice && (
-          <Modal onClose={() => setShowBmwiNotice(false)}>
-            <div className="flex flex-col items-center gap-4 p-4">
-              <img src="/BMWE_de_v3__Web_farbig.svg" width="200" />
-              <p className="text-sm text-center text-gray-700 leading-relaxed">
-                Funded by the Federal Ministry for Economic Affairs and Energy (BMWi) based on a decision of the German
-                Bundestag.
-              </p>
-              <button
-                className="mt-2 px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded"
-                onClick={() => setShowBmwiNotice(false)}
-              >
-                Close
-              </button>
             </div>
           </Modal>
         )}

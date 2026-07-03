@@ -1,51 +1,23 @@
-import { useState } from "react";
 import { GithubLogo, X } from "@phosphor-icons/react";
-import { analytics } from "./modules/analytics";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { analytics } from "./modules/analytics";
 
 function LegalModal({ onClose }: { onClose: () => void }) {
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-background rounded-lg p-6 max-w-sm w-full mx-4 relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-white"
-          onClick={onClose}
-        >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
+      <div className="bg-background rounded-lg p-6 max-w-sm w-full mx-4 relative" onClick={(e) => e.stopPropagation()}>
+        <button className="absolute top-3 right-3 text-gray-400 hover:text-white" onClick={onClose}>
           <X size={18} />
         </button>
         <h3 className="text-sm font-semibold mb-4">Legal</h3>
         <div className="flex flex-col gap-3">
-          <Link
-            to="/privacy-policy"
-            className="text-sm hover:text-primary-300 transition-colors"
-            onClick={onClose}
-          >
+          <Link to="/privacy-policy" className="text-sm hover:text-primary-300 transition-colors" onClick={onClose}>
             Privacy Policy
           </Link>
-          <Link
-            to="/imprint"
-            className="text-sm hover:text-primary-300 transition-colors"
-            onClick={onClose}
-          >
+          <Link to="/imprint" className="text-sm hover:text-primary-300 transition-colors" onClick={onClose}>
             Imprint
           </Link>
-        </div>
-        <div className="mt-5 pt-4 border-t border-white/10 flex items-center gap-3">
-          <img
-            src="/BMWE_de_v3__Web_farbig.svg"
-            width="50"
-            className="shrink-0 opacity-60"
-          />
-          <p className="text-[10px] text-gray-500 leading-tight">
-            Funded by the Federal Ministry for Economic Affairs and Energy
-            (BMWi) based on a decision of the German Bundestag.
-          </p>
         </div>
       </div>
     </div>
@@ -62,18 +34,7 @@ export default (): React.ReactElement => {
         <div className="flex items-center gap-1 text-[10px] text-gray-500 shrink-0">
           <span>&copy; AqueductX 2026</span>
           <span>&middot;</span>
-          <a
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-            href="https://www.regenatlas.xyz"
-            target="_blank"
-          >
-            built on Regen Atlas
-          </a>
-          <span>&middot;</span>
-          <button
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-            onClick={() => setShowLegal(true)}
-          >
+          <button className="text-gray-500 hover:text-gray-700 transition-colors" onClick={() => setShowLegal(true)}>
             Legal
           </button>
         </div>
@@ -83,31 +44,32 @@ export default (): React.ReactElement => {
           <div className="w-px h-1/2 bg-gray-400/50 group-hover/list:bg-gray-400 transition-colors self-center" />
           <a
             className="h-full flex items-center px-6 text-[11px] font-medium hover:bg-gray-100 transition-colors"
-            href="/list"
+            href="/guide"
             onClick={() => {
               analytics.sendEvent({
                 category: "Link Click",
-                action: "List Project",
+                action: "Docs",
                 label: "Footer",
               });
             }}
           >
-            List Project
+            Docs
           </a>
           <div className="w-px h-1/2 bg-gray-400/50 transition-colors self-center" />
           <a
             className="h-full flex items-center px-6 text-[11px] font-medium hover:bg-gray-100 transition-colors"
-            href="https://paragraph.xyz/@regenatlas"
+            href="/deck.html"
             target="_blank"
             onClick={() => {
               analytics.sendEvent({
                 category: "Link Click",
-                action: "Sign Up For Updates",
+                action: "Deck",
                 label: "Footer",
               });
             }}
+            rel="noreferrer"
           >
-            Subscribe
+            Deck
           </a>
           <div className="w-px h-1/2 bg-gray-400/50 group-hover/list:bg-gray-400 transition-colors self-center" />
         </div>
@@ -125,6 +87,7 @@ export default (): React.ReactElement => {
                 label: "Footer",
               });
             }}
+            rel="noreferrer"
           >
             <GithubLogo size={14} />
           </a>

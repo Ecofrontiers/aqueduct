@@ -254,14 +254,18 @@ export default function AqueductCoopSeat(): React.ReactElement {
                     matchedLotCount: number;
                     matchedValueEur: number;
                   }) => (
-                    <div key={a.handle} className="flex items-center justify-between gap-2 bg-gray-50 px-3 py-1.5">
+                    <Link
+                      key={a.handle}
+                      to={`/financing#${a.handle}`}
+                      className="flex items-center justify-between gap-2 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 transition-colors"
+                    >
                       <span className="text-[11px] text-gray-700 truncate">
                         {a.name} <span className="text-gray-400">({a.kind})</span>
                       </span>
                       <span className="text-[11px] aq-mono text-gray-600 shrink-0">
                         {a.matchedLotCount} lot(s) · {fmtEur(a.matchedValueEur)}
                       </span>
-                    </div>
+                    </Link>
                   ),
                 )}
                 {projection.eligibleActors.length === 0 && (
@@ -271,6 +275,12 @@ export default function AqueductCoopSeat(): React.ReactElement {
                   </p>
                 )}
               </div>
+              <Link
+                to="/financing"
+                className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-blue-600 hover:text-blue-800"
+              >
+                See this receivable on Financing — the capital account it forms in <ArrowUpRight size={11} />
+              </Link>
             </div>
 
             {/* ── Global shipping: one blended quote, eBay-GSP style ── */}

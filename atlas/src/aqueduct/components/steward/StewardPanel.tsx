@@ -1,6 +1,7 @@
-import { CheckCircle, Handshake, Lock, Megaphone, ShieldCheck, Sliders } from "@phosphor-icons/react";
+import { ArrowRight, CheckCircle, Handshake, Lock, Megaphone, ShieldCheck, Sliders } from "@phosphor-icons/react";
 import type React from "react";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import type { AqueductIntent } from "../../hooks/useAqueductEconomy";
 import { runSolverRace } from "../../sim/solverRoster.mjs";
 import {
@@ -343,16 +344,20 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function DraftCard({ draft, seat, avgFob }: { draft: AqueductIntent; seat: SeatView; avgFob: number }) {
   const a = draft.authored;
   const filled = draft.status === "filled";
+  // A finance-this-planting intent is a capital ask, not a shipment — the landed-cost
+  // solver race answers the wrong question for it (a €/kg landed cost), so we branch it to
+  // the Financing surface instead of running the race. The sell path is untouched.
+  const isFinance = draft.intentType === "finance-this-planting";
 
   // REAL solver machinery: the same runSolverRace the tour and the page's own publish
   // button call, fed the user's entered floor (→ FOB) and quantity (→ weight). Every bid
   // is the deterministic landed-cost computation over the seat's real EUDR/quality
   // aggregate — not a bespoke invented number.
   const race = useMemo(() => {
-    if (!a) return null;
+    if (!a || isFinance) return null;
     const fob = a.floorEurPerKg ?? avgFob;
     return runSolverRace({ lot: buildAggregateLot(seat.lots), fobEurPerKg: fob, weightKg: a.quantityKg });
-  }, [a, seat.lots, avgFob]);
+  }, [a, isFinance, seat.lots, avgFob]);
 
   const winner = race?.winner ?? null;
 
@@ -372,6 +377,24 @@ function DraftCard({ draft, seat, avgFob }: { draft: AqueductIntent; seat: SeatV
           {a?.note && <p className="text-[11px] text-gray-400 italic mt-0.5">"{a.note}"</p>}
         </div>
       </div>
+
+      {/* finance branch — a capital ask routes to the Financing surface, not the race */}
+      {isFinance && (
+        <div className="px-3 py-3 space-y-2">
+          <p className="text-[11px] text-gray-600 leading-relaxed">
+            This is a capital ask, not a shipment — no landed-cost race applies. The capital that could clear it forms
+            on the financing side: institutional buyers, grants, and funds, matched against your lots by the same policy
+            engine.
+          </p>
+          <Link
+            to="/financing"
+            className="inline-flex items-center gap-1 text-[11px] font-medium"
+            style={{ color: INTENT }}
+          >
+            See who could fund it on Financing <ArrowRight size={11} />
+          </Link>
+        </div>
+      )}
 
       {/* (b) solver responses — REAL running race */}
       {race && (
@@ -404,41 +427,43 @@ function DraftCard({ draft, seat, avgFob }: { draft: AqueductIntent; seat: SeatV
         </div>
       )}
 
-      {/* (c) accept fill (verb #3) */}
-      <div className="px-3 py-2 border-t border-gray-100 space-y-2">
-        {!filled
-          ? winner && (
-              <button
-                type="button"
-                onClick={() => acceptFill(draft.id)}
-                className="w-full py-1.5 text-[11px] font-medium border transition-colors"
-                style={{ borderColor: INTENT, color: INTENT }}
-              >
-                Accept fill — €{winner.bid.landedEurPerKg.toFixed(3)}/kg landed via {winner.handle}
-              </button>
-            )
-          : winner && (
-              <div className="flex items-center gap-1.5 text-[11px] text-gray-700">
-                <CheckCircle size={13} className="text-green-700" weight="fill" />
-                Fill accepted — €{winner.bid.landedEurPerKg.toFixed(3)}/kg via {winner.handle}
-                <ProvenanceChip provenance="SIM" />
-              </div>
-            )}
+      {/* (c) accept fill (verb #3) — sell path only; a finance ask has no shipping fill */}
+      {!isFinance && (
+        <div className="px-3 py-2 border-t border-gray-100 space-y-2">
+          {!filled
+            ? winner && (
+                <button
+                  type="button"
+                  onClick={() => acceptFill(draft.id)}
+                  className="w-full py-1.5 text-[11px] font-medium border transition-colors"
+                  style={{ borderColor: INTENT, color: INTENT }}
+                >
+                  Accept fill — €{winner.bid.landedEurPerKg.toFixed(3)}/kg landed via {winner.handle}
+                </button>
+              )
+            : winner && (
+                <div className="flex items-center gap-1.5 text-[11px] text-gray-700">
+                  <CheckCircle size={13} className="text-green-700" weight="fill" />
+                  Fill accepted — €{winner.bid.landedEurPerKg.toFixed(3)}/kg via {winner.handle}
+                  <ProvenanceChip provenance="SIM" />
+                </div>
+              )}
 
-        {/* (d) confirm settle (verb #4) — always at the honest boundary: disabled, no key,
+          {/* (d) confirm settle (verb #4) — always at the honest boundary: disabled, no key,
             no broadcast. The steward negotiates; it never settles. */}
-        <button
-          type="button"
-          disabled
-          className="w-full py-1.5 text-[11px] font-medium bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
-        >
-          Confirm settle
-        </button>
-        <p className="text-[10px] text-gray-400 leading-relaxed">
-          settle prepared — broadcast requires <span className="aq-mono">AQUEDUCT_SETTLE_PRIVATE_KEY</span> (yours, not
-          the agent's). The steward negotiates; it never settles — that line is the product.
-        </p>
-      </div>
+          <button
+            type="button"
+            disabled
+            className="w-full py-1.5 text-[11px] font-medium bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
+          >
+            Confirm settle
+          </button>
+          <p className="text-[10px] text-gray-400 leading-relaxed">
+            settle prepared — broadcast requires <span className="aq-mono">AQUEDUCT_SETTLE_PRIVATE_KEY</span> (yours,
+            not the agent's). The steward negotiates; it never settles — that line is the product.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -502,21 +502,29 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
                 if (map) map.easeTo({ center: [lng, lat], zoom: map.getZoom() + 2, duration: 500 });
               }}
             >
+              {/* Numbered-circle cluster badge — the map's shared cluster idiom
+                  (cf. the SIM-lot GL clusters: white fill, colored 2px stroke,
+                  count centered). Venue-purple ring keys it to the institutions
+                  category; the words live in the tooltip so the map stays quiet. */}
               <div
-                title={`${count} institutions here — zoom in to individuate (SIM network)`}
+                title={`${count} institutions — click to zoom (SIM network)`}
                 style={{
-                  fontSize: 11,
-                  color: "#374151",
+                  width: 28,
+                  height: 28,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#111827",
                   background: "rgba(255,255,255,0.95)",
-                  border: "1px solid #d1d5db",
-                  borderRadius: 999,
-                  padding: "3px 9px",
-                  whiteSpace: "nowrap",
+                  border: `2px solid ${ACCOUNT_COLORS.venue}`,
+                  borderRadius: "50%",
                   boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
                   cursor: "pointer",
                 }}
               >
-                {count} institutions
+                {count}
               </div>
             </Marker>
           );

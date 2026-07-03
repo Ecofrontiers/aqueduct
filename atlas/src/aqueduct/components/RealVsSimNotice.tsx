@@ -32,11 +32,11 @@ export function RealVsSimNotice(): React.ReactElement {
       <button
         type="button"
         onClick={toggle}
-        title="Real vs sim — every element on this app is labeled; click to see the breakdown"
+        title="Most values are simulated — every element is labeled real or sim; click for the breakdown"
         className="flex items-center gap-1 px-2 py-1 text-[10px] font-medium text-gray-500 hover:text-gray-800 transition-colors flex-shrink-0"
       >
         <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-        real / sim
+        most values simulated
       </button>
     );
   }

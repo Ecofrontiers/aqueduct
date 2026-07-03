@@ -274,6 +274,31 @@ export default function AqueductMapGuide(): React.ReactElement {
             </div>
           </Section>
 
+          {/* ── 4b. Reading the filter bar ── */}
+          <Section title="Reading the filter bar">
+            <p>
+              The bar across the top of the map speaks the same three words as the rail beside it and the legend below
+              it: <strong>Lots</strong>, <strong>Routes</strong>, <strong>Institutions</strong>. One vocabulary, three
+              places. Clicking a category name toggles it on or off — an underline in the category's color means it's
+              live on the map and in the rail; both vanish together when you switch it off.
+            </p>
+            <p>
+              Each category carries a small chevron. It opens that category's sub-filters in a quiet panel:{" "}
+              <strong>Lots</strong> narrows by commodity, EUDR status, and a minimum SCA cupping floor;{" "}
+              <strong>Routes</strong> by intent (sell or finance) and status; <strong>Institutions</strong> by kind and
+              provenance. When a category has sub-filters set, a small count rides on its chevron, so the collapsed bar
+              still tells you what's active. The open financing <strong>asks</strong> — the per-farmer ask cards, real
+              numbers in a templated sentence — live at the top of the Routes panel, discoverable without shouting.
+            </p>
+            <p>
+              At the far right sits <strong>Investable assets</strong>. It is the one control that isn't an Aqueduct
+              category: it overlays the base-Atlas investable assets and funds as a context layer on top of the network.
+              Off by default — the corridor is the subject; the Atlas assets are the backdrop you can call up when you
+              want to see where structured capital already sits. It's also the switch that decides whether a bioregion
+              panel shows its Atlas Assets / Actions / Actors, since those are only on the map when the overlay is on.
+            </p>
+          </Section>
+
           {/* ── 5. Honesty system ── */}
           <Section title="The honesty system">
             <p className="mb-3">

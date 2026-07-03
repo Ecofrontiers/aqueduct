@@ -25,8 +25,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { HandCoins } from "@phosphor-icons/react";
+import { buildGlowFarmLots } from "../aqueduct/components/GlowFarmsLayer";
 import { runCapitalFormationsMatch } from "../aqueduct/sim/capitalFormations.mjs";
 import { getEconomy } from "../aqueduct/sim/economy.mjs";
+import { useAqueductFilters } from "../aqueduct/state/aqueductFiltersStore";
 import type { Asset } from "../modules/assets";
 import { ProtocolIcon } from "../modules/chains/components/ProtocolIcon";
 import { useAgentsByBioregion } from "../modules/ecospatial/a2a";
@@ -38,6 +40,7 @@ import { EIISparkline } from "../modules/ecospatial/eii/components/EIISparkline"
 import type { EIIScore as EIIScoreType } from "../modules/ecospatial/eii/types";
 import type { BioregionStats } from "../modules/intelligence/bioregionIntelligence";
 import {
+  findBioregionForPoint,
   getActionsBioregion,
   getBioregionStats,
   getOrgsBioregion,
@@ -100,6 +103,17 @@ export function BioregionPanel({
   const [bioregionOrgs, setBioregionOrgs] = useState<Org[]>([]);
   const [bioregionActions, setBioregionActions] = useState<Action[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Aqueduct entities whose coordinates fall inside this bioregion — computed by
+  // the SAME ray-casting point-in-polygon (`findBioregionForPoint`) the bioregion
+  // intelligence already uses for its Atlas count maps, applied to the SIM
+  // economy's lots (coffee/cacao/honey), the Glow solar farms, and the coop nodes.
+  const [aqCounts, setAqCounts] = useState<{ lots: number; solar: number; coops: number } | null>(null);
+
+  // The base-Atlas investable overlay gate (singleton store). When it's ON those
+  // entities are actually on the map, so the base-Atlas Assets/Actions/Actors
+  // tabs are meaningful; when OFF they'd disagree with the map, so they're hidden.
+  const { atlasInvestableOverlay: overlayOn } = useAqueductFilters();
   const [expandedActionId, setExpandedActionId] = useState<string | null>(null);
   const [expandedAssetId, setExpandedAssetId] = useState<string | null>(null);
   const [actorSection, setActorSection] = useState<"orgs" | "agents" | null>("orgs");
@@ -117,6 +131,15 @@ export function BioregionPanel({
     setActiveTab(defaultTab);
   }, [defaultTab]);
 
+  // The Assets/Actions/Actors tabs only exist while the investable overlay is on.
+  // If the overlay turns off (or a stale defaultTab points at one) while such a
+  // tab is active, fall back to Overview so the panel never shows an empty tab.
+  useEffect(() => {
+    if (!overlayOn && (activeTab === "assets" || activeTab === "actions" || activeTab === "actors")) {
+      setActiveTab("overview");
+    }
+  }, [overlayOn, activeTab]);
+
   // Type filter for asset list
   const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
 
@@ -133,6 +156,29 @@ export function BioregionPanel({
       setStats(result);
       setBioregionOrgs(getOrgsBioregion(allOrgs, bioregionCode, geojson));
       setBioregionActions(getActionsBioregion(allActions, bioregionCode, geojson));
+
+      // Count the Aqueduct entities that land inside this bioregion's polygon.
+      const econ = getEconomy() as {
+        lots: Array<{ map_marker?: { longitude: number; latitude: number } }>;
+        coops: Array<{ coords: [number, number] }>;
+      };
+      const inBioregion = (lng: number, lat: number) =>
+        findBioregionForPoint(lng, lat, geojson)?.properties?.code === bioregionCode;
+      let lots = 0;
+      let solar = 0;
+      let coops = 0;
+      for (const l of econ.lots) {
+        const m = l.map_marker;
+        if (m && inBioregion(m.longitude, m.latitude)) lots++;
+      }
+      for (const f of buildGlowFarmLots()) {
+        if (inBioregion(f.map_marker.longitude, f.map_marker.latitude)) solar++;
+      }
+      for (const c of econ.coops) {
+        if (inBioregion(c.coords[0], c.coords[1])) coops++;
+      }
+      setAqCounts({ lots, solar, coops });
+
       setLoading(false);
     });
 
@@ -247,17 +293,31 @@ export function BioregionPanel({
         </div>
       </div>
 
-      {/* ── Tab Navigation ── */}
+      {/* ── Tab Navigation — Overview + Financing always; the base-Atlas
+          Assets/Actions/Actors tabs only while the investable overlay is on
+          (that's when those entities are actually on the map). ── */}
       <div className="flex border-b border-gray-200 shrink-0 bg-white">
         {[
           { key: "overview" as TabKey, label: "Overview", icon: <Leaf size={14} /> },
-          { key: "assets" as TabKey, label: `Assets (${sortedAssets.length})`, icon: <TreeStructure size={14} /> },
-          { key: "actions" as TabKey, label: `Actions (${bioregionActions.length})`, icon: <Lightning size={14} /> },
-          {
-            key: "actors" as TabKey,
-            label: `Actors (${bioregionOrgs.length + (agents?.length || 0)})`,
-            icon: <Users size={14} />,
-          },
+          ...(overlayOn
+            ? [
+                {
+                  key: "assets" as TabKey,
+                  label: `Assets (${sortedAssets.length})`,
+                  icon: <TreeStructure size={14} />,
+                },
+                {
+                  key: "actions" as TabKey,
+                  label: `Actions (${bioregionActions.length})`,
+                  icon: <Lightning size={14} />,
+                },
+                {
+                  key: "actors" as TabKey,
+                  label: `Actors (${bioregionOrgs.length + (agents?.length || 0)})`,
+                  icon: <Users size={14} />,
+                },
+              ]
+            : []),
           { key: "financing" as TabKey, label: "Financing", icon: <HandCoins size={14} /> },
         ].map((tab) => (
           <button
@@ -280,21 +340,63 @@ export function BioregionPanel({
         {/* Overview Tab */}
         {activeTab === "overview" && (
           <div className="p-4 space-y-4">
-            {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-gray-50 rounded-lg p-3 text-center">
-                <div className="text-xl font-bold text-gray-900">{stats.assetCount}</div>
-                <div className="text-[11px] text-gray-500">Assets</div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-3 text-center">
-                <div className="text-xl font-bold text-gray-900">{bioregionOrgs.length + (agents?.length || 0)}</div>
-                <div className="text-[11px] text-gray-500">Actors</div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-3 text-center">
-                <div className="text-xl font-bold text-gray-900">{bioregionActions.length}</div>
-                <div className="text-[11px] text-gray-500">Actions</div>
-              </div>
+            {/* ── In this bioregion — the Aqueduct entities that map inside it ── */}
+            <div>
+              <h3 className="text-xs font-semibold text-gray-900 mb-2">In this bioregion</h3>
+              {aqCounts && aqCounts.lots + aqCounts.solar + aqCounts.coops > 0 ? (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-white border border-gray-100 rounded-lg p-3">
+                      <div className="text-xl font-bold text-gray-900">{aqCounts.lots + aqCounts.solar}</div>
+                      <div className="text-[11px] text-gray-500">
+                        Lots
+                        {aqCounts.solar > 0 && aqCounts.lots > 0
+                          ? ` (${aqCounts.lots} coffee · ${aqCounts.solar} solar)`
+                          : aqCounts.solar > 0
+                            ? " (solar)"
+                            : " (coffee)"}
+                      </div>
+                    </div>
+                    <div className="bg-white border border-gray-100 rounded-lg p-3">
+                      <div className="text-xl font-bold text-gray-900">{aqCounts.coops}</div>
+                      <div className="text-[11px] text-gray-500">Coops / institutions</div>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-gray-400 mt-2">
+                    Aqueduct entities whose coordinates fall inside this bioregion (SIM network). Open the corridor from
+                    the map's rail — Lots, Routes, Institutions.
+                  </p>
+                </>
+              ) : (
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  No Aqueduct lots or institutions map inside this bioregion yet — the corridor runs elsewhere. The full
+                  network lives on the map's rail: Lots, Routes, Institutions.
+                </p>
+              )}
             </div>
+
+            {/* ── Base-Atlas context — meaningful only while the investable
+                overlay is on (that's when these entities are on the map). ── */}
+            {overlayOn ? (
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-gray-50 rounded-lg p-3 text-center">
+                  <div className="text-xl font-bold text-gray-900">{stats.assetCount}</div>
+                  <div className="text-[11px] text-gray-500">Assets</div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3 text-center">
+                  <div className="text-xl font-bold text-gray-900">{bioregionOrgs.length + (agents?.length || 0)}</div>
+                  <div className="text-[11px] text-gray-500">Actors</div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3 text-center">
+                  <div className="text-xl font-bold text-gray-900">{bioregionActions.length}</div>
+                  <div className="text-[11px] text-gray-500">Actions</div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-[11px] text-gray-400 leading-relaxed border-t border-gray-100 pt-3">
+                Atlas assets in this bioregion are available via the Investable assets overlay or /hacks/explore.
+              </p>
+            )}
 
             {/* ── Experimental: EII + Vault ── */}
             {experimentalMode &&

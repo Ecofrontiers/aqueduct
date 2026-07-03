@@ -1,4 +1,4 @@
-import { ArrowRight, Truck } from "@phosphor-icons/react";
+import { ArrowRight, HandCoins, Truck } from "@phosphor-icons/react";
 import type React from "react";
 import { useMemo } from "react";
 import { Helmet } from "react-helmet-async";
@@ -112,6 +112,12 @@ export default function AqueductLotDetails(): React.ReactElement {
 
               <RoutesPanel lot={lot} />
               <SimilarLots lot={lot} allLots={lots} />
+              <Link
+                to="/financing"
+                className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 px-1 transition-colors"
+              >
+                <HandCoins size={13} /> Financing that could fund lots like this →
+              </Link>
             </div>
           </div>
           <div className="hidden md:block">
