@@ -19,7 +19,7 @@ export const PrivacyPolicy: React.FC = () => {
       <div className="prose">
         <h1>Privacy Notice</h1>
         <p>
-          <strong>Updated:</strong> [PLACEHOLDER — Pat: publication date]
+          <strong>Updated:</strong> 3 July 2026
         </p>
         <p>
           <strong>AqueductX</strong> (
@@ -31,8 +31,8 @@ export const PrivacyPolicy: React.FC = () => {
           actually does — the site is a prototype, and the notice reads like one.
         </p>
         <p>
-          <strong>Data controller:</strong> Ecofrontiers SARL, [PLACEHOLDER — Pat: registered office address]. Contact:{" "}
-          <a href="mailto:pat@ecofrontiers.xyz">pat@ecofrontiers.xyz</a>.
+          <strong>Data controller:</strong> Ecofrontiers SARL, 23 Chemin du Coupereau, Le Canebas, 83320 Carqueiranne,
+          France. Contact: <a href="mailto:pat@ecofrontiers.xyz">pat@ecofrontiers.xyz</a>.
         </p>
 
         <h2>The short version</h2>
@@ -95,8 +95,8 @@ export const PrivacyPolicy: React.FC = () => {
         </ul>
         <p className="text-sm">
           Inherited registry features may also read from public data endpoints (for example CoinGecko, DexScreener, The
-          Graph, and public blockchain RPCs). These are public data reads; the same IP exposure applies. [PLACEHOLDER —
-          Pat: confirm which of these still run on the live site, or remove the ones that don't.]
+          Graph, and public blockchain RPCs). These are public data reads made by inherited registry features that
+          remain active on this site; the same IP exposure applies.
         </p>
 
         <h3>3. Browser storage (device-only, never transmitted)</h3>

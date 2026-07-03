@@ -46,12 +46,14 @@ reliable, beats a thousand configurable agents.
    competitively sensitive; sealed-bid roadmap is where it eventually lives).
 3. **Accept or decline a fill** — the swarm's matches arrive as named terms (rate, term,
    buyer, route cost lines), Kiva-template rendered, decomposed fields, never one opaque score.
-4. **Confirm settle** — the human hold-point. The steward negotiates; it never settles.
-   This is the swarm-DSS category enforced at the surface: people and institutions make the
-   allocation call, settlement is the action taken. It is also the liability firebreak —
-   an agent that can spend the harvest's proceeds without a human confirmation is a
-   product we refuse to build (and FABLE-KICKOFF's working rule already draws this line:
-   real keys and real money stay with the human).
+4. **Confirm settle**—human-confirmed by default, fully delegable by designation
+   (revised 2026-07-03; supersedes the earlier "never settles" position: agentic-only
+   flows are supported). The default keeps the swarm-DSS shape: people and institutions
+   make the allocation call unless they explicitly designate the steward to settle for
+   them. Delegation is a deliberate, revocable grant. The liability firebreak moves from
+   "the agent cannot settle" to "the agent settles only under an explicit, logged
+   designation," which is the honest version of farmer control: the producer chooses the
+   autonomy level, not the platform.
 5. **Set disclosure tiers** — what evidence the steward may share outward (doc 13 made
    policy: status and attestations flow; plot geometry and full names never do). The
    steward is the custody boundary: it sees your polygon, your credit history, your

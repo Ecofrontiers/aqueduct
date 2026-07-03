@@ -93,7 +93,7 @@ export function StewardPanel({ seat, avgFob }: { seat: SeatView; avgFob: number 
       </div>
       <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
         One agent, bound to <span className="font-medium text-gray-700">{seat.name}</span>, holding your inputs and
-        speaking to the swarm in commitments. Five verbs, nothing else — it negotiates, it never settles.
+        speaking to the swarm in commitments. Five verbs, nothing else — settlement stays yours unless you designate it.
       </p>
 
       <VerbStrip seat={seat} floor={prefs.floorEurPerKg} shareEudr={prefs.disclosure.shareEudrStatus} />
@@ -462,8 +462,9 @@ function DraftCard({ draft, seat, avgFob }: { draft: AqueductIntent; seat: SeatV
                 </div>
               )}
 
-          {/* (d) confirm settle (verb #4) — always at the honest boundary: disabled, no key,
-            no broadcast. The steward negotiates; it never settles. */}
+          {/* (d) confirm settle (verb #4) — at the honest boundary: disabled, no key, no
+            broadcast. Human-confirmed by default; delegable to the steward by designation
+            (Pat, 2026-07-03 — agentic-only flows supported). */}
           <button
             type="button"
             disabled
@@ -472,8 +473,9 @@ function DraftCard({ draft, seat, avgFob }: { draft: AqueductIntent; seat: SeatV
             Confirm settle
           </button>
           <p className="text-[10px] text-gray-400 leading-relaxed">
-            settle prepared — broadcast requires <span className="aq-mono">AQUEDUCT_SETTLE_PRIVATE_KEY</span> (yours,
-            not the agent's). The steward negotiates; it never settles — that line is the product.
+            settle prepared — broadcast requires <span className="aq-mono">AQUEDUCT_SETTLE_PRIVATE_KEY</span>.
+            Settlement is human-confirmed by default and delegable to the steward by designation — the producer chooses
+            the autonomy level, not the platform.
           </p>
         </div>
       )}
