@@ -40,7 +40,7 @@ reliable, beats a thousand configurable agents.
 ## 3. The verb set (the whole opinionated surface)
 
 1. **Post an intent** — sell-this-lot / finance-this-planting / source-inputs. Source-inputs
-   is not a new primitive: it is a finance intent whose `inputResource` is what you need
+   is not a new primitive: it is a finance intent whose `inputResource` is what the producer needs
    (seedlings, solar equipment) — the REA typing already covers it.
 2. **Set the floor** — reserve price / minimum terms. Private to the steward (doc 13:
    competitively sensitive; sealed-bid roadmap is where it eventually lives).
@@ -56,10 +56,21 @@ reliable, beats a thousand configurable agents.
    autonomy level, not the platform.
 5. **Set disclosure tiers** — what evidence the steward may share outward (doc 13 made
    policy: status and attestations flow; plot geometry and full names never do). The
-   steward is the custody boundary: it sees your polygon, your credit history, your
+   steward is the custody boundary: it sees the producer's polygon, credit history, and
    reserve; the swarm sees commitments, statuses, proofs.
 
-Nothing else. No prompts, no model pickers, no agent marketplace.
+Nothing else on the farmer-facing surface: no prompt boxes, no model pickers, no agent
+marketplace. The opinionation lives in the surface, not in the agent behind it.
+
+The steward represents producer interests and nothing else, and within that mandate it is
+extensible. Its negotiation strategies (how it works a floor against arriving bids), its
+alerts (which conditions it surfaces to the producer), and its automations (which steps it
+may take without being asked) can each grow per seat. This is a separate axis from the verb
+set: extending how the steward negotiates or what it watches for adds no farmer-facing verbs
+and opens no marketplace of third-party agents. The surface stays the five verbs above; the
+capability under them deepens for the one producer the steward serves. That is why this
+extensibility is not the open playground §2 rejects: every added strategy stays bound to one
+producer identity and cannot act past the producer's designation.
 
 ## 4. Channels, in adoption order
 

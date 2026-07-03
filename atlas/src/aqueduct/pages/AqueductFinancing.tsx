@@ -421,10 +421,11 @@ export default function AqueductFinancing(): React.ReactElement {
                   color={INDIGO}
                 />
                 <p className="text-[10px] text-gray-400 leading-relaxed mb-3">
-                  EthicHub / Heifer facility, corroborated by the completed 192,600→212,369.79 USDC cycle. Funds only
-                  when the full {eur(assurance.thresholdEur)} assembles — nobody pays otherwise; if the pledge fails to
-                  tip everyone is refunded (the dominant variant adds a sponsor-funded bonus, so pledging early is the
-                  dominant strategy).
+                  The EthicHub / Heifer facility—EthicHub, a crowdlending platform financing smallholder coffee
+                  cooperatives—corroborated by the completed 192,600→212,369.79 USDC cycle. Funds only when the full{" "}
+                  {eur(assurance.thresholdEur)} assembles — nobody pays otherwise; if the pledge fails to tip everyone
+                  is refunded (the dominant variant adds a sponsor-funded bonus, so pledging early is the dominant
+                  strategy).
                 </p>
 
                 {/* Pledge progress — second position (fix 2); moves live on each SIM pledge (fix 3) */}
@@ -569,8 +570,8 @@ export default function AqueductFinancing(): React.ReactElement {
                 color={INDIGO}
               />
               <p className="text-[11px] text-gray-500 leading-relaxed mb-2">
-                Sell a confirmed future cashflow at a discount for cash today — a solar reward stream and a coffee
-                receivable are the same instrument shape.
+                Glow is a protocol financing distributed solar; here you sell a confirmed future cashflow at a discount
+                for cash today — a solar reward stream and a coffee receivable are the same instrument shape.
               </p>
 
               {/* Pool state — no sold-fraction is published for a Miner, so honest term-progress:

@@ -156,5 +156,9 @@ a live, FINMA-supervised instance of three mechanisms AqueductX currently render
   exposes `getGccOracleState()` so the map can flip from verdict to price without a
   redesign.
 - hREA/Holochain runtime adoption remains a separate, explicit technology decision.
+- A third corridor, LandX agri-commodity trade finance, as the next vertical after coffee
+  and solar (a Regen Atlas partner, not live today): the same aggregate/verify/price/
+  publish/fill/settle loop over a third commodity class, TO-BUILD. Coffee and solar are the
+  two that read live today; the loop is built to take a third.
 - Answering doc 11's Q6–Q7 with Glow directly (Miner onchain transferability is now
   half-answered by OFFCHAIN_FRACTIONS; referral attribution remains open).

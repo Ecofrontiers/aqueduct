@@ -87,11 +87,16 @@ grabbing and displacement — the mechanism geo-exposure feeds.
 1. **Now (this pass, subtractive + doc):** the non-publication policy stated above; name
    `title_redacted` as a deliberate privacy default; one privacy sentence on the About
    page. Zero new cryptography, fully real.
-2. **Next (shippable without alpha dependencies):** the certifier attestation object — a
-   signed "plot deforestation-free / outside protected areas" credential (VC/BBS+
-   selective disclosure) attached to a lot's EUDR status, issued through the existing
-   certifier/standards-registry role. Astral cited as the *labeled testnet* path to making
-   containment *verifiable* (honestly flagged: dev-preview, TEE trust model).
+2. **Next (shippable without alpha dependencies):** wire the certification databases
+   (Fairtrade, Rainforest Alliance, and the TIC firms already in the certifier/standards
+   registry) so a lot's compliance is verified at source rather than self-declared. That
+   certification-database wiring is the grant-deliverable form of this layer. The signed
+   VC/BBS+ selective-disclosure credential (a "plot deforestation-free / outside protected
+   areas" attestation attached to a lot's EUDR status, issued through the same certifier
+   role) is the technical evolution of that wiring: verified-at-source made
+   privacy-preserving and independently checkable, and it remains TO-BUILD. Astral cited as
+   the *labeled testnet* path to making containment *verifiable* (honestly flagged:
+   dev-preview, TEE trust model).
 3. **Prototype and watch (Interfold):** a sealed-bid solver-race E3 — the direct
    structural fit — prototyped against Network Alpha when their auction primitive ships;
    graded TO-BUILD until then. MACI's collusion-resistance machinery is the fallback to

@@ -104,9 +104,10 @@ export default function AqueductMapGuide(): React.ReactElement {
               The global trade-finance gap is $2.5 trillion (ADB, 2022, still $2.5T in the January 2026 survey).
               Smallholder finance alone is short $200B+ a year: ~$323B in demand against ~$95B in supply (ISF Advisors,
               2025). Reported trade-finance fraud topped $10B in 2020 (GLEIF/MonetaGo). The gap is a legibility gap
-              before it's a capital gap — lenders reject smallholders not for lack of capital but for lack of a way to
-              verify who's real. Aggregating, verifying, pricing, matching, and settling are exactly the tasks AI now
-              performs cheaply, at any scale.
+              before it's a capital gap. A smallholder can't afford to verify a lot to the standard an institution
+              demands. Every buyer who looks re-proves the same lot from scratch. And a lot pledged twice can't be
+              caught. Aggregating, verifying, pricing, matching, and settling are exactly the tasks AI now performs
+              cheaply, at any scale.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100 border border-gray-100 mt-1">
               {stats.map((s) => (
@@ -281,7 +282,7 @@ export default function AqueductMapGuide(): React.ReactElement {
             <AccountRow
               swatch={<RingSwatch color={ACCOUNT_COLORS.capitalEndo} />}
               name="Capital account — endogenous credit"
-              body="Credit created inside the system against its own receivables. It does not cross oceans, so it is not an arc: it is a halo revolving around the coop. At the anchor cooperative this halo is REAL — EthicHub's credit lines on Celo settle in native USDC, and line 2 completed a full cycle: 192,600 borrowed, 212,369.79 repaid. Tokenized trade finance, already operating; Aqueduct's projection extends the same mechanic to structured lots."
+              body="Credit created inside the system against its own receivables. It does not cross oceans, so it is not an arc: it is a halo revolving around the coop. At the anchor cooperative this halo is REAL — EthicHub, a crowdlending platform financing smallholder coffee cooperatives, runs credit lines on Celo that settle in native USDC, and line 2 completed a full cycle: 192,600 borrowed, 212,369.79 repaid. Tokenized trade finance, already operating; Aqueduct's projection extends the same mechanic to structured lots."
             />
             <AccountRow
               swatch={<RingSwatch color={ACCOUNT_COLORS.capitalExo} dashed />}

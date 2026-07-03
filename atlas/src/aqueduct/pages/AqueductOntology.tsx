@@ -186,8 +186,9 @@ export default function AqueductOntology(): React.ReactElement {
                 <FieldRow label="status" value={financeExample.status} />
                 <FieldRow label="ask" value={financeExample.detail} />
                 <p className="text-[11px] text-gray-400 leading-relaxed mt-1.5">
-                  The single-sentence ask is a Kiva-template convention AqueductX designed — EthicHub publishes no
-                  per-farmer dollar-ask card. The numbers in it are real; the sentence wrapping them is ours.
+                  The single-sentence ask is a Kiva-template convention AqueductX designed — EthicHub, a crowdlending
+                  platform financing smallholder coffee cooperatives, publishes no per-farmer dollar-ask card. The
+                  numbers in it are real; the sentence wrapping them is ours.
                 </p>
               </Example>
             ) : (
@@ -233,7 +234,7 @@ export default function AqueductOntology(): React.ReactElement {
             n="5"
             rea="Claim — the missing object"
             type="AqueductFinanceClaim (EthicHubClaim | GlowClaim)"
-            definition="The deferred half of a financing. When capital moves now against repayment later — at a rate and a term — REA calls that promise a Claim. A sale creates no Claim; a loan does. This is the object the base ontology was missing, now typed."
+            definition="The deferred half of a financing. Capital moves now; the repayment owed later is a first-class record, carrying its own rate and term. REA calls that promise a Claim. A sale creates no Claim; a loan does. This is the object the base ontology was missing, now typed."
           >
             {financeExample ? (
               <Example>

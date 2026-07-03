@@ -92,8 +92,10 @@ export function StewardPanel({ seat, avgFob }: { seat: SeatView; avgFob: number 
         <ProvenanceChip provenance="SIM" />
       </div>
       <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
-        One agent, bound to <span className="font-medium text-gray-700">{seat.name}</span>, holding your inputs and
-        speaking to the swarm in commitments. Five verbs, nothing else — settlement stays yours unless you designate it.
+        One agent that represents <span className="font-medium text-gray-700">{seat.name}</span>'s interests and nothing
+        else—it holds your inputs and speaks to the swarm in commitments, and it's extensible with negotiation
+        strategies, alerts, and automations. Settlement stays human-confirmed by default, fully delegable when you
+        designate it.
       </p>
 
       <VerbStrip seat={seat} floor={prefs.floorEurPerKg} shareEudr={prefs.disclosure.shareEudrStatus} />
