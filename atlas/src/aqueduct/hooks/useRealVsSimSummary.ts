@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { SIM_SOLVER_ROSTER } from "../sim/solverRoster.mjs";
 import { getEconomy } from "../sim/economy.mjs";
+import { SIM_SOLVER_ROSTER } from "../sim/solverRoster.mjs";
 
 export interface RealVsSimSummary {
   liveCount: number;

@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Marker, Source, Layer } from "react-map-gl";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Layer, Marker, Source } from "react-map-gl";
 import { useNavigate } from "react-router-dom";
 import { useAqueductLots } from "../hooks/useAqueductLots";
 import { getEconomy } from "../sim/economy.mjs";
 import { AGROFORESTRY_VENUES, TO_BUILD_PLATFORM_NODES } from "../sim/venues.mjs";
-import { useTourStore, selectActiveChapter } from "../state/tourStore";
+import { selectActiveChapter, useTourStore } from "../state/tourStore";
 
 /**
  * The Aqueduct network layer — the map as a balance of payments, not just
@@ -45,12 +46,7 @@ const MAX_STATIC_FLOWS = 80;
 const ANIMATED_FLOWS = 10;
 const CAPITAL_COUNTER_FLOWS = 8; // paired payment/investment arcs on the top lanes
 
-function bezierArc(
-  from: [number, number],
-  to: [number, number],
-  segments = 32,
-  side: 1 | -1 = 1
-): [number, number][] {
+function bezierArc(from: [number, number], to: [number, number], segments = 32, side: 1 | -1 = 1): [number, number][] {
   const dx = to[0] - from[0];
   const dy = to[1] - from[1];
   const dist = Math.sqrt(dx * dx + dy * dy);
@@ -307,7 +303,14 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
 
       {/* ── Arrowheads at destinations ── */}
       {arrows.map((a) => (
-        <Marker key={a.id} longitude={a.at[0]} latitude={a.at[1]} anchor="center" rotation={a.bearing} rotationAlignment="map">
+        <Marker
+          key={a.id}
+          longitude={a.at[0]}
+          latitude={a.at[1]}
+          anchor="center"
+          rotation={a.bearing}
+          rotationAlignment="map"
+        >
           <div
             style={{
               width: 0,
@@ -353,21 +356,27 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
             }}
           >
             <NodeRing
-              color={capState === "facility" ? ACCOUNT_COLORS.capitalEndo : capState === "opportunity" ? ACCOUNT_COLORS.capitalExo : null}
+              color={
+                capState === "facility"
+                  ? ACCOUNT_COLORS.capitalEndo
+                  : capState === "opportunity"
+                    ? ACCOUNT_COLORS.capitalExo
+                    : null
+              }
               dashed={capState === "opportunity"}
               title={
                 capState === "facility"
                   ? `${coop.name} — endogenous credit facility active (SIM) · open the coop seat`
                   : capState === "opportunity"
-                  ? `${coop.name} — open financing opportunity (SIM) · open the coop seat`
-                  : `${coop.name} (SIM) — open the coop seat`
+                    ? `${coop.name} — open financing opportunity (SIM) · open the coop seat`
+                    : `${coop.name} (SIM) — open the coop seat`
               }
             >
               <div
                 style={{
                   width: 10,
                   height: 10,
-                  borderRadius: 3,
+                  borderRadius: "50%",
                   background: "#ffffff",
                   border: `2px solid ${ACCOUNT_COLORS.goods}`,
                   boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
@@ -379,7 +388,8 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         );
       })}
 
-      {/* Anchor coop: the REAL endogenous facility — Celo USDC credit lines */}
+      {/* Anchor coop: the REAL endogenous facility — Celo USDC credit lines. Same
+          circle shape as every other node marker; ring + fill carry the meaning. */}
       {anchorCoop && (
         <Marker longitude={anchorCoop[0]} latitude={anchorCoop[1]} anchor="center">
           <NodeRing
@@ -390,7 +400,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
               style={{
                 width: 12,
                 height: 12,
-                borderRadius: 3,
+                borderRadius: "50%",
                 background: settleActive ? ACCOUNT_COLORS.goods : "#ffffff",
                 border: `2.5px solid ${ACCOUNT_COLORS.goods}`,
                 boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
@@ -400,49 +410,51 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       )}
 
-      {/* ── Venues: purple squares; TO-BUILD dashed + faded ── */}
+      {/* ── Venues: same circle shape, purple fill; TO-BUILD = hollow + dashed ring ── */}
       {[...AGROFORESTRY_VENUES, ...TO_BUILD_PLATFORM_NODES]
         .filter((v: { coords?: { longitude: number; latitude: number } }) => v.coords)
-        .map((v: { name: string; kind: string; status: string; coords: { longitude: number; latitude: number; precision: string } }) => (
-          <Marker key={`venue-${v.name}`} longitude={v.coords.longitude} latitude={v.coords.latitude} anchor="center">
-            <div
-              title={`${v.name} — ${v.kind} (${v.status}, position ${v.coords.precision})`}
-              style={{
-                width: 11,
-                height: 11,
-                borderRadius: 2,
-                background: v.status === "TO-BUILD" ? "transparent" : ACCOUNT_COLORS.venue,
-                border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${ACCOUNT_COLORS.venue}`,
-                opacity: v.status === "TO-BUILD" ? 0.5 : 1,
-                boxShadow: v.status === "TO-BUILD" ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
-              }}
-            />
-          </Marker>
-        ))}
-
-      {/* ── Tour emphasis: solver ring around the anchor during Fill/Settle ── */}
-      {showSolverRing &&
-        [0, 1, 2, 3, 4, 5].map((i) => {
-          const angle = (i / 6) * Math.PI * 2;
-          const lon = anchor!.map_marker.longitude + Math.cos(angle) * 1.1;
-          const lat = anchor!.map_marker.latitude + Math.sin(angle) * 1.1;
-          const isBackstop = i === 5;
-          return (
-            <Marker key={`race-solver-${i}`} longitude={lon} latitude={lat} anchor="center">
+        .map(
+          (v: {
+            name: string;
+            kind: string;
+            status: string;
+            coords: { longitude: number; latitude: number; precision: string };
+          }) => (
+            <Marker key={`venue-${v.name}`} longitude={v.coords.longitude} latitude={v.coords.latitude} anchor="center">
               <div
-                title={isBackstop ? "@solver-backstop — open reference, REAL computation" : `@sim-solver-${i + 1} (SIM)`}
+                title={`${v.name} — ${v.kind} (${v.status}, position ${v.coords.precision})`}
                 style={{
                   width: 11,
                   height: 11,
-                  background: isBackstop ? ACCOUNT_COLORS.venue : "#ffffff",
-                  border: `2px ${isBackstop ? "solid" : "dashed"} ${ACCOUNT_COLORS.venue}`,
-                  transform: "rotate(45deg)",
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                  borderRadius: "50%",
+                  background: v.status === "TO-BUILD" ? "transparent" : ACCOUNT_COLORS.venue,
+                  border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${ACCOUNT_COLORS.venue}`,
+                  opacity: v.status === "TO-BUILD" ? 0.5 : 1,
+                  boxShadow: v.status === "TO-BUILD" ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
                 }}
               />
             </Marker>
-          );
-        })}
+          ),
+        )}
+
+      {/* ── Tour emphasis: the race, charted as ONE ring on the anchor itself —
+          not six new markers. A pulsing halo around the existing lot marker IS
+          the "solvers are racing" signal; spawning satellites around it doesn't
+          chart any account value, it's noise on top of the real one. ── */}
+      {showSolverRing && anchor && (
+        <Marker longitude={anchor.map_marker.longitude} latitude={anchor.map_marker.latitude} anchor="center">
+          <div
+            title="Solver race live — bids competing for this lot's route (SIM), backstop bids the real reference"
+            style={{
+              width: 22,
+              height: 22,
+              borderRadius: "50%",
+              border: `2px dashed ${ACCOUNT_COLORS.venue}`,
+              opacity: 0.7,
+            }}
+          />
+        </Marker>
+      )}
 
       {/* ── Vault badge during Settle ── */}
       {settleActive && anchorCoop && tour.vaultCount > 0 && (
