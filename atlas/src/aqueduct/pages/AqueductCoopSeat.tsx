@@ -86,6 +86,7 @@ export default function AqueductCoopSeat(): React.ReactElement {
   const blendedShippingEurPerKg = shippingBid.lines
     .filter((l: { label: string }) => shippingLineLabels.includes(l.label))
     .reduce((s: number, l: { eurPerKg: number }) => s + l.eurPerKg, 0);
+  const shippingInsuranceLine = shippingBid.lines.find((l: { label: string }) => l.label.startsWith("Cargo insurance"));
   const shippingIsProjection = !race?.winner;
 
   const publishIntent = () => {
@@ -277,15 +278,20 @@ export default function AqueductCoopSeat(): React.ReactElement {
               </div>
               <p className="text-[11px] text-gray-400 leading-relaxed mb-2">
                 Freight, customs, and certification collapsed into one blended line — the same way a marketplace's
-                global shipping program abstracts international shipping from both sides. Aqueduct doesn't operate
-                logistics; every figure traces to{" "}
+                global shipping program abstracts international shipping from both sides. Cargo insurance is broken out
+                separately: 110% of CIF/invoice value is the real Institute Cargo Clauses (C) minimum, the premium rate
+                applied to it is an estimate. Aqueduct doesn't operate logistics; every figure traces to{" "}
                 {shippingBid.profileLabel === REFERENCE_PROFILE.label
                   ? "the shared open reference engine"
                   : `${shippingBid.profileLabel}'s declared cost profile`}
                 , never invented.
               </p>
-              <div className="grid grid-cols-3 gap-px bg-gray-100 mb-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100 mb-2">
                 <Kpi label="Blended cost" value={`€${blendedShippingEurPerKg.toFixed(3)}/kg`} />
+                <Kpi
+                  label={`Insurance (${((shippingBid.insuredValuePct ?? 1.1) * 100).toFixed(0)}% CIF)`}
+                  value={shippingInsuranceLine ? `€${shippingInsuranceLine.eurPerKg.toFixed(4)}/kg` : "—"}
+                />
                 <Kpi label="Incoterm" value={shippingBid.incoterm} />
                 <Kpi label="Transit" value={`${shippingBid.totalRouteDays}d`} />
               </div>

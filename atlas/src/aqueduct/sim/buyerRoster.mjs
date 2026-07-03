@@ -15,6 +15,7 @@
 // discipline as venues.mjs's COOP_EXPORTER_NODE and SIM_SOLVER_ROSTER handles
 // (FABLE-KICKOFF.md "Never: ... fictional platform names").
 
+import { lotHasCertifier } from "../connectors/certifiers.mjs";
 import { commodityNotIn, eudrUnverifiedFraction, qualityBelow, weightBelowKg } from "./policyConditions.mjs";
 
 /** @typedef {{
@@ -106,6 +107,23 @@ export const CAPITAL_ROSTER = [
         logicScore: { hierarchy: 8, market: 4, network: 6 },
         condition: eudrUnverifiedFraction,
         effect: { type: "decline", note: "renovation financing requires confirmed origin legality, not just flagged" },
+      },
+      {
+        id: "grant-agroforestry-1-certification-visibility",
+        citesFailureMode: "info-asymmetry",
+        citesStandards: [{ source: "CERTIFIER", code: "rainforest-alliance" }],
+        // Flag, not decline: lot.certs is empty for every lot today (no real source
+        // populates it — EthicHub doesn't publish it, the seeded economy doesn't invent
+        // one). A real agroforestry/shade-grown covenant would ask for Rainforest
+        // Alliance certification (the scheme that specifically covers agroforestry
+        // practice), not auto-reject a lot that simply hasn't reported cert status yet —
+        // same posture as Silvi's EUDR-visibility rule.
+        logicScore: { hierarchy: 6, market: 4, network: 7 },
+        condition: (lot) => (lotHasCertifier(lot, "rainforest-alliance") ? 0 : 1),
+        effect: {
+          type: "flag",
+          note: "no Rainforest Alliance (or equivalent) certification on file — a real agroforestry covenant would request it before disbursing, not block on its absence today",
+        },
       },
     ],
   },

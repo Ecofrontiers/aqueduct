@@ -34,9 +34,27 @@
  * @property {number} financingAprPct - annualized cost of capital-lock, fraction (e.g. 0.13 = 13% APR)
  * @property {number} tenorDays - days capital is locked between acquisition and buyer settlement
  * @property {number} marginBps - the solver's own disclosed margin, in basis points of FOB
+ * @property {number} [insuredValuePct] - cargo insurance coverage basis, fraction of insurable (~CIF) value. Defaults to INSTITUTE_CARGO_CLAUSES_MIN_INSURED_PCT (1.10 = 110%) if omitted — a solver profile only needs to override this if it insures above the minimum.
+ * @property {number} [insurancePremiumPct] - marine cargo insurance premium rate, fraction of insured value. Defaults to DEFAULT_INSURANCE_PREMIUM_PCT if omitted.
  * @property {Confidence} confidence
  * @property {string} source
  */
+
+/** Institute Cargo Clauses (C) — the minimum insured-value basis under CIF Incoterms
+ *  for international cargo: 110% of the CIF/invoice value, covering the 10% notional
+ *  profit margin buyers are entitled to insure alongside the goods themselves. This is
+ *  a real, confirmed international standard, not an estimate — the premium RATE applied
+ *  to that insured value (below) is what varies by route/commodity and IS an estimate.
+ *  Coffee-specific note (not modeled as a separate line item): moisture/inherent-vice
+ *  damage can be excluded even under the broadest ICC (A) tier — insurance covers loss
+ *  in transit, not quality degradation from the commodity's own nature.
+ */
+export const INSTITUTE_CARGO_CLAUSES_MIN_INSURED_PCT = 1.1;
+
+/** Typical marine cargo insurance premium for standard agricultural commodities on an
+ *  established ocean route under ICC (C) — industry-typical range is ~0.1%-0.5% of
+ *  insured value; this is the midpoint, not a quoted rate for this specific route. */
+export const DEFAULT_INSURANCE_PREMIUM_PCT = 0.003;
 
 /** The physical document chain a green-coffee export route travels (DEMO-SPEC §3.5:
  *  "documents ARE logistics"). Lead times are typical ranges for a Chiapas Soconusco
@@ -49,7 +67,12 @@ export const DOCUMENT_CHAIN = [
   { step: "licensed exporter", node: "exportadora — Tapachula/Puerto Chiapas", leadDays: 3, confidence: "estimate" },
   { step: "phytosanitary certificate", node: "SENASICA export inspection", leadDays: 2, confidence: "estimate" },
   { step: "ICO Certificate of Origin", node: "ICO-member exporter registry", leadDays: 2, confidence: "estimate" },
-  { step: "Bill of Lading / CAD", node: "carrier — Puerto Chiapas/Manzanillo -> Hamburg", leadDays: 32, confidence: "estimate" },
+  {
+    step: "Bill of Lading / CAD",
+    node: "carrier — Puerto Chiapas/Manzanillo -> Hamburg",
+    leadDays: 32,
+    confidence: "estimate",
+  },
 ];
 
 export const TOTAL_ROUTE_DAYS = DOCUMENT_CHAIN.reduce((sum, s) => sum + s.leadDays, 0);
@@ -86,19 +109,54 @@ export function computeLandedCost({ fobEurPerKg, weightKg, profile }) {
   const customs = fobEurPerKg * profile.customsPct;
   const cert = fobEurPerKg * profile.certPct;
   const financing = fobEurPerKg * profile.financingAprPct * (profile.tenorDays / 365);
-  const preMarginLanded = fobEurPerKg + freight + customs + cert + financing;
+
+  // Cargo insurance: insured value = 110% of the insurable (~CIF) value (Institute
+  // Cargo Clauses C minimum, a real confirmed standard) — freight+customs+cert stand
+  // in for the CIF uplift over FOB, since this engine doesn't cascade a true CIF figure.
+  const insuredValuePct = profile.insuredValuePct ?? INSTITUTE_CARGO_CLAUSES_MIN_INSURED_PCT;
+  const insurancePremiumPct = profile.insurancePremiumPct ?? DEFAULT_INSURANCE_PREMIUM_PCT;
+  const insurableValue = fobEurPerKg + freight + customs + cert;
+  const insurance = insurableValue * insuredValuePct * insurancePremiumPct;
+
+  const preMarginLanded = fobEurPerKg + freight + customs + cert + financing + insurance;
   const margin = fobEurPerKg * (profile.marginBps / 10000);
   const landedEurPerKg = preMarginLanded + margin;
 
   const lines = [
-    { label: "FOB (producer ask)", eurPerKg: fobEurPerKg, confidence: "reported", source: "EthicHub shop listing (live/snapshot read)" },
+    {
+      label: "FOB (producer ask)",
+      eurPerKg: fobEurPerKg,
+      confidence: "reported",
+      source: "EthicHub shop listing (live/snapshot read)",
+    },
     { label: "Freight & import", eurPerKg: freight, confidence: profile.confidence, source: profile.source },
-    { label: "Customs", eurPerKg: customs, confidence: profile.confidence, source: profile.source + " — EU green-coffee (HS 0901.11) duty is widely reported near 0%; this line covers import VAT deferral + customs admin, not tariff" },
+    {
+      label: "Customs",
+      eurPerKg: customs,
+      confidence: profile.confidence,
+      source: `${profile.source} — EU green-coffee (HS 0901.11) duty is widely reported near 0%; this line covers import VAT deferral + customs admin, not tariff`,
+    },
     { label: "Certification", eurPerKg: cert, confidence: profile.confidence, source: profile.source },
-    { label: `Financing (T+${profile.tenorDays})`, eurPerKg: financing, confidence: profile.confidence, source: `${profile.source} — ${(profile.financingAprPct * 100).toFixed(1)}% APR x ${profile.tenorDays}d capital lock` },
+    {
+      label: `Cargo insurance (${(insuredValuePct * 100).toFixed(0)}% CIF, ICC C)`,
+      eurPerKg: insurance,
+      confidence: "estimate",
+      source: `Institute Cargo Clauses (C) minimum insured-value standard (${(insuredValuePct * 100).toFixed(0)}% of CIF/invoice value, confirmed) — premium rate ${(insurancePremiumPct * 100).toFixed(2)}% of insured value is an industry-typical estimate, not a quoted rate for this route. Coffee-specific: moisture/inherent-vice damage can be excluded even under ICC (A).`,
+    },
+    {
+      label: `Financing (T+${profile.tenorDays})`,
+      eurPerKg: financing,
+      confidence: profile.confidence,
+      source: `${profile.source} — ${(profile.financingAprPct * 100).toFixed(1)}% APR x ${profile.tenorDays}d capital lock`,
+    },
   ];
   if (profile.marginBps > 0) {
-    lines.push({ label: `${profile.label} margin`, eurPerKg: margin, confidence: "reported", source: "disclosed solver margin, basis points of FOB" });
+    lines.push({
+      label: `${profile.label} margin`,
+      eurPerKg: margin,
+      confidence: "reported",
+      source: "disclosed solver margin, basis points of FOB",
+    });
   }
 
   return {
@@ -109,6 +167,8 @@ export function computeLandedCost({ fobEurPerKg, weightKg, profile }) {
     landedEurPerKg: Math.round(landedEurPerKg * 10000) / 10000,
     marginPct: Math.round((margin / fobEurPerKg) * 10000) / 100,
     tenorDays: profile.tenorDays,
+    insuredValuePct,
+    insurancePremiumPct,
     lines: lines.map((l) => ({ ...l, eurPerKg: Math.round(l.eurPerKg * 10000) / 10000 })),
     documentChain: DOCUMENT_CHAIN,
     totalRouteDays: TOTAL_ROUTE_DAYS,

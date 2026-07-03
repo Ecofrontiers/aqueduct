@@ -8,8 +8,11 @@
 
 ## North star (Pat, verbatim — every decision derives from this)
 
-**"Aqueduct is a generalized peer-to-peer logistics layer for smallholder farmers:
-agents aggregate, verify, and price commodity lots, and intents match and settle them."**
+**"Aqueduct is a generalized peer-to-peer logistics and finance layer for smallholder
+farmers: agents aggregate, verify, and price commodity lots, and intents match and
+settle them."** (updated 2026-07-03 to name the finance layer explicitly — the financing,
+capital-formations, and tokenizer-solver work built this session is load-bearing, not
+a side quest.)
 
 This is a demo for a grant application (Sentient Foundation, "AI Supply Chain for
 Smallholder Farmers" RFP — see docs/SOURCE-MATERIALS.md). It is a demo. Pragmatism over

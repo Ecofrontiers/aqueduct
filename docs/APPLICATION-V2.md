@@ -30,7 +30,7 @@ Aqueduct is multi-party infrastructure. The parties, in the order they show up:
 
 ## Q2(c) — In one line, what are you building?
 
-Aqueduct is a generalized peer-to-peer logistics layer for smallholder farmers: agents aggregate, verify, and price commodity lots, and intents match and settle them.
+Aqueduct is a generalized peer-to-peer logistics and finance layer for smallholder farmers: agents aggregate, verify, and price commodity lots, and intents match and settle them.
 
 ## Q2(d) — Who is building this, and why is your team the right one to do it?
 

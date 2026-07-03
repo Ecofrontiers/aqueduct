@@ -6,11 +6,12 @@ import { useRealVsSimSummary } from "../hooks/useRealVsSimSummary";
 const STORAGE_KEY = "aq-dev-mode";
 
 /**
- * The real-vs-sim honesty indicator, always present (Header.tsx), collapsed to a small
- * corner notice by default. Toggling it open turns it into a dev-mode bar — full counts,
- * pinned under the header — rather than sending a visitor to /ledger just to see the
- * breakdown exists. Persisted across navigation/reload via localStorage: once a visitor
- * has opened dev mode, it stays open until they close it.
+ * The real-vs-sim honesty indicator. Collapsed state sits inline in the header row
+ * (left of the wallet connect button, Header.tsx) — a small notice, not a floating
+ * corner badge. Toggling it open turns it into a full-width dev-mode bar pinned under
+ * the header, rather than sending a visitor to /ledger just to see the breakdown
+ * exists. Persisted across navigation/reload via localStorage: once a visitor has
+ * opened dev mode, it stays open until they close it.
  */
 export function RealVsSimNotice(): React.ReactElement {
   const [open, setOpen] = useState(() => {
@@ -31,7 +32,7 @@ export function RealVsSimNotice(): React.ReactElement {
         type="button"
         onClick={toggle}
         title="Real vs sim — every element on this app is labeled; click to see the breakdown"
-        className="fixed top-2 right-3 z-30 flex items-center gap-1 px-2 py-1 bg-cardBackground border border-gray-200 text-[10px] font-medium text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-800 transition-colors"
+        className="flex items-center gap-1 px-2 py-1 text-[10px] font-medium text-gray-500 hover:text-gray-800 transition-colors flex-shrink-0"
       >
         <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
         real / sim

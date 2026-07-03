@@ -1,21 +1,25 @@
-import React, { useState } from "react";
 import {
+  ArrowUpRight,
+  CaretDown,
+  CaretUp,
+  Check,
   Coffee,
   Coin,
+  Copy,
   Drop,
   Fingerprint,
   HandCoins,
   MapPin,
   Mountains,
   ShieldCheck,
-  ArrowUpRight,
-  Check,
-  Copy,
   Users,
 } from "@phosphor-icons/react";
-import { ProvenanceChip, ValueOrDash, JoinConfidenceTag } from "./Chips";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { CollapsibleSection } from "../../shared/components/CollapsibleSection";
 import type { AqueductAnyLot } from "../hooks/useAqueductEconomy";
+import { runSolverRace } from "../sim/solverRoster.mjs";
+import { JoinConfidenceTag, ProvenanceChip, ValueOrDash } from "./Chips";
 
 function fmtEur(n: number | null | undefined) {
   if (n === null || n === undefined) return null;
@@ -42,11 +46,18 @@ type SectionId = "price" | "origin" | "sensory" | "eudr" | "lending" | "identity
 const COMMODITY_LABELS = { coffee: "Coffee", cacao: "Cacao", honey: "Honey" } as const;
 
 export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
-  const [openSections, setOpenSections] = useState<Set<SectionId>>(
-    new Set(["price", "origin", "eudr"])
-  );
+  const [openSections, setOpenSections] = useState<Set<SectionId>>(new Set(["origin", "eudr"]));
   const [showJson, setShowJson] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showBids, setShowBids] = useState(false);
+  const [showContactNote, setShowContactNote] = useState(false);
+
+  // Live market strip: the same solver race the tour/coop-seat run, computed here so
+  // the lot's OWN page shows competitive bidding, not just a static spec sheet.
+  const race = useMemo(() => {
+    if (!lot.price?.amount) return null;
+    return runSolverRace({ lot, fobEurPerKg: lot.price.amount, weightKg: lot.weight_kg ?? 70 });
+  }, [lot]);
 
   const toggleSection = (id: string) => {
     setOpenSections((prev) => {
@@ -66,7 +77,12 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
     { label: "Plot geolocation", present: lot.eudr.plot_geo_present, note: "not published by the platform" },
     { label: "Harvest window", present: lot.eudr.harvest_window_present, note: "not published" },
     { label: "Legality evidence", present: lot.eudr.legality_evidence, note: "not published" },
-    { label: "Due Diligence Statement", present: Boolean(lot.eudr.dds_ref), note: "no DDS reference", value: lot.eudr.dds_ref },
+    {
+      label: "Due Diligence Statement",
+      present: Boolean(lot.eudr.dds_ref),
+      note: "no DDS reference",
+      value: lot.eudr.dds_ref,
+    },
   ];
   const eudrComplete = eudrChecks.every((c) => c.present);
 
@@ -77,18 +93,27 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
         {lot.image && (
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${lot.image})` }} />
         )}
-        <div className={`absolute inset-0 ${lot.image ? "bg-gradient-to-r from-black/70 via-black/50 to-black/30" : "bg-gray-800"}`} />
+        <div
+          className={`absolute inset-0 ${lot.image ? "bg-gradient-to-r from-black/70 via-black/50 to-black/30" : "bg-gray-800"}`}
+        />
         <div className="relative z-10 px-5 py-4">
           <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-            <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded flex items-center gap-1" style={{ backgroundColor: "#b4530930", color: "#fff" }}>
+            <span
+              className="text-[11px] font-semibold px-1.5 py-0.5 rounded flex items-center gap-1"
+              style={{ backgroundColor: "#b4530930", color: "#fff" }}
+            >
               <Coffee size={11} />
               {COMMODITY_LABELS[lot.commodity ?? "coffee"]}
             </span>
             {lot.variety && (
-              <span className="text-[11px] font-medium px-1.5 py-0.5 rounded bg-white/20 text-white/90">{lot.variety}</span>
+              <span className="text-[11px] font-medium px-1.5 py-0.5 rounded bg-white/20 text-white/90">
+                {lot.variety}
+              </span>
             )}
             {lot.process && (
-              <span className="text-[11px] font-medium px-1.5 py-0.5 rounded bg-white/20 text-white/90">{lot.process}</span>
+              <span className="text-[11px] font-medium px-1.5 py-0.5 rounded bg-white/20 text-white/90">
+                {lot.process}
+              </span>
             )}
           </div>
           <h1 className="text-base font-bold text-white leading-tight">{lot.title_redacted}</h1>
@@ -107,6 +132,86 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
         </div>
       </div>
 
+      {/* ── Market strip: price + live solver race, marketplace-forward ── */}
+      <div className="px-4 py-3 border-b border-gray-100">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <div className="text-[10px] text-gray-400 uppercase tracking-wide">
+              {lot.price ? lot.price.incoterm : "price on match"}
+            </div>
+            <div className="text-2xl font-bold text-gray-900 aq-mono leading-tight">
+              {priceEur !== null ? fmtEur(priceEur) : "—"}
+              {lot.price && <span className="text-sm font-medium text-gray-400">/{lot.price.unit}</span>}
+            </div>
+          </div>
+          {race && (
+            <button
+              type="button"
+              onClick={() => setShowBids((s) => !s)}
+              className="text-right hover:opacity-70 transition-opacity"
+            >
+              <div className="text-[10px] text-gray-400 flex items-center justify-end gap-0.5">
+                {race.bids.filter((b) => b.status === "BID").length} solvers bidding
+                {showBids ? <CaretUp size={10} /> : <CaretDown size={10} />}
+              </div>
+              <div className="text-sm font-semibold text-green-700 aq-mono">
+                best landed €{race.winner?.bid.landedEurPerKg.toFixed(3)}/kg
+              </div>
+            </button>
+          )}
+        </div>
+        {race && showBids && (
+          <div className="mt-2 space-y-1">
+            {race.bids.map((b) => (
+              <div key={b.handle} className="flex items-center justify-between gap-2 bg-gray-50 px-3 py-1.5">
+                <span className="text-[11px] aq-mono text-gray-700 flex items-center gap-1">
+                  {b.handle}
+                  {b.real && <ProvenanceChip provenance="LIVE" />}
+                </span>
+                {b.status === "DECLINED" ? (
+                  <span className="aq-status aq-status--failed">DECLINED</span>
+                ) : (
+                  <span
+                    className={`text-[11px] aq-mono ${
+                      b.handle === race.winner?.handle ? "font-bold text-green-700" : "text-gray-600"
+                    }`}
+                  >
+                    €{b.bid?.landedEurPerKg.toFixed(3)}/kg
+                  </span>
+                )}
+              </div>
+            ))}
+            <p className="text-[10px] text-gray-400 leading-relaxed pt-0.5">
+              Every bid is the same deterministic landed-cost computation — SIM solvers compete on declared cost
+              profiles, the backstop is a real, public computation.
+            </p>
+          </div>
+        )}
+
+        {/* ── Primary CTA: the vision, honestly labeled. Direct producer contact isn't
+            wired in this build — TO-BUILD, same chip/status this repo uses for every
+            other roadmap capability (REGISTRAR_NODE, TO_BUILD_PLATFORM_NODES). Showing
+            the intended action is the point of a pitch demo; claiming it works isn't. ── */}
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={() => setShowContactNote((s) => !s)}
+            className="w-full flex items-center justify-center gap-1.5 py-2 bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-colors"
+          >
+            Contact producer
+            <ProvenanceChip provenance="TO-BUILD" />
+          </button>
+          {showContactNote && (
+            <p className="text-[11px] text-gray-400 leading-relaxed mt-1.5 px-1">
+              Direct producer messaging is roadmap, not wired in this build.{" "}
+              {lot.sim
+                ? "This is a seeded synthetic lot — there is no real producer to contact yet."
+                : "Today: reach this lot through EthicHub directly (link above), or structure financing through a linked coop seat."}
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* ── Provenance line ── */}
       <div className="px-4 pt-3 flex items-center gap-2 flex-wrap text-xs text-gray-500">
         <ProvenanceChip
@@ -117,7 +222,10 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
           <span>seeded synthetic lot — deterministic, replays identically</span>
         ) : (
           <span>
-            fetched <span className="aq-mono">{new Date(lot.source.fetched_at).toISOString().replace("T", " ").slice(0, 19)}Z</span>
+            fetched{" "}
+            <span className="aq-mono">
+              {new Date(lot.source.fetched_at).toISOString().replace("T", " ").slice(0, 19)}Z
+            </span>
           </span>
         )}
         {lot.source.url && (
@@ -187,20 +295,21 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
                     </span>
                   </div>
                   <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
-                    The floor = ICE C + origin differential — a lower bound, not a verdict.
-                    Specialty lots price above it on grade. Converted at SIM FX 1.08; no live
-                    ICE C feed wired.
+                    The floor = ICE C + origin differential — a lower bound, not a verdict. Specialty lots price above
+                    it on grade. Converted at SIM FX 1.08; no live ICE C feed wired.
                   </p>
                 </div>
               ) : (
                 <p className="text-[11px] text-gray-400 leading-relaxed">
-                  Floor = exchange benchmark + origin differential; no benchmark feed wired
-                  for this commodity (SIM, coarse calibration).
+                  Floor = exchange benchmark + origin differential; no benchmark feed wired for this commodity (SIM,
+                  coarse calibration).
                 </p>
               )}
             </div>
           ) : (
-            <p className="text-xs text-gray-400">Price on match — <ValueOrDash value={null} /></p>
+            <p className="text-xs text-gray-400">
+              Price on match — <ValueOrDash value={null} />
+            </p>
           )}
         </CollapsibleSection>
 
@@ -267,8 +376,8 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
               </div>
             ))}
             <p className="text-[11px] text-gray-400 pt-1 leading-relaxed">
-              A real check finding real gaps — the platform does not publish these fields for
-              this lot. Nothing here is invented to look complete.
+              A real check finding real gaps — the platform does not publish these fields for this lot. Nothing here is
+              invented to look complete.
             </p>
           </div>
         </CollapsibleSection>
@@ -284,9 +393,7 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500">
-                  Linked by producer/community, not platform id
-                </span>
+                <span className="text-xs text-gray-500">Linked by producer/community, not platform id</span>
                 <JoinConfidenceTag level={lot.join_confidence} />
               </div>
               <div className="space-y-1">
@@ -326,6 +433,7 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
               <div className="flex items-center justify-between gap-2 mb-1">
                 <span className="text-[11px] text-gray-500">Content-addressed lot id</span>
                 <button
+                  type="button"
                   className="flex items-center gap-1 text-[11px] text-blue-500 hover:text-blue-700"
                   onClick={() => {
                     navigator.clipboard?.writeText(lot.aqueduct_id_full);
@@ -370,7 +478,11 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
 
       {/* Raw JSON */}
       <div className="border-t border-gray-100 px-4 py-2.5">
-        <button className="text-[11px] text-gray-400 hover:text-gray-600 underline" onClick={() => setShowJson((s) => !s)}>
+        <button
+          type="button"
+          className="text-[11px] text-gray-400 hover:text-gray-600 underline"
+          onClick={() => setShowJson((s) => !s)}
+        >
           {showJson ? "Hide raw JSON" : "Show raw JSON"}
         </button>
         {showJson && (

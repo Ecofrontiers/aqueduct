@@ -7,9 +7,10 @@
 
 ## 1. The product (one paragraph)
 
-**Canonical definition (Pat, locked 2026-07-02 — use these words everywhere):**
-"Aqueduct is a generalized peer-to-peer logistics layer for smallholder farmers: agents
-aggregate, verify, and price commodity lots, and intents match and settle them."
+**Canonical definition (Pat, updated 2026-07-03 to name the finance layer explicitly):**
+"Aqueduct is a generalized peer-to-peer logistics and finance layer for smallholder
+farmers: agents aggregate, verify, and price commodity lots, and intents match and
+settle them."
 
 
 Aqueduct is an **open financial + logistics layer for smallholder commodities**: an

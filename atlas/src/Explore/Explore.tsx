@@ -1,58 +1,65 @@
-import type { MapRef } from "react-map-gl";
-import { Source, Layer, Popup } from "react-map-gl";
-import FiltersMobile from "./FiltersMobile";
-import { useNewFiltersDispatch, useNewFiltersState } from "../context/filters";
+import {
+  ArrowRight,
+  CaretDown,
+  CaretLeft,
+  CaretRight,
+  Globe,
+  Lightning,
+  MagnifyingGlass,
+  TreeStructure,
+  Users,
+} from "@phosphor-icons/react";
+import { ArrowsLeftRight, Coffee, Cpu } from "@phosphor-icons/react";
 import clsx from "clsx";
-import Footer from "../Footer";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMapState } from "../context/map";
-import { MapBox } from "../shared/components/MapBox";
+import type { MapRef } from "react-map-gl";
+import { Layer, Popup, Source } from "react-map-gl";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Footer from "../Footer";
 import Header from "../Header";
-import { AssetBioregionCard } from "./AssetBioregionCard";
-import { OrgBioregionCard } from "./OrgBioregionCard";
-import { ActionBioregionCard } from "./ActionBioregionCard";
-import { Asset } from "../modules/assets";
-import { Org, Action } from "../shared/types";
-import { CompositeClusterLayer } from "../shared/components/CompositeClusterLayer";
+import { ActivityPanel } from "../aqueduct/components/ActivityPanel";
 import {
-  BioregionLayer,
-  type BioregionProperties,
-} from "../shared/components/BioregionLayer";
+  AQUEDUCT_SECTION_COLORS,
+  ActorExploreCard,
+  IntentExploreCard,
+  LotExploreCard,
+} from "../aqueduct/components/AqueductExploreCards";
+import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
+import { AqueductNetworkLayer } from "../aqueduct/components/AqueductNetworkLayer";
+import { MapLegend } from "../aqueduct/components/MapLegend";
+import { TourDock } from "../aqueduct/components/TourDock";
+import { useAqueductEconomy } from "../aqueduct/hooks/useAqueductEconomy";
+import { useNewFiltersDispatch, useNewFiltersState } from "../context/filters";
+import type { EntityType } from "../context/filters/filtersContext";
+import { useMapState } from "../context/map";
+import { loadEIIScores } from "../lib/api";
+import type { Asset } from "../modules/assets";
+import { ChainIcon } from "../modules/chains/components/ChainIcon";
 import {
+  findBioregionForPoint,
   getBioregionForAsset,
   getBioregionStats,
   loadBioregionGeoJSON,
-  findBioregionForPoint,
 } from "../modules/intelligence/bioregionIntelligence";
-import { loadEIIScores } from "../lib/api";
-import { BioregionPanel } from "./BioregionPanel";
-import { MapFilterBar, type ActionFilters } from "./MapFilterBar";
-import { ArrowRight, CaretLeft, CaretRight, CaretDown, MagnifyingGlass, Globe, TreeStructure, Lightning, Users } from "@phosphor-icons/react";
+import { BioregionLayer, type BioregionProperties } from "../shared/components/BioregionLayer";
+import { CompositeClusterLayer } from "../shared/components/CompositeClusterLayer";
 import { ENTITY_COLORS } from "../shared/components/CompositeClusterLayer";
+import { MapBox } from "../shared/components/MapBox";
 import { BIOREGION_PROXIMITY } from "../shared/consts";
-import { ChainIcon } from "../modules/chains/components/ChainIcon";
+import type { Action, Org } from "../shared/types";
+import { ActionBioregionCard } from "./ActionBioregionCard";
+import { AssetBioregionCard } from "./AssetBioregionCard";
+import { BioregionPanel } from "./BioregionPanel";
 import {
-  AssetExploreCard,
-  OrgExploreCard,
   ActionExploreCard,
+  AssetExploreCard,
   BioregionExploreCard,
   type BioregionListItem,
+  OrgExploreCard,
 } from "./ExploreCards";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import type { EntityType } from "../context/filters/filtersContext";
-import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
-import { AqueductNetworkLayer } from "../aqueduct/components/AqueductNetworkLayer";
-import { TourDock } from "../aqueduct/components/TourDock";
-import { ActivityPanel } from "../aqueduct/components/ActivityPanel";
-import { MapLegend } from "../aqueduct/components/MapLegend";
-import { useAqueductEconomy } from "../aqueduct/hooks/useAqueductEconomy";
-import {
-  LotExploreCard,
-  IntentExploreCard,
-  ActorExploreCard,
-  AQUEDUCT_SECTION_COLORS,
-} from "../aqueduct/components/AqueductExploreCards";
-import { Coffee, ArrowsLeftRight, Cpu } from "@phosphor-icons/react";
+import FiltersMobile from "./FiltersMobile";
+import { type ActionFilters, MapFilterBar } from "./MapFilterBar";
+import { OrgBioregionCard } from "./OrgBioregionCard";
 // EntityType still used for URL param handling
 
 export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {}): React.ReactElement => {
@@ -68,6 +75,15 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   } = useNewFiltersState();
   const dispatch = useNewFiltersDispatch();
   const [showPrimaryAssets, setShowPrimaryAssets] = useState(true);
+  // Investment view (default on): the base Atlas registers 500+ assets/actors globally,
+  // most with no financial instrument attached — on Aqueduct's narrower commodity-finance
+  // scope, defaulting to only investable/purchasable entities keeps the map matched to
+  // what this build is actually for, not the full base-Atlas breadth. Investable = the
+  // asset already carries one of the base platform's own financial-instrument flags
+  // (prefinancing/pretoken/yield_bearing — real fields, not invented for this filter);
+  // for orgs, a populated treasury (a real fund/account someone could actually route
+  // capital through, not just a description).
+  const [investableOnly, setInvestableOnly] = useState(true);
   const mapRef = useRef<MapRef>();
   const { mapStyle } = useMapState();
   const [searchParams] = useSearchParams();
@@ -78,14 +94,19 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   const panelWidth = panelExpanded ? 700 : 490;
 
   // Bioregion selection state
-  const [selectedBioregion, setSelectedBioregion] =
-    useState<BioregionProperties | null>(null);
+  const [selectedBioregion, setSelectedBioregion] = useState<BioregionProperties | null>(null);
 
   // Org/Action selection state
   const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null);
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
-  const [bioregionDefaultTab, setBioregionDefaultTab] = useState<'overview' | 'assets' | 'actors' | 'actions'>('overview');
-  const [actionFilters, setActionFilters] = useState<ActionFilters>({ protocols: new Set(), sdgs: new Set(), timeRange: null });
+  const [bioregionDefaultTab, setBioregionDefaultTab] = useState<"overview" | "assets" | "actors" | "actions">(
+    "overview",
+  );
+  const [actionFilters, setActionFilters] = useState<ActionFilters>({
+    protocols: new Set(),
+    sdgs: new Set(),
+    timeRange: null,
+  });
 
   // Read ?entity= URL param on mount
   useEffect(() => {
@@ -136,23 +157,29 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         const props = feature.properties as BioregionProperties;
         if (!props?.code) return null;
         // Count assets near this bioregion centroid
-        const assetCount = filteredAssets.filter(a =>
-          a.coordinates && props.centroid &&
-          Math.abs(a.coordinates.latitude - props.centroid[1]) < BIOREGION_PROXIMITY.lat &&
-          Math.abs(a.coordinates.longitude - props.centroid[0]) < BIOREGION_PROXIMITY.lng
+        const assetCount = filteredAssets.filter(
+          (a) =>
+            a.coordinates &&
+            props.centroid &&
+            Math.abs(a.coordinates.latitude - props.centroid[1]) < BIOREGION_PROXIMITY.lat &&
+            Math.abs(a.coordinates.longitude - props.centroid[0]) < BIOREGION_PROXIMITY.lng,
         ).length;
         // Count orgs near this bioregion + 1 for owockibot
-        const orgCount = allOrgs.filter(o =>
-          o.coordinates && props.centroid &&
-          Math.abs(o.coordinates.latitude - props.centroid[1]) < BIOREGION_PROXIMITY.lat &&
-          Math.abs(o.coordinates.longitude - props.centroid[0]) < BIOREGION_PROXIMITY.lng
+        const orgCount = allOrgs.filter(
+          (o) =>
+            o.coordinates &&
+            props.centroid &&
+            Math.abs(o.coordinates.latitude - props.centroid[1]) < BIOREGION_PROXIMITY.lat &&
+            Math.abs(o.coordinates.longitude - props.centroid[0]) < BIOREGION_PROXIMITY.lng,
         ).length;
         const actorCount = orgCount + 1; // +1 for owockibot
         // Count actions near this bioregion
-        const actionCount = allActions.filter(a =>
-          a.location && props.centroid &&
-          Math.abs(a.location.latitude - props.centroid[1]) < BIOREGION_PROXIMITY.lat &&
-          Math.abs(a.location.longitude - props.centroid[0]) < BIOREGION_PROXIMITY.lng
+        const actionCount = allActions.filter(
+          (a) =>
+            a.location &&
+            props.centroid &&
+            Math.abs(a.location.latitude - props.centroid[1]) < BIOREGION_PROXIMITY.lat &&
+            Math.abs(a.location.longitude - props.centroid[0]) < BIOREGION_PROXIMITY.lng,
         ).length;
 
         return {
@@ -166,7 +193,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         };
       })
       .filter((b): b is BioregionListItem => b !== null)
-      .sort((a, b) => (b.assetCount + b.actionCount) - (a.assetCount + a.actionCount));
+      .sort((a, b) => b.assetCount + b.actionCount - (a.assetCount + a.actionCount));
   }, [bioregionGeoJSON, filteredAssets, allOrgs, allActions]);
 
   // Item count for the filter bar — reflects what's currently visible
@@ -195,17 +222,19 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   // Format bioregion stats for the filter bar
   const formattedBioregionStats = useMemo(() => {
     if (!selectedBioregion) return null;
-    const assetsInBioregion = filteredAssets.filter(a =>
-      a.region?.startsWith(selectedBioregion.code.split('_')[0])
+    const assetsInBioregion = filteredAssets.filter((a) =>
+      a.region?.startsWith(selectedBioregion.code.split("_")[0]),
     ).length;
-    const orgsInBioregion = allOrgs.filter(o =>
-      o.coordinates && Math.abs(o.coordinates.latitude - (selectedBioregion.centroid?.[1] || 0)) < 5
+    const orgsInBioregion = allOrgs.filter(
+      (o) => o.coordinates && Math.abs(o.coordinates.latitude - (selectedBioregion.centroid?.[1] || 0)) < 5,
     ).length;
     const actorCount = orgsInBioregion + 1; // +1 for owockibot
-    const actionsInBioregion = allActions.filter(a =>
-      a.location && selectedBioregion.centroid &&
-      Math.abs(a.location.latitude - selectedBioregion.centroid[1]) < 5 &&
-      Math.abs(a.location.longitude - selectedBioregion.centroid[0]) < 10
+    const actionsInBioregion = allActions.filter(
+      (a) =>
+        a.location &&
+        selectedBioregion.centroid &&
+        Math.abs(a.location.latitude - selectedBioregion.centroid[1]) < 5 &&
+        Math.abs(a.location.longitude - selectedBioregion.centroid[0]) < 10,
     ).length;
 
     return {
@@ -232,32 +261,26 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
       dispatch({ type: "SET_SELECTED_ASSET", payload: assetId });
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [dispatch]
+    [dispatch],
   );
 
-  const handleOrgClick = useCallback(
-    ({ orgId, lng, lat }: { orgId: number; lng: number; lat: number }) => {
-      setSelectedOrgId(orgId);
-      mapRef?.current?.flyTo({ center: [lng, lat], zoom: 6 });
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
-    []
-  );
+  const handleOrgClick = useCallback(({ orgId, lng, lat }: { orgId: number; lng: number; lat: number }) => {
+    setSelectedOrgId(orgId);
+    mapRef?.current?.flyTo({ center: [lng, lat], zoom: 6 });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-  const handleActionClick = useCallback(
-    ({ actionId, lng, lat }: { actionId: string; lng: number; lat: number }) => {
-      setSelectedActionId(actionId);
-      mapRef?.current?.flyTo({ center: [lng, lat], zoom: 6 });
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
-    []
-  );
+  const handleActionClick = useCallback(({ actionId, lng, lat }: { actionId: string; lng: number; lat: number }) => {
+    setSelectedActionId(actionId);
+    mapRef?.current?.flyTo({ center: [lng, lat], zoom: 6 });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const handleAgentClick = useCallback(
     (address: string) => {
       navigate(`/agents/${address}`);
     },
-    [navigate]
+    [navigate],
   );
 
   const handleOrgCardClick = useCallback(
@@ -267,7 +290,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
       mapRef?.current?.flyTo({ center: [longitude, latitude], zoom: 6 });
 
       // Detect bioregion and open panel with actors tab
-      setBioregionDefaultTab('actors');
+      setBioregionDefaultTab("actors");
       if (bioregionGeoJSON) {
         const feature = findBioregionForPoint(longitude, latitude, bioregionGeoJSON);
         if (feature?.properties) {
@@ -283,7 +306,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         }
       }
     },
-    [bioregionGeoJSON]
+    [bioregionGeoJSON],
   );
 
   const handleActionCardClick = useCallback(
@@ -293,7 +316,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
       mapRef?.current?.flyTo({ center: [longitude, latitude], zoom: 6 });
 
       // Detect bioregion and open panel with actions tab
-      setBioregionDefaultTab('actions');
+      setBioregionDefaultTab("actions");
       if (bioregionGeoJSON) {
         const feature = findBioregionForPoint(longitude, latitude, bioregionGeoJSON);
         if (feature?.properties) {
@@ -309,23 +332,20 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         }
       }
     },
-    [bioregionGeoJSON]
+    [bioregionGeoJSON],
   );
 
-  const handleBioregionSelect = useCallback(
-    (bioregion: BioregionProperties) => {
-      setBioregionDefaultTab('overview');
-      setSelectedBioregion(bioregion);
-      if (bioregion.centroid) {
-        mapRef.current?.flyTo({
-          center: bioregion.centroid,
-          zoom: 4.5,
-          duration: 1200,
-        });
-      }
-    },
-    []
-  );
+  const handleBioregionSelect = useCallback((bioregion: BioregionProperties) => {
+    setBioregionDefaultTab("overview");
+    setSelectedBioregion(bioregion);
+    if (bioregion.centroid) {
+      mapRef.current?.flyTo({
+        center: bioregion.centroid,
+        zoom: 4.5,
+        duration: 1200,
+      });
+    }
+  }, []);
 
   const handleBioregionClose = useCallback(() => {
     setSelectedBioregion(null);
@@ -348,7 +368,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         zoom: 10,
       });
     },
-    [dispatch]
+    [dispatch],
   );
 
   // Back from asset detail to bioregion panel — zoom out to bioregion extent
@@ -366,32 +386,26 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   }, [dispatch, selectedBioregion]);
 
   // Action detail select — parallel to handleBioregionAssetSelect
-  const handleActionDetailSelect = useCallback(
-    (action: Action) => {
-      setSelectedActionId(action.id);
-      if (action.location) {
-        mapRef?.current?.flyTo({
-          center: [action.location.longitude, action.location.latitude],
-          zoom: 6,
-        });
-      }
-    },
-    []
-  );
+  const handleActionDetailSelect = useCallback((action: Action) => {
+    setSelectedActionId(action.id);
+    if (action.location) {
+      mapRef?.current?.flyTo({
+        center: [action.location.longitude, action.location.latitude],
+        zoom: 6,
+      });
+    }
+  }, []);
 
   // Org detail select — parallel to handleBioregionAssetSelect
-  const handleOrgDetailSelect = useCallback(
-    (org: Org) => {
-      setSelectedOrgId(org.id);
-      if (org.coordinates) {
-        mapRef?.current?.flyTo({
-          center: [org.coordinates.longitude, org.coordinates.latitude],
-          zoom: 8,
-        });
-      }
-    },
-    []
-  );
+  const handleOrgDetailSelect = useCallback((org: Org) => {
+    setSelectedOrgId(org.id);
+    if (org.coordinates) {
+      mapRef?.current?.flyTo({
+        center: [org.coordinates.longitude, org.coordinates.latitude],
+        zoom: 8,
+      });
+    }
+  }, []);
 
   // Reorder orgs/actions to put selected one first
   const orgsToDisplay = useMemo(() => {
@@ -406,15 +420,11 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
 
     // Apply protocol filter (exclusion: protocols in the set are HIDDEN)
     if (actionFilters.protocols.size > 0) {
-      list = list.filter((a) =>
-        !a.proofs.every((p) => actionFilters.protocols.has(p.protocol.id))
-      );
+      list = list.filter((a) => !a.proofs.every((p) => actionFilters.protocols.has(p.protocol.id)));
     }
     // Apply SDG filter (exclusion: SDGs in the set are HIDDEN)
     if (actionFilters.sdgs.size > 0) {
-      list = list.filter((a) =>
-        !a.sdg_outcomes.every((s) => actionFilters.sdgs.has(s.code))
-      );
+      list = list.filter((a) => !a.sdg_outcomes.every((s) => actionFilters.sdgs.has(s.code)));
     }
     // Apply time range filter
     if (actionFilters.timeRange) {
@@ -456,56 +466,71 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
     return extras.length > 0 ? [...filteredAssets, ...extras] : filteredAssets;
   }, [filteredAssets, allAssets, showPrimaryAssets]);
 
+  // Investment view: assets with at least one real financial-instrument flag.
+  const investableFilteredAssets = useMemo(() => {
+    if (!investableOnly) return expandedFilteredAssets;
+    return expandedFilteredAssets.filter((a) => a.prefinancing || a.pretoken || a.yield_bearing);
+  }, [expandedFilteredAssets, investableOnly]);
+
+  // Investment view: orgs with a real treasury (a fund/account, not just a description).
+  const investableOrgs = useMemo(() => {
+    if (!investableOnly) return allOrgs;
+    return allOrgs.filter((o) => o.treasury && o.treasury.length > 0);
+  }, [allOrgs, investableOnly]);
+
   // Filter actions to only those with valid locations (respecting action filters)
   const actionsWithLocation = useMemo(
     () =>
       actionsToDisplay.filter(
-        (a) =>
-          a.location &&
-          typeof a.location.longitude === "number" &&
-          typeof a.location.latitude === "number"
+        (a) => a.location && typeof a.location.longitude === "number" && typeof a.location.latitude === "number",
       ),
-    [actionsToDisplay]
+    [actionsToDisplay],
   );
 
   // The currently selected asset (for three-state rendering)
   const selectedAsset = useMemo(
     () => (selectedAssetId ? allAssets.find((a) => a.id === selectedAssetId) ?? null : null),
-    [selectedAssetId, allAssets]
+    [selectedAssetId, allAssets],
   );
 
   const selectedOrg = useMemo(
     () => (selectedOrgId ? allOrgs.find((o) => o.id === selectedOrgId) ?? null : null),
-    [selectedOrgId, allOrgs]
+    [selectedOrgId, allOrgs],
   );
 
   const selectedOrgSiblings = useMemo(() => {
     if (!selectedOrg || !selectedBioregion?.centroid) return [];
-    return allOrgs.filter((o) =>
-      o.id !== selectedOrg.id && o.coordinates &&
-      Math.abs(o.coordinates.latitude - selectedBioregion.centroid![1]) < 5 &&
-      Math.abs(o.coordinates.longitude - selectedBioregion.centroid![0]) < 10
+    return allOrgs.filter(
+      (o) =>
+        o.id !== selectedOrg.id &&
+        o.coordinates &&
+        Math.abs(o.coordinates.latitude - selectedBioregion.centroid![1]) < 5 &&
+        Math.abs(o.coordinates.longitude - selectedBioregion.centroid![0]) < 10,
     );
   }, [selectedOrg, selectedBioregion, allOrgs]);
 
   const selectedAction = useMemo(
     () => (selectedActionId ? allActions.find((a) => a.id === selectedActionId) ?? null : null),
-    [selectedActionId, allActions]
+    [selectedActionId, allActions],
   );
 
   // Build action group (same location + base title) and sibling actions for the detail card
   const selectedActionGroup = useMemo(() => {
     if (!selectedAction) return [];
     const groupKey = (a: Action) => {
-      const base = (a.title || '').replace(/\s*[-—]\s*\d{4}\s*$/, '').replace(/\s+\d{4}\s*$/, '').trim();
-      const loc = a.location ? `${a.location.latitude.toFixed(2)},${a.location.longitude.toFixed(2)}` : 'noloc';
+      const base = (a.title || "")
+        .replace(/\s*[-—]\s*\d{4}\s*$/, "")
+        .replace(/\s+\d{4}\s*$/, "")
+        .trim();
+      const loc = a.location ? `${a.location.latitude.toFixed(2)},${a.location.longitude.toFixed(2)}` : "noloc";
       return `${base}||${loc}`;
     };
     const bioregionActions = selectedBioregion?.centroid
-      ? allActions.filter((a) =>
-          a.location &&
-          Math.abs(a.location.latitude - selectedBioregion.centroid![1]) < 5 &&
-          Math.abs(a.location.longitude - selectedBioregion.centroid![0]) < 10
+      ? allActions.filter(
+          (a) =>
+            a.location &&
+            Math.abs(a.location.latitude - selectedBioregion.centroid![1]) < 5 &&
+            Math.abs(a.location.longitude - selectedBioregion.centroid![0]) < 10,
         )
       : allActions;
     const selectedKey = groupKey(selectedAction);
@@ -526,9 +551,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   }, [selectedAsset, selectedBioregion, allAssets]);
 
   // Flat mercator for second-order assets, globe otherwise
-  const mapProjection = selectedAsset?.second_order
-    ? { name: "mercator" as const }
-    : { name: "globe" as const };
+  const mapProjection = selectedAsset?.second_order ? { name: "mercator" as const } : { name: "globe" as const };
 
   const isSecondOrder = !!selectedAsset?.second_order;
 
@@ -552,7 +575,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
 
   // Hover state for parent asset dots
   const [hoveredDot, setHoveredDot] = useState<{
-    lng: number; lat: number; name: string; id: string;
+    lng: number;
+    lat: number;
+    name: string;
+    id: string;
   } | null>(null);
 
   // Map click handler — navigates to parent asset when dot is clicked
@@ -577,7 +603,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         mapRef?.current?.flyTo({ center: [lng, lat], zoom: 10, duration: 800 });
       }
     },
-    [isSecondOrder, dispatch, allAssets]
+    [isSecondOrder, dispatch, allAssets],
   );
 
   // Mouse move over parent dots — show hover preview
@@ -588,7 +614,8 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
       if (feature?.properties?.id && feature.geometry?.type === "Point") {
         const [lng, lat] = feature.geometry.coordinates;
         setHoveredDot({
-          lng, lat,
+          lng,
+          lat,
           name: feature.properties.name ?? "Asset",
           id: String(feature.properties.id),
         });
@@ -596,18 +623,14 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
         setHoveredDot(null);
       }
     },
-    [isSecondOrder]
+    [isSecondOrder],
   );
 
   const handleMapMouseLeave = useCallback(() => {
     setHoveredDot(null);
   }, []);
 
-  const hasDetailSelection =
-    selectedBioregion ||
-    selectedAssetId ||
-    selectedOrgId ||
-    selectedActionId;
+  const hasDetailSelection = selectedBioregion || selectedAssetId || selectedOrgId || selectedActionId;
   // Always show panel on lg (accordion is default content). On md, only when detail selected.
   const showLeftPanel = true;
 
@@ -615,14 +638,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   const economy = useAqueductEconomy();
 
   // Accordion: priority order Lots > Bioregions > Intents > Solvers > Assets > Actions > Actors
-  type AccordionSection =
-    | "bioregion"
-    | "lot"
-    | "intent"
-    | "aqActor"
-    | "asset"
-    | "action"
-    | "actor";
+  type AccordionSection = "bioregion" | "lot" | "intent" | "aqActor" | "asset" | "action" | "actor";
   const [openSection, setOpenSection] = useState<AccordionSection | null>(null);
 
   // Auto-select highest priority section when panel content changes
@@ -664,14 +680,14 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
             "pt-[60px] lg:pt-[36px]",
             "md:grid md:grid-cols-2 md:gap-4 lg:gap-0",
             `lg:grid-cols-[var(--panel-w)_1fr] xl:grid-cols-[var(--panel-w)_1fr]`,
-            "transition-[grid-template-columns] duration-300"
+            "transition-[grid-template-columns] duration-300",
           )}
           style={{ "--panel-w": `${panelWidth}px` } as React.CSSProperties}
         >
           <div
             className={clsx(
               "md:order-3 md:self-start md:row-start-2 md:row-end-3 lg:row-start-1 lg:row-end-2",
-              !showLeftPanel && "md:!col-span-2"
+              !showLeftPanel && "md:!col-span-2",
             )}
             onClick={() => panelExpanded && setPanelExpanded(false)}
           >
@@ -679,11 +695,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
               className={clsx(
                 "w-full overflow-hidden",
                 "map-wrapper",
-                showLeftPanel &&
-                  "md:fixed md:top-[100px] md:right-4 md:w-[calc(50vw-32px)] md:h-[calc(100vh-136px)]",
+                showLeftPanel && "md:fixed md:top-[100px] md:right-4 md:w-[calc(50vw-32px)] md:h-[calc(100vh-136px)]",
                 showLeftPanel && "lg:h-[calc(100vh-72px)]",
                 showLeftPanel && "lg:top-[36px] lg:left-[var(--panel-w)] lg:w-[calc(100vw-var(--panel-w))]",
-                "transition-[width] duration-300"
+                "transition-[width] duration-300",
               )}
             >
               <MapBox
@@ -711,6 +726,8 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   onActionFiltersChange={setActionFilters}
                   showPrimaryAssets={showPrimaryAssets}
                   onTogglePrimaryAssets={() => setShowPrimaryAssets((v) => !v)}
+                  investableOnly={investableOnly}
+                  onToggleInvestableOnly={() => setInvestableOnly((v) => !v)}
                   filteredActionCount={actionsToDisplay.length}
                 />
 
@@ -728,8 +745,8 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     />
 
                     <CompositeClusterLayer
-                      assets={expandedFilteredAssets.filter((asset) => !asset.second_order)}
-                      orgs={allOrgs}
+                      assets={investableFilteredAssets.filter((asset) => !asset.second_order)}
+                      orgs={investableOrgs}
                       actions={actionsWithLocation}
                       activeTypes={activeEntityTypes}
                       onAssetClick={handleAssetMarkerClick}
@@ -793,15 +810,12 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
             </div>
           </div>
           <div
-            className={clsx(
-              "h-[60px] z-10 md:row-start-1 md:row-end-2 md:order-1 md:col-span-2 lg:hidden",
-              "md:h-0"
-            )}
+            className={clsx("h-[60px] z-10 md:row-start-1 md:row-end-2 md:order-1 md:col-span-2 lg:hidden", "md:h-0")}
           >
             <div
               className={clsx(
                 "filters-row-mobile bg-background",
-                "md:fixed md:!top-[70px] md:left-0 md:w-full md:!px-4"
+                "md:fixed md:!top-[70px] md:left-0 md:w-full md:!px-4",
               )}
             >
               <FiltersMobile actionFilters={actionFilters} onActionFiltersChange={setActionFilters} />
@@ -813,7 +827,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
               "md:bg-cardBackground md:h-[calc(100vh-160px)] md:flex md:flex-col md:overflow-hidden",
               "lg:h-[calc(100vh-72px)]",
               !showLeftPanel && "md:hidden",
-              "relative"
+              "relative",
             )}
           >
             {/* Expand/collapse toggle — only mount when panel is visible; fixed position sits above the map's stacking context */}
@@ -823,29 +837,36 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                 className="hidden lg:flex items-center justify-center fixed top-1/2 -translate-y-1/2 z-40 w-6 h-12 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full shadow-md hover:bg-gray-50 transition-all duration-300 cursor-pointer"
                 style={{ left: `${panelWidth - 12}px` }}
               >
-                {panelExpanded ? <CaretLeft size={14} className="text-gray-500" /> : <CaretRight size={14} className="text-gray-500" />}
+                {panelExpanded ? (
+                  <CaretLeft size={14} className="text-gray-500" />
+                ) : (
+                  <CaretRight size={14} className="text-gray-500" />
+                )}
               </button>
             )}
             {/* Navigation bar */}
-            {selectedBioregion && (() => {
-              const hasDetail = selectedAsset || selectedAction || selectedOrg;
-              const detailName = selectedAsset?.name || (selectedAction ? (selectedAction.title || '').replace(/\s*[-—]\s*\d{4}\s*$/, '').trim() : selectedOrg?.name || '');
-              return (
-                <div className="flex items-center gap-2 px-3 h-8 bg-gray-900 text-white text-xs shrink-0">
-                  <button
-                    onClick={hasDetail ? handleBackToBioregion : handleBioregionClose}
-                    className="flex items-center gap-1 text-white/60 hover:text-white transition-colors cursor-pointer shrink-0"
-                  >
-                    <ArrowRight size={10} className="rotate-180" />
-                    <span>{hasDetail ? selectedBioregion.name : "Explore"}</span>
-                  </button>
-                  <span className="text-white/30">/</span>
-                  <span className="font-medium truncate">
-                    {hasDetail ? detailName : selectedBioregion.name}
-                  </span>
-                </div>
-              );
-            })()}
+            {selectedBioregion &&
+              (() => {
+                const hasDetail = selectedAsset || selectedAction || selectedOrg;
+                const detailName =
+                  selectedAsset?.name ||
+                  (selectedAction
+                    ? (selectedAction.title || "").replace(/\s*[-—]\s*\d{4}\s*$/, "").trim()
+                    : selectedOrg?.name || "");
+                return (
+                  <div className="flex items-center gap-2 px-3 h-8 bg-gray-900 text-white text-xs shrink-0">
+                    <button
+                      onClick={hasDetail ? handleBackToBioregion : handleBioregionClose}
+                      className="flex items-center gap-1 text-white/60 hover:text-white transition-colors cursor-pointer shrink-0"
+                    >
+                      <ArrowRight size={10} className="rotate-180" />
+                      <span>{hasDetail ? selectedBioregion.name : "Explore"}</span>
+                    </button>
+                    <span className="text-white/30">/</span>
+                    <span className="font-medium truncate">{hasDetail ? detailName : selectedBioregion.name}</span>
+                  </div>
+                );
+              })()}
 
             {/* Panel state machine: bioregion+entity → detail card, bioregion → panel, else → card lists */}
             {selectedBioregion && selectedAsset ? (
@@ -871,8 +892,11 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       const lngs = coords.map((c) => c[0]);
                       const lats = coords.map((c) => c[1]);
                       mapRef?.current?.fitBounds(
-                        [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
-                        { padding: 60, maxZoom: 8, duration: 800 }
+                        [
+                          [Math.min(...lngs), Math.min(...lats)],
+                          [Math.max(...lngs), Math.max(...lats)],
+                        ],
+                        { padding: 60, maxZoom: 8, duration: 800 },
                       );
                     }
                   } else if (target.coordinates) {
@@ -929,43 +953,46 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       </span>
                       <CaretDown
                         size={14}
-                        className={clsx(
-                          "transition-transform",
-                          openSection === "bioregion" && "rotate-180"
-                        )}
+                        className={clsx("transition-transform", openSection === "bioregion" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "bioregion" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? bioregionList.filter((b) => b.name?.toLowerCase().includes(q) || b.realm_name?.toLowerCase().includes(q))
-                        : bioregionList;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search bioregions..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {items.map((bioregion) => (
-                              <BioregionExploreCard
-                                key={bioregion.code}
-                                bioregion={bioregion}
-                                onSelect={() => {
-                                  handleBioregionSelect(bioregion);
-                                }}
+                    {openSection === "bioregion" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? bioregionList.filter(
+                              (b) => b.name?.toLowerCase().includes(q) || b.realm_name?.toLowerCase().includes(q),
+                            )
+                          : bioregionList;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                            ))}
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search bioregions..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {items.map((bioregion) => (
+                                <BioregionExploreCard
+                                  key={bioregion.code}
+                                  bioregion={bioregion}
+                                  onSelect={() => {
+                                    handleBioregionSelect(bioregion);
+                                  }}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
 
@@ -986,53 +1013,57 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                         className={clsx("transition-transform", openSection === "lot" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "lot" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? economy.lots.filter(
-                            (l) =>
-                              l.title_redacted.toLowerCase().includes(q) ||
-                              (l.origin.region ?? "").toLowerCase().includes(q) ||
-                              (l.origin.country ?? "").toLowerCase().includes(q)
-                          )
-                        : economy.lots;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search lots..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {items.slice(0, 80).map((lot) => (
-                              <LotExploreCard
-                                key={lot.aqueduct_id}
-                                lot={lot}
-                                onLocate={() => {
-                                  if (lot.map_marker) {
-                                    mapRef?.current?.flyTo({
-                                      center: [lot.map_marker.longitude, lot.map_marker.latitude],
-                                      zoom: 9,
-                                      duration: 900,
-                                    });
-                                  }
-                                }}
+                    {openSection === "lot" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? economy.lots.filter(
+                              (l) =>
+                                l.title_redacted.toLowerCase().includes(q) ||
+                                (l.origin.region ?? "").toLowerCase().includes(q) ||
+                                (l.origin.country ?? "").toLowerCase().includes(q),
+                            )
+                          : economy.lots;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                            ))}
-                            {items.length > 80 && (
-                              <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
-                                Showing 80 of {items.length.toLocaleString()} — search to narrow.
-                              </div>
-                            )}
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search lots..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {items.slice(0, 80).map((lot) => (
+                                <LotExploreCard
+                                  key={lot.aqueduct_id}
+                                  lot={lot}
+                                  onLocate={() => {
+                                    if (lot.map_marker) {
+                                      mapRef?.current?.flyTo({
+                                        center: [lot.map_marker.longitude, lot.map_marker.latitude],
+                                        zoom: 9,
+                                        duration: 900,
+                                      });
+                                    }
+                                  }}
+                                />
+                              ))}
+                              {items.length > 80 && (
+                                <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
+                                  Showing 80 of {items.length.toLocaleString()} — search to narrow.
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
 
@@ -1046,57 +1077,62 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     >
                       <span className="flex items-center gap-1.5">
                         <ArrowsLeftRight size={14} style={{ color: AQUEDUCT_SECTION_COLORS.intent }} />
-                        Intents & Routes <span className="font-normal text-gray-400">({economy.intents.length.toLocaleString()})</span>
+                        Intents & Routes{" "}
+                        <span className="font-normal text-gray-400">({economy.intents.length.toLocaleString()})</span>
                       </span>
                       <CaretDown
                         size={14}
                         className={clsx("transition-transform", openSection === "intent" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "intent" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? economy.intents.filter(
-                            (it) => it.title.toLowerCase().includes(q) || it.detail.toLowerCase().includes(q)
-                          )
-                        : economy.intents;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search intents..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {items.slice(0, 80).map((intent) => (
-                              <IntentExploreCard
-                                key={intent.id}
-                                intent={intent}
-                                onLocate={() => {
-                                  if (intent.coordinates) {
-                                    mapRef?.current?.flyTo({
-                                      center: [intent.coordinates.longitude, intent.coordinates.latitude],
-                                      zoom: 8,
-                                      duration: 900,
-                                    });
-                                  }
-                                }}
+                    {openSection === "intent" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? economy.intents.filter(
+                              (it) => it.title.toLowerCase().includes(q) || it.detail.toLowerCase().includes(q),
+                            )
+                          : economy.intents;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                            ))}
-                            {items.length > 80 && (
-                              <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
-                                Showing 80 of {items.length.toLocaleString()} — search to narrow.
-                              </div>
-                            )}
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search intents..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {items.slice(0, 80).map((intent) => (
+                                <IntentExploreCard
+                                  key={intent.id}
+                                  intent={intent}
+                                  onLocate={() => {
+                                    if (intent.coordinates) {
+                                      mapRef?.current?.flyTo({
+                                        center: [intent.coordinates.longitude, intent.coordinates.latitude],
+                                        zoom: 8,
+                                        duration: 900,
+                                      });
+                                    }
+                                  }}
+                                />
+                              ))}
+                              {items.length > 80 && (
+                                <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
+                                  Showing 80 of {items.length.toLocaleString()} — search to narrow.
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
 
@@ -1117,52 +1153,56 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                         className={clsx("transition-transform", openSection === "aqActor" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "aqActor" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? economy.actors.filter(
-                            (a) => a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q)
-                          )
-                        : economy.actors;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search solvers & venues..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {items.slice(0, 100).map((actor) => (
-                              <ActorExploreCard
-                                key={actor.id}
-                                actor={actor}
-                                href={actor.kind === "coop" ? `/coops/${actor.id}` : undefined}
-                                onLocate={
-                                  actor.coordinates
-                                    ? () =>
-                                        mapRef?.current?.flyTo({
-                                          center: [actor.coordinates!.longitude, actor.coordinates!.latitude],
-                                          zoom: 6,
-                                          duration: 900,
-                                        })
-                                    : undefined
-                                }
+                    {openSection === "aqActor" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? economy.actors.filter(
+                              (a) => a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q),
+                            )
+                          : economy.actors;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                            ))}
-                            {items.length > 100 && (
-                              <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
-                                Showing 100 of {items.length.toLocaleString()} — search to narrow.
-                              </div>
-                            )}
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search solvers & venues..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {items.slice(0, 100).map((actor) => (
+                                <ActorExploreCard
+                                  key={actor.id}
+                                  actor={actor}
+                                  href={actor.kind === "coop" ? `/coops/${actor.id}` : undefined}
+                                  onLocate={
+                                    actor.coordinates
+                                      ? () =>
+                                          mapRef?.current?.flyTo({
+                                            center: [actor.coordinates!.longitude, actor.coordinates!.latitude],
+                                            zoom: 6,
+                                            duration: 900,
+                                          })
+                                      : undefined
+                                  }
+                                />
+                              ))}
+                              {items.length > 100 && (
+                                <div className="px-4 py-2.5 text-[11px] text-gray-400 border-t border-gray-100">
+                                  Showing 100 of {items.length.toLocaleString()} — search to narrow.
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
 
@@ -1180,41 +1220,42 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       </span>
                       <CaretDown
                         size={14}
-                        className={clsx(
-                          "transition-transform",
-                          openSection === "asset" && "rotate-180"
-                        )}
+                        className={clsx("transition-transform", openSection === "asset" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "asset" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? filteredAssets.filter((a) => a.name.toLowerCase().includes(q))
-                        : filteredAssets;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search assets..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {items.map((asset) => (
-                              <AssetExploreCard
-                                key={asset.id}
-                                asset={asset}
-                                onLocate={() => handleAssetCardPinClick(asset)}
+                    {openSection === "asset" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? filteredAssets.filter((a) => a.name.toLowerCase().includes(q))
+                          : filteredAssets;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                            ))}
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search assets..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {items.map((asset) => (
+                                <AssetExploreCard
+                                  key={asset.id}
+                                  asset={asset}
+                                  onLocate={() => handleAssetCardPinClick(asset)}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
 
@@ -1232,41 +1273,42 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       </span>
                       <CaretDown
                         size={14}
-                        className={clsx(
-                          "transition-transform",
-                          openSection === "action" && "rotate-180"
-                        )}
+                        className={clsx("transition-transform", openSection === "action" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "action" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? actionsToDisplay.filter((a) => (a.title ?? a.id).toLowerCase().includes(q))
-                        : actionsToDisplay;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search actions..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {items.map((action) => (
-                              <ActionExploreCard
-                                key={action.id}
-                                action={action}
-                                onLocate={() => handleActionCardClick(action)}
+                    {openSection === "action" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? actionsToDisplay.filter((a) => (a.title ?? a.id).toLowerCase().includes(q))
+                          : actionsToDisplay;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                            ))}
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search actions..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {items.map((action) => (
+                                <ActionExploreCard
+                                  key={action.id}
+                                  action={action}
+                                  onLocate={() => handleActionCardClick(action)}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
 
@@ -1284,66 +1326,74 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       </span>
                       <CaretDown
                         size={14}
-                        className={clsx(
-                          "transition-transform",
-                          openSection === "actor" && "rotate-180"
-                        )}
+                        className={clsx("transition-transform", openSection === "actor" && "rotate-180")}
                       />
                     </button>
-                    {openSection === "actor" && (() => {
-                      const q = accordionSearch.toLowerCase();
-                      const items = q
-                        ? orgsToDisplay.filter((o) => (o.name || '').toLowerCase().includes(q))
-                        : orgsToDisplay;
-                      return (
-                        <div className="flex-1 min-h-0 flex flex-col">
-                          <div className="relative shrink-0 border-b border-gray-200">
-                            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              value={accordionSearch}
-                              onChange={(e) => setAccordionSearch(e.target.value)}
-                              placeholder="Search actors..."
-                              className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                            />
-                          </div>
-                          <div className="flex-1 min-h-0 overflow-y-auto">
-                            {/* owockibot — universal agent */}
-                            <div className="bg-cardBackground border border-gray-100 overflow-hidden">
-                              <div className="flex">
-                                <div className="w-1 flex-shrink-0 bg-purple-500" />
-                                <div className="flex items-center pl-2.5 py-2.5">
-                                  <img src="/images/agents/owockibot.webp" className="w-10 h-10 rounded flex-shrink-0 object-cover" alt="owockibot" />
-                                </div>
-                                <div className="flex-1 min-w-0 px-2.5 py-2.5">
-                                  <div className="flex items-center justify-between gap-1.5 mb-0.5">
-                                    <div className="flex items-center gap-1.5">
-                                      <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-purple-50 text-purple-600">Agent</span>
-                                    </div>
-                                    <div className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-100 flex-shrink-0">
-                                      <ChainIcon chainId="base" chainName="Base" size={13} />
-                                    </div>
+                    {openSection === "actor" &&
+                      (() => {
+                        const q = accordionSearch.toLowerCase();
+                        const items = q
+                          ? orgsToDisplay.filter((o) => (o.name || "").toLowerCase().includes(q))
+                          : orgsToDisplay;
+                        return (
+                          <div className="flex-1 min-h-0 flex flex-col">
+                            <div className="relative shrink-0 border-b border-gray-200">
+                              <MagnifyingGlass
+                                size={14}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                              />
+                              <input
+                                type="text"
+                                value={accordionSearch}
+                                onChange={(e) => setAccordionSearch(e.target.value)}
+                                placeholder="Search actors..."
+                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
+                              />
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                              {/* owockibot — universal agent */}
+                              <div className="bg-cardBackground border border-gray-100 overflow-hidden">
+                                <div className="flex">
+                                  <div className="w-1 flex-shrink-0 bg-purple-500" />
+                                  <div className="flex items-center pl-2.5 py-2.5">
+                                    <img
+                                      src="/images/agents/owockibot.webp"
+                                      className="w-10 h-10 rounded flex-shrink-0 object-cover"
+                                      alt="owockibot"
+                                    />
                                   </div>
-                                  <div className="flex items-center justify-between gap-2">
-                                    <h4 className="text-sm font-semibold text-gray-900">owockibot</h4>
-                                    <a href="https://owockibot.xyz" target="_blank" rel="noopener noreferrer" className="flex-shrink-0 text-gray-300 hover:text-purple-500 transition-colors">
-                                      <ArrowRight size={14} />
-                                    </a>
+                                  <div className="flex-1 min-w-0 px-2.5 py-2.5">
+                                    <div className="flex items-center justify-between gap-1.5 mb-0.5">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-purple-50 text-purple-600">
+                                          Agent
+                                        </span>
+                                      </div>
+                                      <div className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-100 flex-shrink-0">
+                                        <ChainIcon chainId="base" chainName="Base" size={13} />
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                      <h4 className="text-sm font-semibold text-gray-900">owockibot</h4>
+                                      <a
+                                        href="https://owockibot.xyz"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-shrink-0 text-gray-300 hover:text-purple-500 transition-colors"
+                                      >
+                                        <ArrowRight size={14} />
+                                      </a>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
+                              {items.map((org) => (
+                                <OrgExploreCard key={org.id} org={org} onLocate={() => handleOrgCardClick(org)} />
+                              ))}
                             </div>
-                            {items.map((org) => (
-                              <OrgExploreCard
-                                key={org.id}
-                                org={org}
-                                onLocate={() => handleOrgCardClick(org)}
-                              />
-                            ))}
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </>
                 )}
               </div>

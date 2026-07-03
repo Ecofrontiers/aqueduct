@@ -1,11 +1,21 @@
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Layer, Marker, Source } from "react-map-gl";
+import { Layer, Marker, Source, useMap } from "react-map-gl";
 import { useNavigate } from "react-router-dom";
 import { useAqueductLots } from "../hooks/useAqueductLots";
 import { getEconomy } from "../sim/economy.mjs";
 import { AGROFORESTRY_VENUES, TO_BUILD_PLATFORM_NODES } from "../sim/venues.mjs";
 import { selectActiveChapter, useTourStore } from "../state/tourStore";
+
+// Institution markers (coop/venue/hub) only render past this zoom — below it, the
+// flow lines carry the visual weight (per the brief's "calm over complete"); dozens of
+// individually-rendered markers at world/continent zoom is exactly the density that
+// made the map unreadable (docs/research/09 marker-language pass). Native clustering
+// (like AqueductLotsLayer's SIM-lot circles) is the deeper fix; this zoom gate is the
+// immediate one — cheap, no new rendering pipeline, and it's the same lever
+// (CLAUDE.md gotcha: react-map-gl Markers have no z-index, only mount order/visibility
+// levers exist).
+const INSTITUTION_MARKER_MIN_ZOOM = 4;
 
 /**
  * The Aqueduct network layer — the map as a balance of payments, not just
@@ -138,11 +148,29 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
   const chapter = selectActiveChapter(tour);
   const [dashStep, setDashStep] = useState(0);
   const [settleProgress, setSettleProgress] = useState(0);
+  const { current: mapRef } = useMap();
+  const [zoom, setZoom] = useState(3);
 
   useEffect(() => {
     const t = setInterval(() => setDashStep((s) => (s + 1) % DASH_STEPS.length), 120);
     return () => clearInterval(t);
   }, []);
+
+  // Reactive zoom — react-map-gl's useMap() is imperative (getZoom() at call time),
+  // so subscribe to the underlying mapbox-gl instance's own zoom event to re-render
+  // institution markers in/out as the visitor zooms.
+  useEffect(() => {
+    if (!mapRef) return;
+    const map = mapRef.getMap();
+    const update = () => setZoom(map.getZoom());
+    update();
+    map.on("zoom", update);
+    return () => {
+      map.off("zoom", update);
+    };
+  }, [mapRef]);
+
+  const showInstitutionMarkers = zoom >= INSTITUTION_MARKER_MIN_ZOOM;
 
   const settleActive = tour.started && chapter === "settle";
   useEffect(() => {
@@ -324,72 +352,82 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       ))}
 
-      {/* ── Demand hubs: where exogenous capital enters ── */}
-      {(economy.hubs as Array<{ id: string; name: string; coords: [number, number] }>).map((hub) => (
-        <Marker key={hub.id} longitude={hub.coords[0]} latitude={hub.coords[1]} anchor="center">
-          <div
-            title={`${hub.name} — import demand hub (SIM): goods land here, capital enters here`}
-            style={{
-              width: 13,
-              height: 13,
-              borderRadius: "50%",
-              background: ACCOUNT_COLORS.capitalExo,
-              border: "2px solid #ffffff",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
-            }}
-          />
-        </Marker>
-      ))}
-
-      {/* ── Coops: outline = capital-account state ── */}
-      {(economy.coops as Array<{ id: string; name: string; coords: [number, number] }>).map((coop) => {
-        const capState = coopCapitalState.get(coop.id);
-        return (
-          <Marker
-            key={coop.id}
-            longitude={coop.coords[0]}
-            latitude={coop.coords[1]}
-            anchor="center"
-            onClick={(e) => {
-              e.originalEvent?.stopPropagation();
-              navigate(`/coops/${coop.id}`);
-            }}
-          >
-            <NodeRing
-              color={
-                capState === "facility"
-                  ? ACCOUNT_COLORS.capitalEndo
-                  : capState === "opportunity"
-                    ? ACCOUNT_COLORS.capitalExo
-                    : null
-              }
-              dashed={capState === "opportunity"}
-              title={
-                capState === "facility"
-                  ? `${coop.name} — endogenous credit facility active (SIM) · open the coop seat`
-                  : capState === "opportunity"
-                    ? `${coop.name} — open financing opportunity (SIM) · open the coop seat`
-                    : `${coop.name} (SIM) — open the coop seat`
-              }
-            >
-              <div
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  background: "#ffffff",
-                  border: `2px solid ${ACCOUNT_COLORS.goods}`,
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
-                  cursor: "pointer",
-                }}
-              />
-            </NodeRing>
+      {/* ── Demand hubs: circle, indigo (typed glyph grammar — lot-detail-and-network
+          brief §B: "buyer/demand hub = circle, indigo"). Zoom-gated: institutions
+          only render past INSTITUTION_MARKER_MIN_ZOOM, flow lines carry the weight
+          below that. ── */}
+      {showInstitutionMarkers &&
+        (economy.hubs as Array<{ id: string; name: string; coords: [number, number] }>).map((hub) => (
+          <Marker key={hub.id} longitude={hub.coords[0]} latitude={hub.coords[1]} anchor="center">
+            <div
+              title={`${hub.name} — import demand hub (SIM): goods land here, capital enters here`}
+              style={{
+                width: 13,
+                height: 13,
+                borderRadius: "50%",
+                background: ACCOUNT_COLORS.capitalExo,
+                border: "2px solid #ffffff",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
+              }}
+            />
           </Marker>
-        );
-      })}
+        ))}
+
+      {/* ── Coops: rounded square, sienna outline (brief §B: "Coop/exporter = rounded
+          square, sienna outline") — NOT a circle; a circle here is indistinguishable
+          from a hub/lot at a glance, which is the "uniform dots" anti-pattern the
+          brief explicitly warns against. Outline color = capital-account state. ── */}
+      {showInstitutionMarkers &&
+        (economy.coops as Array<{ id: string; name: string; coords: [number, number] }>).map((coop) => {
+          const capState = coopCapitalState.get(coop.id);
+          return (
+            <Marker
+              key={coop.id}
+              longitude={coop.coords[0]}
+              latitude={coop.coords[1]}
+              anchor="center"
+              onClick={(e) => {
+                e.originalEvent?.stopPropagation();
+                navigate(`/coops/${coop.id}`);
+              }}
+            >
+              <NodeRing
+                color={
+                  capState === "facility"
+                    ? ACCOUNT_COLORS.capitalEndo
+                    : capState === "opportunity"
+                      ? ACCOUNT_COLORS.capitalExo
+                      : null
+                }
+                dashed={capState === "opportunity"}
+                title={
+                  capState === "facility"
+                    ? `${coop.name} — endogenous credit facility active (SIM) · open the coop seat`
+                    : capState === "opportunity"
+                      ? `${coop.name} — open financing opportunity (SIM) · open the coop seat`
+                      : `${coop.name} (SIM) — open the coop seat`
+                }
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 3,
+                    background: "#ffffff",
+                    border: `2px solid ${ACCOUNT_COLORS.goods}`,
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                    cursor: "pointer",
+                  }}
+                />
+              </NodeRing>
+            </Marker>
+          );
+        })}
 
       {/* Anchor coop: the REAL endogenous facility — Celo USDC credit lines. Same
-          circle shape as every other node marker; ring + fill carry the meaning. */}
+          rounded-square shape as every other coop; ring + fill carry the meaning.
+          Always visible regardless of zoom — this is the anchor, not a background
+          institution. */}
       {anchorCoop && (
         <Marker longitude={anchorCoop[0]} latitude={anchorCoop[1]} anchor="center">
           <NodeRing
@@ -400,7 +438,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
               style={{
                 width: 12,
                 height: 12,
-                borderRadius: "50%",
+                borderRadius: 3,
                 background: settleActive ? ACCOUNT_COLORS.goods : "#ffffff",
                 border: `2.5px solid ${ACCOUNT_COLORS.goods}`,
                 boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
@@ -410,32 +448,39 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       )}
 
-      {/* ── Venues: same circle shape, purple fill; TO-BUILD = hollow + dashed ring ── */}
-      {[...AGROFORESTRY_VENUES, ...TO_BUILD_PLATFORM_NODES]
-        .filter((v: { coords?: { longitude: number; latitude: number } }) => v.coords)
-        .map(
-          (v: {
-            name: string;
-            kind: string;
-            status: string;
-            coords: { longitude: number; latitude: number; precision: string };
-          }) => (
-            <Marker key={`venue-${v.name}`} longitude={v.coords.longitude} latitude={v.coords.latitude} anchor="center">
-              <div
-                title={`${v.name} — ${v.kind} (${v.status}, position ${v.coords.precision})`}
-                style={{
-                  width: 11,
-                  height: 11,
-                  borderRadius: "50%",
-                  background: v.status === "TO-BUILD" ? "transparent" : ACCOUNT_COLORS.venue,
-                  border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${ACCOUNT_COLORS.venue}`,
-                  opacity: v.status === "TO-BUILD" ? 0.5 : 1,
-                  boxShadow: v.status === "TO-BUILD" ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
-                }}
-              />
-            </Marker>
-          ),
-        )}
+      {/* ── Venues: square, purple (brief §B: "Venue = square, purple"); TO-BUILD =
+          hollow + dashed outline. ── */}
+      {showInstitutionMarkers &&
+        [...AGROFORESTRY_VENUES, ...TO_BUILD_PLATFORM_NODES]
+          .filter((v: { coords?: { longitude: number; latitude: number } }) => v.coords)
+          .map(
+            (v: {
+              name: string;
+              kind: string;
+              status: string;
+              coords: { longitude: number; latitude: number; precision: string };
+            }) => (
+              <Marker
+                key={`venue-${v.name}`}
+                longitude={v.coords.longitude}
+                latitude={v.coords.latitude}
+                anchor="center"
+              >
+                <div
+                  title={`${v.name} — ${v.kind} (${v.status}, position ${v.coords.precision})`}
+                  style={{
+                    width: 11,
+                    height: 11,
+                    borderRadius: 2,
+                    background: v.status === "TO-BUILD" ? "transparent" : ACCOUNT_COLORS.venue,
+                    border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${ACCOUNT_COLORS.venue}`,
+                    opacity: v.status === "TO-BUILD" ? 0.5 : 1,
+                    boxShadow: v.status === "TO-BUILD" ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
+                  }}
+                />
+              </Marker>
+            ),
+          )}
 
       {/* ── Tour emphasis: the race, charted as ONE ring on the anchor itself —
           not six new markers. A pulsing halo around the existing lot marker IS

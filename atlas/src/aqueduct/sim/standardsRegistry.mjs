@@ -1,12 +1,15 @@
 // Aqueduct — external standards registry. sim/policy.mjs stays generic (doesn't know
 // about any specific connector); this file is the one place mapping a
 // PolicyRule.citesStandards `source` string to the connector that can actually resolve it.
-// Today: GIIN's IRIS+ (connectors/giin.mjs). Add new sources here, not inside policy.mjs.
+// Sources: GIIN's IRIS+ (connectors/giin.mjs), real commodity certifiers — TIC firms +
+// sustainability schemes (connectors/certifiers.mjs). Add new sources here, not in policy.mjs.
 
+import { resolveCertifier } from "../connectors/certifiers.mjs";
 import { resolveIrisMetric } from "../connectors/giin.mjs";
 
 export const STANDARD_RESOLVERS = {
   "GIIN-IRIS+": resolveIrisMetric,
+  CERTIFIER: resolveCertifier,
 };
 
 /** @param {{source: string, code: string}} citation */

@@ -9,6 +9,7 @@ import { useAqueductLots } from "../hooks/useAqueductLots";
 import { CAPITAL_ROSTER } from "../sim/buyerRoster.mjs";
 import { runCapitalFormationsMatch } from "../sim/capitalFormations.mjs";
 import { getEconomy } from "../sim/economy.mjs";
+import { runTokenizerRace } from "../sim/tokenizerRoster.mjs";
 
 const KIND_LABEL: Record<string, string> = { buyer: "Buyer", grant: "Grant", fund: "Fund" };
 const KIND_COLOR: Record<string, string> = { buyer: "#4f46e5", grant: "#059669", fund: "#9333ea" };
@@ -36,6 +37,16 @@ export default function AqueductFinancing(): React.ReactElement {
     const lots = [...(realLots ?? []), ...economy.lots];
     return runCapitalFormationsMatch(lots);
   }, [realLots]);
+
+  // Tokenizer race: same mechanism as the solver race, applied to structuring an
+  // investable instrument instead of moving a lot. Illustrated at the scale of this
+  // economy's total declared capital — a real instrument size would come from an
+  // actual asset/org's value, not this pool total, but the race mechanism is identical
+  // either way.
+  const tokenizerRace = useMemo(
+    () => runTokenizerRace({ instrumentValueEur: formations.totalCapitalEur }),
+    [formations.totalCapitalEur],
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -107,6 +118,50 @@ export default function AqueductFinancing(): React.ReactElement {
           <div className="divide-y divide-gray-100 border border-gray-100">
             {formations.actors.map((a) => (
               <ActorRow key={a.handle} actor={a} expanded />
+            ))}
+          </div>
+        </Section>
+
+        {/* ── Tokenizer race: the solver-race mechanism, applied to structuring an
+            investable instrument instead of moving a lot ── */}
+        <Section
+          title="Tokenizer race"
+          subtitle="Same mechanism as the solver race — lowest all-in structuring cost that clears the deal-size bar wins"
+        >
+          <div className="mb-2 text-[11px] text-gray-400">
+            Illustrated at this economy's total declared capital ({eur(formations.totalCapitalEur)}) — a real instrument
+            would size off one actual asset or org, not this pool total. Archetypes are modeled on real RWA tokenization
+            platforms (Centrifuge, Maple, Goldfinch, Ondo); fee figures are labeled estimates, not those platforms'
+            actual quoted terms.
+          </div>
+          <div className="divide-y divide-gray-100 border border-gray-100">
+            {tokenizerRace.bids.map((b) => (
+              <div key={b.handle} className="flex items-center justify-between gap-2 px-3.5 py-2.5">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold text-gray-900 truncate">{b.name}</span>
+                    <ProvenanceChip provenance="SIM" />
+                    {b.handle === tokenizerRace.winner?.handle && (
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-green-50 text-green-700">
+                        winner
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-gray-500">{b.note}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  {b.status === "DECLINED" ? (
+                    <span className="aq-status aq-status--failed">DECLINED</span>
+                  ) : (
+                    <>
+                      <div className="text-xs font-semibold text-gray-900 aq-mono">
+                        {eur(b.cost?.allInYear1Eur ?? 0)} ({b.cost?.allInYear1Pct}%)
+                      </div>
+                      <div className="text-[11px] text-gray-400">{b.cost?.listingDays}d to list</div>
+                    </>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         </Section>

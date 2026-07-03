@@ -12,10 +12,10 @@ import { Modal } from "./shared/components/Modal";
 type NavKey = "map" | "ledger" | "financing" | "about";
 
 const primaryNav: { key: NavKey; name: string; link: string }[] = [
+  { key: "about", name: "About", link: "/about" },
   { key: "map", name: "Map", link: "/" },
   { key: "ledger", name: "Ledger", link: "/ledger" },
   { key: "financing", name: "Financing", link: "/financing" },
-  { key: "about", name: "About", link: "/about" },
 ];
 
 const secondaryLinks = [
@@ -52,7 +52,6 @@ export default (): React.ReactElement => {
 
   return (
     <>
-      <RealVsSimNotice />
       <header
         className={clsx(
           "px-3 md:px-4 z-20 fixed top-0 left-0 w-full",
@@ -89,6 +88,8 @@ export default (): React.ReactElement => {
           </nav>
 
           <div className="hidden lg:flex items-center ml-auto h-full group/wallet">
+            <RealVsSimNotice />
+            <div className="w-px h-1/2 bg-gray-400/50 self-center mr-1" />
             {walletConnected && chain && (
               <>
                 <div className="flex items-center gap-1.5 px-3 text-[10px] text-gray-400">
