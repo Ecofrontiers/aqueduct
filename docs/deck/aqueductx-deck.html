@@ -129,7 +129,7 @@
     font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
     padding: 0 16px 10px; border-bottom: 1px solid var(--line);
   }
-  table.rea td { padding: 12px 16px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.rea td { padding: 9px 16px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
   table.rea tr:last-child td { border-bottom: none; }
   table.rea .concept { font-weight: 640; color: var(--ink); white-space: nowrap; }
   table.rea .type { font-family: var(--mono); font-size: 13.5px; color: var(--capital); }
@@ -179,7 +179,8 @@
   .g-event    { width: 13px; height: 13px; border-radius: 50%; background: var(--ink); border: 2px solid #fff; box-shadow: 0 0 0 1px var(--ink); }
 
   /* slide 6 assemblage */
-  .assemblage { display: flex; gap: 22px; align-items: stretch; }
+  .assemblage { display: flex; gap: 16px; align-items: stretch; }
+  .flow-arrows { flex: 0 0 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
   .role-col { flex: 0 0 262px; display: flex; flex-direction: column; gap: 11px; justify-content: center; }
   .role-agent { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 9px; padding: 10px 14px; background: var(--ground); }
   .role-agent.right { flex-direction: row-reverse; text-align: right; }
@@ -243,19 +244,19 @@
   .receipt .rc-p .num { font-family: var(--mono); font-weight: 700; color: var(--ink); }
 
   /* slide 12 team */
-  .person { display: flex; gap: 20px; align-items: flex-start; }
-  .person .photo { width: 108px; height: 108px; border-radius: 12px; object-fit: cover; flex: 0 0 108px; border: 1px solid var(--line); background: var(--ground-soft); }
-  .person .mono-photo { width: 108px; height: 108px; border-radius: 12px; flex: 0 0 108px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 34px; font-weight: 700; color: var(--ink-3); background: var(--ground-soft); border: 1px solid var(--line); }
-  .person .nm { font-size: 21px; font-weight: 680; color: var(--ink); letter-spacing: -.01em; }
-  .person .rl { font-size: 14px; color: var(--capital); font-weight: 600; margin-top: 2px; font-family: var(--mono); letter-spacing: .02em; }
-  .person .bio { font-size: 14.5px; color: var(--ink-2); margin-top: 9px; line-height: 1.42; text-wrap: pretty; }
-  .socials { display: flex; flex-wrap: wrap; gap: 7px 16px; margin-top: 11px; }
-  .socials a, .socials span { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); text-decoration: none; }
+  .person { display: flex; gap: 26px; align-items: flex-start; }
+  .person .photo { width: 128px; height: 128px; border-radius: 14px; object-fit: cover; flex: 0 0 128px; border: 1px solid var(--line); background: var(--ground-soft); }
+  .person .mono-photo { width: 128px; height: 128px; border-radius: 14px; flex: 0 0 128px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 38px; font-weight: 700; color: var(--ink-3); background: var(--ground-soft); border: 1px solid var(--line); }
+  .person .nm { font-size: 25px; font-weight: 680; color: var(--ink); letter-spacing: -.01em; }
+  .person .rl { font-size: 15.5px; color: var(--capital); font-weight: 600; margin-top: 4px; font-family: var(--mono); letter-spacing: .02em; }
+  .person .bio { font-size: 16.5px; color: var(--ink-2); margin-top: 12px; line-height: 1.48; text-wrap: pretty; }
+  .socials { display: flex; flex-wrap: wrap; gap: 9px 20px; margin-top: 14px; }
+  .socials a, .socials span { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 14px; color: var(--ink-3); text-decoration: none; }
   .chain { display: flex; align-items: stretch; gap: 0; }
-  .chain .cn { flex: 1; border: 1px solid var(--line); border-radius: 9px; padding: 12px 14px; background: var(--ground); min-width: 0; }
+  .chain .cn { flex: 1; border: 1px solid var(--line); border-radius: 9px; padding: 16px 18px; background: var(--ground); min-width: 0; }
   .chain .cn.win { border-color: var(--capital); background: var(--capital-tint); }
-  .chain .cn .cn-h { font-size: 15px; font-weight: 640; color: var(--ink); line-height: 1.15; }
-  .chain .cn .cn-d { font-size: 12px; color: var(--ink-3); margin-top: 4px; line-height: 1.3; }
+  .chain .cn .cn-h { font-size: 17px; font-weight: 640; color: var(--ink); line-height: 1.2; }
+  .chain .cn .cn-d { font-size: 13.5px; color: var(--ink-3); margin-top: 6px; line-height: 1.4; }
   .chain .carrow { flex: 0 0 26px; display: flex; align-items: center; justify-content: center; color: var(--ink-4); }
 
   /* slide 13 ask */
@@ -334,7 +335,7 @@
         Lenders do not lend against lots they cannot verify—<b>legibility is the bottleneck before capital.</b>
       </p>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>02 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>02 / 10</span></div>
   </section>
 
   <!-- ============================= 3 · THE SEAT ============================= -->
@@ -343,9 +344,9 @@
     <h1 class="title wide">The producer gets a seat, not a terminal.</h1>
     <p class="dek">
       Automated judgment placed in the farmer's hands—a steward agent whose loyalty is structurally to
-      the producer, and a human who always confirms the settle.
+      the producer, a human confirms settlement, unless designated otherwise.
     </p>
-    <div class="body" style="display:flex; align-items:center; gap:48px;">
+    <div class="body" style="display:flex; align-items:flex-start; gap:48px;">
 
       <div style="flex:0 0 400px;">
         <div class="kicker">The seat</div>
@@ -377,66 +378,28 @@
           <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:var(--mono); font-size:14px; font-weight:700; color:var(--ink-4); flex:0 0 22px;">03</span><span style="font-size:18px; font-weight:600; color:var(--ink);">Accept or decline a fill</span></div>
           <div style="display:flex; align-items:center; gap:14px; border:1.5px solid var(--capital); border-radius:10px; padding:12px 15px; background:var(--capital-tint);">
             <span style="font-family:var(--mono); font-size:14px; font-weight:700; color:var(--capital); flex:0 0 22px;">04</span>
-            <div><div style="font-size:18px; font-weight:680; color:var(--ink);">Confirm settle</div><div style="font-size:14px; color:var(--capital); margin-top:2px;">the human decides—the steward negotiates, never settles</div></div>
+            <div><div style="font-size:18px; font-weight:680; color:var(--ink);">Confirm settle</div><div style="font-size:14px; color:var(--capital); margin-top:2px;">human-confirmed by default—fully delegable to the steward by designation</div></div>
           </div>
           <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:var(--mono); font-size:14px; font-weight:700; color:var(--ink-4); flex:0 0 22px;">05</span><span style="font-size:18px; font-weight:600; color:var(--ink);">Set disclosure tiers</span></div>
         </div>
       </div>
     </div>
-    <p class="src-line" style="position:absolute; left:76px; right:76px; bottom:56px; font-size:12.5px; line-height:1.5; color:var(--ink-3);">
-      Bankr showed the shape—few verbs, custody abstracted, one legible object out; we keep the seat and drop the token flywheel. A reachable buyer is the whole difference: SMS lifted farmer income +13&ndash;14% in Peru, 0% in India (Nakasone 2014; Fafchamps &amp; Minten 2012).
-    </p>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>03 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>03 / 10</span></div>
   </section>
 
-  <!-- ============================= 4 · WHAT IT IS ============================= -->
+  <!-- ============================= 4 · LEGIBILITY (merged 4+5) ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">04</span><span class="tag">What it is</span><span class="rule"></span></div>
-    <h1 class="title wide">One lot becomes many.</h1>
-    <p class="dek">
-      The judgment work—aggregate, verify, price, match—is now cheap at any scale. One lot's loop runs
-      identically, thousands of times over.
+    <div class="eyebrow"><span class="num">04</span><span class="tag">Legibility</span><span class="rule"></span></div>
+    <h1 class="title wide">A legible lot is a servable lot.</h1>
+    <p class="dek" style="max-width:none; font-size:19px; line-height:1.48;">
+      Today a smallholder's lot can't afford verification—inspection floors run ~$250 per shipment—can't
+      re-prove compliance to each buyer, and can't be checked for double-pledged collateral, so lenders pass.
+      Make the lot legible—shared schema, derivable ID, typed claims, cited standards—and agents do all three
+      at near-zero cost: one check satisfies every standard via registered resolvers (EUDR live today;
+      organic, Fairtrade, GIIN ride the same rails), duplicate financing becomes one registry query—the
+      check banks already pay MonetaGo for—and verification finally scales to lot size.
     </p>
-    <div class="body" style="display:flex; flex-direction:column; gap:20px;">
-      <div style="display:flex; align-items:center; gap:40px;">
-        <div style="flex:0 0 264px;">
-          <div class="kicker">One lot · one loop</div>
-          <div class="unitcell">
-            <span class="glyph g-agent coop" style="width:24px;height:24px;"></span>
-            <span style="color:var(--ink-4);">&rarr;</span>
-            <span class="glyph g-intent" style="width:20px;height:20px;"></span>
-            <span style="color:var(--ink-4);">&rarr;</span>
-            <span class="glyph g-resource" style="width:24px;height:24px;"></span>
-            <span class="glyph g-claim" style="width:16px;height:16px; margin-left:2px;"></span>
-          </div>
-          <div style="margin-top:10px; display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-3); font-family:var(--mono); white-space:nowrap;">
-            <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M245.63,48A6,6,0,0,0,240,42.37c-51-3-91.88,12.42-109.35,41.26-11.63,19.21-11.38,42.68.53,65a69.42,69.42,0,0,0-15.48,30.59L95.9,159.41c8.15-16.1,8.1-32.95-.32-46.85C82.77,91.41,53,80.07,15.9,82.27a6,6,0,0,0-5.63,5.64C8.09,125,19.41,154.77,40.56,167.58A43.75,43.75,0,0,0,63.44,174a53.17,53.17,0,0,0,24-6L114,194.48V224a6,6,0,0,0,12,0V194.51A57.55,57.55,0,0,1,139.76,157c11.21,5.93,22.72,8.91,33.82,8.91a58.9,58.9,0,0,0,30.79-8.57C233.21,139.89,248.63,99,245.63,48ZM46.78,157.31C30.47,147.44,21.39,124,22,94c30-.65,53.41,8.44,63.28,24.75,5.68,9.37,6.16,20.38,1.54,31.59L60.24,123.75a6,6,0,0,0-8.49,8.49l26.62,26.61C67.16,163.47,56.15,163,46.78,157.31Zm151.38-10.22c-14.74,8.92-32.14,9.18-49.67.9l55.76-55.75a6,6,0,0,0-8.49-8.49L140,139.51c-8.28-17.53-8-34.93.9-49.66,14.52-24,49.06-37.18,93-35.75C235.33,98,222.14,132.56,198.16,147.09Z"/></svg></span>coop &middot; intent &middot; lot &middot; <span style="color:var(--venue)">claim</span>
-          </div>
-        </div>
-        <div style="flex:1;">
-          <div class="field"><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tg" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:0.72"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tc" style="opacity:0.45"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tg" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:0.72"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:0.45"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tc" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tg" style="opacity:0.72"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:0.45"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tg" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:1"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell tc" style="opacity:0.72"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div><div class="cell" style="opacity:0.45"><span class="cc"></span><span class="cd"></span><span class="cs"></span><span class="ct"></span></div></div>
-        </div>
-      </div>
-      <div class="baseband">
-        <span class="bl">the open layer · shared standards</span>
-        <span style="margin-left:auto; font-size:20px; font-weight:700; color:var(--goods); letter-spacing:-.01em;">&#8531; of the world's food grows here</span>
-      </div>
-      <p style="font-size:16px; color:var(--ink-2); line-height:1.42; max-width:none; text-wrap:pretty;">
-        <b style="color:var(--ink); font-weight:640;">One compliance check, every standard.</b> EUDR today; organic, Fairtrade, GIIN metrics ride the same
-        registered resolvers—prove it once, cite it everywhere.
-      </p>
-    </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>04 / 13</span></div>
-  </section>
-
-  <!-- ============================= 5 · SWARM LEGIBILITY ============================= -->
-  <section class="slide">
-    <div class="eyebrow"><span class="num">05</span><span class="tag">The angle</span><span class="rule"></span></div>
-    <h1 class="title wide">Legibility is the missing layer.</h1>
-    <p class="dek">
-      The middleman's moat was on-site human judgment. Make a lot legible and a swarm judges it anywhere.
-    </p>
-    <div class="body" style="display:flex; flex-direction:column; justify-content:center; gap:26px;">
+    <div class="body" style="display:flex; flex-direction:column; justify-content:center; gap:18px;">
       <div style="display:flex; align-items:stretch; gap:22px;">
         <div class="state" style="flex:1;">
           <div style="display:flex; align-items:center; gap:16px;">
@@ -448,10 +411,9 @@
           <div class="stcap"><b style="color:var(--ink);">Invisible.</b> No schema, no ID, no claim. A person had to stand in the field.</div>
         </div>
 
-        <div style="flex:0 0 210px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+        <div style="flex:0 0 170px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
           <span class="ph" style="color:var(--ink-3)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></span>
-          <div style="font-family:var(--mono); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:600;">make it legible</div>
-          <div style="font-family:var(--mono); font-size:12px; color:var(--ink-4); text-align:center; line-height:1.5;">schema · content-ID<br>typed claim · cited standard</div>
+          <div style="font-family:var(--mono); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:600; text-align:center;">make it legible</div>
         </div>
 
         <div class="state" style="flex:1; border-color:var(--goods); background:var(--goods-tint);">
@@ -467,22 +429,16 @@
         </div>
       </div>
 
-      <p style="font-size:18px; color:var(--ink-2); line-height:1.45; max-width:none; text-wrap:pretty;">
-        Every barrier is already priced: <b style="color:var(--ink);">$250 inspection floors</b>, GS1's paid prefix, the
-        duplicate-financing registry banks have paid MonetaGo for since 2018. The one open bet is
-        all-or-nothing lot funding—<b style="color:var(--ink);">untested on commodities</b>, and the question this grant tests.
-      </p>
-
       <p class="src-line" style="font-size:12px; line-height:1.5; color:var(--ink-3);">
-        Every RWA-agriculture blowup failed at verification, never the contract—Goldfinch $18M+ · Maple $54M · Tingo &gt;$250M · Qingdao $3B-class.
+        Sources: Bureau Veritas Verigates PVoC fee schedule ($250 inspection floor) · MonetaGo duplicate-financing registry, live since 2018 · EU Deforestation Regulation (EUDR), in force.
       </p>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>05 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>04 / 10</span></div>
   </section>
 
   <!-- ============================= 6 · ARCHITECTURE ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">06</span><span class="tag">Architecture</span><span class="rule"></span></div>
+    <div class="eyebrow"><span class="num">05</span><span class="tag">Architecture</span><span class="rule"></span></div>
     <h1 class="title wide">One open layer, a swarm of agents.</h1>
     <p class="dek">
       Single-purpose agents act <b>concurrently</b> on a small set of shared objects. No agent owns the
@@ -496,6 +452,11 @@
           <div class="role-agent"><span class="glyph g-agent"></span><div><div class="rl">Certifier-resolver</div><div class="rf">resolves cited standards: TIC · GLOW-GCA · GIIN</div></div></div>
         </div>
 
+        <div class="flow-arrows">
+          <span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></span>
+          <span class="ph" style="color:var(--ink-4); transform:rotate(180deg);"><svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></span>
+        </div>
+
         <div class="shared-objects">
           <div class="so-lead">Shared objects · every agent reads and writes these</div>
           <div class="obj-grid">
@@ -506,10 +467,15 @@
           </div>
         </div>
 
+        <div class="flow-arrows">
+          <span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></span>
+          <span class="ph" style="color:var(--ink-4); transform:rotate(180deg);"><svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></span>
+        </div>
+
         <div class="role-col">
-          <div class="role-agent right"><span class="glyph g-agent solver"></span><div><div class="rl">Oracle</div><div class="rf">prices against a real floor</div></div></div>
-          <div class="role-agent right"><span class="glyph g-agent solver"></span><div><div class="rl">Solver</div><div class="rf">races to fill, landed-cost bids</div></div></div>
-          <div class="role-agent right"><span class="glyph g-agent coop"></span><div><div class="rl">Steward</div><div class="rf">settles &amp; custodies for the coop</div></div></div>
+          <div class="role-agent"><span class="glyph g-agent solver"></span><div><div class="rl">Oracle</div><div class="rf">prices against a real floor</div></div></div>
+          <div class="role-agent"><span class="glyph g-agent solver"></span><div><div class="rl">Solver</div><div class="rf">races to fill, landed-cost bids</div></div></div>
+          <div class="role-agent"><span class="glyph g-agent coop"></span><div><div class="rl">Steward</div><div class="rf">settles &amp; custodies for the coop</div></div></div>
         </div>
       </div>
 
@@ -518,27 +484,24 @@
         <div class="spine-thin">
           <span class="st">verify</span><i>&rarr;</i><span class="st">price</span><i>&rarr;</i><span class="st">settle</span>
         </div>
-        <span class="src-line" style="font-size:12px;">the only order in the system · settle rail: Base Sepolia IntentRegistry (publish&rarr;fill&rarr;verify&rarr;settle)</span>
       </div>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>06 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>05 / 10</span></div>
   </section>
 
   <!-- ============================= 7 · REA ONTOLOGY ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">07</span><span class="tag">Data model</span><span class="rule"></span></div>
+    <div class="eyebrow"><span class="num">06</span><span class="tag">Data model</span><span class="rule"></span></div>
     <h1 class="title wide">The data model is REA—the Claim is the point.</h1>
-    <p class="dek">
+    <p class="dek" style="max-width:none; font-size:18.5px; line-height:1.4; margin-top:12px;">
       <span class="accent-goods">Sell</span> and <span class="accent-capital">finance</span> are
       <b>one schema, not two features.</b> The model captures the smallholder economy whole—what the farm
-      sells, and what it consumes to produce.
+      sells, and what it consumes to produce. AqueductX's types are a
+      <b style="color:var(--ink);">Resource&ndash;Event&ndash;Agent</b> model; naming it turns "map the value chain" from a
+      slogan into schema decisions, and surfaces the one object that was missing: the
+      <b style="color:var(--ink);">Claim</b>, financing's deferred half.
     </p>
     <div class="body">
-      <p style="font-size:16px; color:var(--ink-2); line-height:1.45; max-width:none; margin-bottom:16px; text-wrap:pretty;">
-        AqueductX's types are a <b style="color:var(--ink);">Resource&ndash;Event&ndash;Agent</b> model. Naming it turns "map the value
-        chain" from a slogan into schema decisions, and surfaces the one object that was missing: the
-        <b style="color:var(--ink);">Claim</b>, financing's deferred half.
-      </p>
       <table class="rea">
         <thead>
           <tr><th style="width:22%">REA concept</th><th style="width:30%">AqueductX type</th><th style="width:48%">Example</th></tr>
@@ -548,20 +511,21 @@
           <tr><td class="concept">Agent</td><td class="type">AqueductActor + hubs</td><td class="ex">cooperative, venue, solver, certifier, infrastructure</td></tr>
           <tr><td class="concept">Commitment</td><td class="type">AqueductIntent</td><td class="ex">sell-this-lot · finance-this-planting · finance-this-farm</td></tr>
           <tr><td class="concept">Event</td><td class="type">AqueductEvent</td><td class="ex">a fill—merged with real per-event source URLs</td></tr>
-          <tr class="claim"><td class="concept">Claim</td><td class="type">claim: &#123;principal, aprPct, term&#125;</td><td class="ex"><b>financing's deferred half—a repayment owed.</b> EthicHub's real 9.9% line repaid its Line 2 cycle, 192,600 &rarr; 212,369.79 USDC.</td></tr>
+          <tr class="claim"><td class="concept">Claim</td><td class="type">claim: &#123;principal, aprPct, term&#125;</td><td class="ex"><b>financing's deferred half—a repayment owed.</b> Rates anchor on live platform data: EthicHub's published 9.9% facility, with completed repayment cycles on Celo as the track record. <span style="font-family:var(--mono); font-size:12px; color:var(--ink-4);">Source: EthicHub / Heifer facility documentation.</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>07 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>06 / 10</span></div>
   </section>
 
   <!-- ============================= 8 · PROOF · COFFEE ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">08</span><span class="tag">Proof · vertical one · live EthicHub reads</span><span class="rule"></span></div>
+    <div class="eyebrow"><span class="num">07</span><span class="tag">Proof · vertical one · live EthicHub reads</span><span class="rule"></span></div>
     <h1 class="title wide">Coffee—the loop, running on real EthicHub reads.</h1>
     <p class="dek">
-      The real Chiapas anchor lot, read from EthicHub. The coop publishes a sell-intent about the lot; a
-      solver's fill fulfills it; a finance-intent carries the <b>9.9%</b> claim. Goods flow out, capital flows in.
+      A real Chiapas anchor lot, read from EthicHub. The coop publishes a sell-intent about the lot; a
+      solver's fill fulfills it. Then the Claim—financing's deferred half: capital moves now, repayment
+      later at a stated rate and term—this finance-intent carries the <b>9.9%</b> claim.
     </p>
     <div class="body" style="display:flex; flex-direction:column; justify-content:center;">
       <div class="motif">
@@ -600,13 +564,16 @@
         <span class="li"><span class="edgekey"></span>typed relation</span>
         <span class="li"><span class="edgekey defer"></span>defers to settlement</span>
       </div>
+      <p class="src-line" style="margin-top:10px; text-align:center; font-size:12px;">
+        Live read: greencoffee.ethichub.com &middot; rate: EthicHub/Heifer facility
+      </p>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>08 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>07 / 10</span></div>
   </section>
 
   <!-- ============================= 9 · PROOF · SOLAR ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">09</span><span class="tag">Proof · vertical two · live Glow reads</span><span class="rule"></span></div>
+    <div class="eyebrow"><span class="num">08</span><span class="tag">Proof · vertical two · live Glow reads</span><span class="rule"></span></div>
     <h1 class="title wide">The same swarm that sells your coffee finances your panels.</h1>
     <p class="dek">
       A farmer needs energy to produce. An analysis agent reads the farm, finds the financeable input, and
@@ -614,11 +581,11 @@
     </p>
     <div class="body" style="display:flex; flex-direction:column; justify-content:flex-start;">
       <div class="motif" style="height:300px; margin-top:6px;">
-        <svg viewBox="0 0 1040 300" preserveAspectRatio="none">
+        <svg viewBox="0 0 1040 300" preserveAspectRatio="none" style="width:1040px; height:300px;">
           <line x1="110" y1="105" x2="360" y2="105"/>
           <line x1="360" y1="105" x2="620" y2="105"/>
-          <line x1="360" y1="240" x2="360" y2="105"/>
-          <line class="edge-defer" x1="620" y1="105" x2="620" y2="240"/>
+          <line x1="360" y1="222" x2="360" y2="105"/>
+          <line class="edge-defer" x1="620" y1="105" x2="620" y2="222"/>
         </svg>
 
         <div class="dirlabel" style="left:235px; top:44px; color:var(--endo);">what the farm needs &#9654;</div>
@@ -627,132 +594,39 @@
         <div class="mnode" style="left:110px; top:105px;"><span class="glyph g-agent coop"></span><div class="mcap"><div class="mlabel">farmer &amp; panels</div><div class="msub">agent</div></div></div>
         <div class="mnode capup" style="left:360px; top:105px;"><span class="glyph g-intent"></span><div class="mcap"><div class="mlabel">finance-this-farm</div><div class="msub">commitment</div></div></div>
         <div class="mnode capup" style="left:620px; top:105px;"><span class="glyph g-resource input" style="display:flex;align-items:center;justify-content:center;"><span class="ph" style="color:var(--goods)"><svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M122,40V16a6,6,0,0,1,12,0V40a6,6,0,0,1-12,0Zm68,88a62,62,0,1,1-62-62A62.07,62.07,0,0,1,190,128Zm-12,0a50,50,0,1,0-50,50A50.06,50.06,0,0,0,178,128ZM59.76,68.24a6,6,0,1,0,8.48-8.48l-16-16a6,6,0,0,0-8.48,8.48Zm0,119.52-16,16a6,6,0,1,0,8.48,8.48l16-16a6,6,0,1,0-8.48-8.48ZM192,70a6,6,0,0,0,4.24-1.76l16-16a6,6,0,0,0-8.48-8.48l-16,16A6,6,0,0,0,192,70Zm4.24,117.76a6,6,0,0,0-8.48,8.48l16,16a6,6,0,0,0,8.48-8.48ZM46,128a6,6,0,0,0-6-6H16a6,6,0,0,0,0,12H40A6,6,0,0,0,46,128Zm82,82a6,6,0,0,0-6,6v24a6,6,0,0,0,12,0V216A6,6,0,0,0,128,210Zm112-88H216a6,6,0,0,0,0,12h24a6,6,0,0,0,0-12Z"/></svg></span></span><div class="mcap"><div class="mlabel">solar-fraction</div><div class="msub">input the farm consumes</div></div></div>
-        <div class="mnode" style="left:360px; top:240px;"><span class="glyph g-agent solver"></span><div class="mcap"><div class="mlabel">analysis agent</div><div class="msub">reads the reward stream</div></div></div>
-        <div class="mnode" style="left:360px; top:172px;"><span class="glyph g-event"></span></div>
-        <div class="mnode" style="left:620px; top:240px;"><span class="glyph g-claim"></span><div class="mcap"><div class="mlabel">claim · <span class="mnum" style="color:var(--capital)">$399</span></div><div class="msub">&#8776;43.6 GLW/wk &times; 89 wk</div></div></div>
+        <div class="mnode" style="left:360px; top:222px;"><span class="glyph g-agent solver"></span><div class="mcap"><div class="mlabel">analysis agent</div><div class="msub">reads the reward stream</div></div></div>
+        <div class="mnode" style="left:360px; top:163px;"><span class="glyph g-event"></span></div>
+        <div class="mnode" style="left:620px; top:222px;"><span class="glyph g-claim"></span><div class="mcap"><div style="border:1px solid var(--venue); border-radius:8px; background:var(--venue-tint); padding:7px 11px;"><div style="font-size:14px; font-weight:640; color:var(--ink); line-height:1.25;">claim · <span style="font-size:18px; font-weight:700; color:var(--capital); letter-spacing:-.01em;">$399</span></div><div style="font-size:11px; color:var(--ink-3); font-family:var(--mono); line-height:1.3; margin-top:3px;">&#8776;43.6 GLW/wk &times; 89 wk</div></div></div></div>
 
         <div class="elabel" style="left:235px; top:105px;">publishes</div>
         <div class="elabel" style="left:490px; top:105px;">about</div>
-        <div class="elabel" style="left:405px; top:172px;">reads</div>
-        <div class="elabel defer" style="left:620px; top:172px;">defers &#8594; settlement</div>
+        <div class="elabel" style="left:405px; top:163px;">reads</div>
+        <div class="elabel defer" style="left:620px; top:163px;">defers &#8594; settlement</div>
       </div>
-    </div>
-    <p class="src-line" style="position:absolute; left:76px; right:76px; bottom:56px; text-align:center; font-size:12.5px;">
+    <p class="src-line" style="margin-top:14px; text-align:center; font-size:12.5px;">
       <b style="color:var(--ink);">124</b> audited farms read live · live GLW <b style="color:var(--ink);">&#8776;$0.2825</b> from the onchain pool—the agent reads a real stream, not a projection.
     </p>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>09 / 13</span></div>
-  </section>
-
-  <!-- ============================= 10 · PRIVACY ============================= -->
-  <section class="slide">
-    <div class="eyebrow"><span class="num">10</span><span class="tag">Differentiator · privacy</span><span class="rule"></span></div>
-    <h1 class="title wide">What could endanger the farmer never leaves.</h1>
-    <p class="dek">
-      The market sees only status. Plot geolocation crosses to the competent authorities alone—never the public map.
-    </p>
-    <div class="body" style="display:flex; flex-direction:column; justify-content:center; gap:6px;">
-
-      <!-- the one sanctioned exit, centered above the divide -->
-      <div style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-bottom:6px;">
-        <span class="ph" style="color:var(--capital); transform:rotate(-90deg);"><svg viewBox="0 0 256 256" width="22" height="22" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></span>
-        <span class="ph" style="color:var(--capital)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M208,42H48A14,14,0,0,0,34,56v56c0,51.94,25.12,83.4,46.2,100.64,22.73,18.6,45.27,24.89,46.22,25.15a6,6,0,0,0,3.16,0c.95-.26,23.49-6.55,46.22-25.15C196.88,195.4,222,163.94,222,112V56A14,14,0,0,0,208,42Zm2,70c0,37.76-13.94,68.39-41.44,91.06A131.17,131.17,0,0,1,128,225.72a130.94,130.94,0,0,1-40.56-22.66C59.94,180.39,46,149.76,46,112V56a2,2,0,0,1,2-2H208a2,2,0,0,1,2,2ZM172.24,99.76a6,6,0,0,1,0,8.48l-56,56a6,6,0,0,1-8.48,0l-24-24a6,6,0,0,1,8.48-8.48L112,151.51l51.76-51.75A6,6,0,0,1,172.24,99.76Z"/></svg></span>
-        <span style="font-size:15px; font-weight:680; color:var(--capital);">competent authorities</span>
-        <span style="font-family:var(--mono); font-size:12.5px; color:var(--ink-3);">EUDR geolocation crosses here—to authorities only</span>
-      </div>
-
-      <!-- the membrane: public | dashed divide | private -->
-      <div style="display:flex; align-items:stretch;">
-        <div style="flex:1; padding:14px 44px 14px 4px; display:flex; flex-direction:column; justify-content:center; gap:15px;">
-          <div style="display:flex; align-items:center; gap:11px;">
-            <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="26" height="26" fill="currentColor"><path d="M245.48,125.57c-.34-.78-8.66-19.23-27.24-37.81C201,70.54,171.38,50,128,50S55,70.54,37.76,87.76c-18.58,18.58-26.9,37-27.24,37.81a6,6,0,0,0,0,4.88c.34.77,8.66,19.22,27.24,37.8C55,185.47,84.62,206,128,206s73-20.53,90.24-37.75c18.58-18.58,26.9-37,27.24-37.8A6,6,0,0,0,245.48,125.57ZM128,194c-31.38,0-58.78-11.42-81.45-33.93A134.77,134.77,0,0,1,22.69,128,134.56,134.56,0,0,1,46.55,95.94C69.22,73.42,96.62,62,128,62s58.78,11.42,81.45,33.94A134.56,134.56,0,0,1,233.31,128C226.94,140.21,195,194,128,194Zm0-112a46,46,0,1,0,46,46A46.06,46.06,0,0,0,128,82Zm0,80a34,34,0,1,1,34-34A34,34,0,0,1,128,162Z"/></svg></span>
-            <span style="font-size:17px; font-weight:640; color:var(--ink);">The market sees only status</span>
-          </div>
-          <div style="display:flex; flex-wrap:wrap; gap:9px;">
-            <span style="font-family:var(--mono); font-size:15px; font-weight:600; color:#05593f;">ready</span>
-            <span style="font-family:var(--mono); font-size:15px; font-weight:600; color:#8a3d06;">partial</span>
-            <span style="font-family:var(--mono); font-size:15px; font-weight:600; color:var(--ink-3);">gap</span>
-            <span style="font-family:var(--mono); font-size:15px; font-weight:600; color:var(--ink-3);">initials</span>
-          </div>
-          <div style="font-size:14px; color:var(--ink-3); line-height:1.4;">That is all the market ever sees—the map renders status, never plots.</div>
-        </div>
-
-        <div style="flex:0 0 0; border-left:2px dashed var(--capital);"></div>
-
-        <div style="flex:1; padding:14px 4px 14px 44px; display:flex; flex-direction:column; justify-content:center; gap:15px;">
-          <div style="display:flex; align-items:center; gap:11px;">
-            <span class="ph" style="color:var(--ink-3)"><svg viewBox="0 0 256 256" width="24" height="24" fill="currentColor"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Zm-68-56a12,12,0,1,1-12-12A12,12,0,0,1,140,152Z"/></svg></span>
-            <span style="font-size:17px; font-weight:640; color:var(--ink);">Sealed—never leaves the farm</span>
-          </div>
-          <div style="display:flex; flex-wrap:wrap; gap:9px;">
-            <span style="font-family:var(--mono); font-size:15px; color:var(--ink-4); background:#fff; border:1px dashed #c4c4cc; border-radius:5px; padding:6px 12px; text-decoration:line-through;">plot polygons</span>
-            <span style="font-family:var(--mono); font-size:15px; color:var(--ink-4); background:#fff; border:1px dashed #c4c4cc; border-radius:5px; padding:6px 12px; text-decoration:line-through;">GPS coordinates</span>
-            <span style="font-family:var(--mono); font-size:15px; color:var(--ink-4); background:#fff; border:1px dashed #c4c4cc; border-radius:5px; padding:6px 12px; text-decoration:line-through;">bids</span>
-            <span style="font-family:var(--mono); font-size:15px; color:var(--ink-4); background:#fff; border:1px dashed #c4c4cc; border-radius:5px; padding:6px 12px; text-decoration:line-through;">reserves</span>
-          </div>
-          <div style="font-size:14px; color:var(--ink-3); line-height:1.4;">Names are initials by design; front-running has nothing to read.</div>
-        </div>
-      </div>
     </div>
-    <p class="src-line" style="position:absolute; left:76px; right:76px; bottom:56px; font-size:12.5px; color:var(--ink-3);">
-      Roadmap: sealed-bid solver race, private cross-coop aggregates—FHE/ZK, MACI fallback.
-    </p>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>10 / 13</span></div>
-  </section>
-
-  <!-- ============================= 11 · CREDIBILITY ============================= -->
-  <section class="slide">
-    <div class="eyebrow"><span class="num">11</span><span class="tag">The credibility slide</span><span class="rule"></span></div>
-    <h1 class="title wide">Nothing here is new.</h1>
-    <p class="dek">
-      Every load-bearing assumption already shipped somewhere—and we name the one way this fails.
-    </p>
-    <div class="body" style="display:flex; flex-direction:column; justify-content:center; gap:15px;">
-      <div class="receipt">
-        <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span>
-        <div><div class="rc-h">EUDR enforcement holds</div><div class="rc-p">In force; plot-proof required <span class="num">30 Dec 2026</span>.</div></div>
-      </div>
-      <div class="receipt">
-        <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span>
-        <div><div class="rc-h">Open reads are tolerated</div><div class="rc-p">EthicHub + Glow public surfaces, read live today.</div></div>
-      </div>
-      <div class="receipt">
-        <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span>
-        <div><div class="rc-h">Bounded local capital works</div><div class="rc-p">LVGA Lugano: FINMA-supervised, <span class="num">650 vouchers, CHF 130k</span>.</div></div>
-      </div>
-      <div class="receipt">
-        <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span>
-        <div><div class="rc-h">The ask-card convention works</div><div class="rc-p">Kiva: one-sentence ask per farmer, at scale.</div></div>
-      </div>
-      <div class="receipt">
-        <span class="ph" style="color:var(--endo)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span>
-        <div><div class="rc-h">Smallholder onchain credit repays</div><div class="rc-p">EthicHub Line 2: <span class="num">192,600 &rarr; 212,369.79 USDC</span>, repaid.</div></div>
-      </div>
-      <div class="receipt" style="margin-top:8px; padding-top:16px; border-top:1px solid var(--line);">
-        <span class="ph" style="color:var(--goods)"><svg viewBox="0 0 256 256" width="28" height="28" fill="currentColor"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></svg></span>
-        <div><div class="rc-h" style="color:#9a3412;">Graph-first trade finance fails</div><div class="rc-p" style="color:#9a3412;">Marco Polo led with the metaphor, went insolvent. We lead with the lot.</div></div>
-      </div>
-    </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>11 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>08 / 10</span></div>
   </section>
 
   <!-- ============================= 12 · TEAM ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">12</span><span class="tag">Team</span><span class="rule"></span></div>
+    <div class="eyebrow"><span class="num">09</span><span class="tag">Team</span><span class="rule"></span></div>
     <h1 class="title wide">Two builders who ship, with institutional reach.</h1>
-    <div class="body" style="display:flex; flex-direction:column; gap:26px; margin-top:24px;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
+    <div class="body" style="display:flex; flex-direction:column; gap:34px; margin-top:28px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px;">
 
         <div class="person">
           <img class="photo" src="data:image/jpeg;base64,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" alt="Patrick Rawson">
           <div>
             <div class="nm">Patrick Rawson</div>
             <div class="rl">Co-Founder &amp; CEO</div>
-            <div class="bio">Full-stack builder across AI orchestration and blockchain mechanism design; ex-CEO of Curve Labs. Co-author, <i>The Green Crypto Handbook</i> (Taylor &amp; Francis).</div>
+            <div class="bio">Full-stack builder across AI orchestration and blockchain mechanism design; ex-CEO of Curve Labs. Co-author (Taylor &amp; Francis), <i>The Green Crypto Handbook: Blockchain for Sustainability Professionals</i>.</div>
             <div class="socials">
               <a href="https://x.com/papa_raw"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M213.06,212.78l-63.42-99.66L212.44,44A6,6,0,1,0,203.56,36L143,102.62l-41.9-65.84A6,6,0,0,0,96,34H48a6,6,0,0,0-5.06,9.22l63.42,99.66L43.56,212A6,6,0,0,0,52.44,220L113,153.38l41.9,65.84A6,6,0,0,0,160,222h48a6,6,0,0,0,5.06-9.22ZM163.29,210,58.93,46H92.71L197.07,210Z"/></svg></span>@papa_raw</a>
               <a href="https://github.com/papa-raw"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M206.13,75.92A57.79,57.79,0,0,0,201.2,29a6,6,0,0,0-5.2-3,57.77,57.77,0,0,0-47,24H123A57.77,57.77,0,0,0,76,26a6,6,0,0,0-5.2,3,57.79,57.79,0,0,0-4.93,46.92A55.88,55.88,0,0,0,58,104v8a54.06,54.06,0,0,0,50.45,53.87A37.85,37.85,0,0,0,98,192v10H72a26,26,0,0,1-26-26A38,38,0,0,0,8,138a6,6,0,0,0,0,12,26,26,0,0,1,26,26,38,38,0,0,0,38,38H98v18a6,6,0,0,0,12,0V192a26,26,0,0,1,52,0v40a6,6,0,0,0,12,0V192a37.85,37.85,0,0,0-10.45-26.13A54.06,54.06,0,0,0,214,112v-8A55.88,55.88,0,0,0,206.13,75.92ZM202,112a42,42,0,0,1-42,42H112a42,42,0,0,1-42-42v-8a43.86,43.86,0,0,1,7.3-23.69,6,6,0,0,0,.81-5.76,45.85,45.85,0,0,1,1.43-36.42,45.85,45.85,0,0,1,35.23,21.1A6,6,0,0,0,119.83,62h32.34a6,6,0,0,0,5.06-2.76,45.83,45.83,0,0,1,35.23-21.11,45.85,45.85,0,0,1,1.43,36.42,6,6,0,0,0,.79,5.74A43.78,43.78,0,0,1,202,104Z"/></svg></span>papa-raw</a>
               <a href="https://linkedin.com/in/pat-rawson-48306867"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M216,26H40A14,14,0,0,0,26,40V216a14,14,0,0,0,14,14H216a14,14,0,0,0,14-14V40A14,14,0,0,0,216,26Zm2,190a2,2,0,0,1-2,2H40a2,2,0,0,1-2-2V40a2,2,0,0,1,2-2H216a2,2,0,0,1,2,2ZM94,112v64a6,6,0,0,1-12,0V112a6,6,0,0,1,12,0Zm88,28v36a6,6,0,0,1-12,0V140a22,22,0,0,0-44,0v36a6,6,0,0,1-12,0V112a6,6,0,0,1,12,0v2.11A34,34,0,0,1,182,140ZM98,84A10,10,0,1,1,88,74,10,10,0,0,1,98,84Z"/></svg></span>pat-rawson</a>
-              <a href="https://ecofrontiers.xyz"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M128,26A102,102,0,1,0,230,128,102.12,102.12,0,0,0,128,26Zm81.57,64H169.19a132.58,132.58,0,0,0-25.73-50.67A90.29,90.29,0,0,1,209.57,90ZM218,128a89.7,89.7,0,0,1-3.83,26H171.81a155.43,155.43,0,0,0,0-52h42.36A89.7,89.7,0,0,1,218,128Zm-90,87.83a110,110,0,0,1-15.19-19.45A124.24,124.24,0,0,1,99.35,166h57.3a124.24,124.24,0,0,1-13.46,30.38A110,110,0,0,1,128,215.83ZM96.45,154a139.18,139.18,0,0,1,0-52h63.1a139.18,139.18,0,0,1,0,52ZM38,128a89.7,89.7,0,0,1,3.83-26H84.19a155.43,155.43,0,0,0,0,52H41.83A89.7,89.7,0,0,1,38,128Zm90-87.83a110,110,0,0,1,15.19,19.45A124.24,124.24,0,0,1,156.65,90H99.35a124.24,124.24,0,0,1,13.46-30.38A110,110,0,0,1,128,40.17Zm-15.46-.84A132.58,132.58,0,0,0,86.81,90H46.43A90.29,90.29,0,0,1,112.54,39.33ZM46.43,166H86.81a132.58,132.58,0,0,0,25.73,50.67A90.29,90.29,0,0,1,46.43,166Zm97,50.67A132.58,132.58,0,0,0,169.19,166h40.38A90.29,90.29,0,0,1,143.46,216.67Z"/></svg></span>ecofrontiers.xyz</a>
             </div>
           </div>
         </div>
@@ -762,11 +636,10 @@
           <div>
             <div class="nm">Louise Borreani</div>
             <div class="rl">Co-Founder</div>
-            <div class="bio">Researcher and strategist across AI, blockchain, and sustainability (MA Environmental Policy, Sciences Po Paris); authored the dMRV research underpinning Regen Atlas. Co-author, <i>The Green Crypto Handbook</i>.</div>
+            <div class="bio">Researcher and strategist across AI, blockchain, and sustainability (MA Environmental Policy, Sciences Po Paris); authored the dMRV research underpinning Regen Atlas. Co-author, <i>The Green Crypto Handbook: Blockchain for Sustainability Professionals</i>.</div>
             <div class="socials">
               <a href="https://x.com/LBorreani"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M213.06,212.78l-63.42-99.66L212.44,44A6,6,0,1,0,203.56,36L143,102.62l-41.9-65.84A6,6,0,0,0,96,34H48a6,6,0,0,0-5.06,9.22l63.42,99.66L43.56,212A6,6,0,0,0,52.44,220L113,153.38l41.9,65.84A6,6,0,0,0,160,222h48a6,6,0,0,0,5.06-9.22ZM163.29,210,58.93,46H92.71L197.07,210Z"/></svg></span>@LBorreani</a>
               <a href="https://linkedin.com/in/louise-borreani-887278203"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M216,26H40A14,14,0,0,0,26,40V216a14,14,0,0,0,14,14H216a14,14,0,0,0,14-14V40A14,14,0,0,0,216,26Zm2,190a2,2,0,0,1-2,2H40a2,2,0,0,1-2-2V40a2,2,0,0,1,2-2H216a2,2,0,0,1,2,2ZM94,112v64a6,6,0,0,1-12,0V112a6,6,0,0,1,12,0Zm88,28v36a6,6,0,0,1-12,0V140a22,22,0,0,0-44,0v36a6,6,0,0,1-12,0V112a6,6,0,0,1,12,0v2.11A34,34,0,0,1,182,140ZM98,84A10,10,0,1,1,88,74,10,10,0,0,1,98,84Z"/></svg></span>louise-borreani</a>
-              <a href="https://ecofrontiers.xyz"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M128,26A102,102,0,1,0,230,128,102.12,102.12,0,0,0,128,26Zm81.57,64H169.19a132.58,132.58,0,0,0-25.73-50.67A90.29,90.29,0,0,1,209.57,90ZM218,128a89.7,89.7,0,0,1-3.83,26H171.81a155.43,155.43,0,0,0,0-52h42.36A89.7,89.7,0,0,1,218,128Zm-90,87.83a110,110,0,0,1-15.19-19.45A124.24,124.24,0,0,1,99.35,166h57.3a124.24,124.24,0,0,1-13.46,30.38A110,110,0,0,1,128,215.83ZM96.45,154a139.18,139.18,0,0,1,0-52h63.1a139.18,139.18,0,0,1,0,52ZM38,128a89.7,89.7,0,0,1,3.83-26H84.19a155.43,155.43,0,0,0,0,52H41.83A89.7,89.7,0,0,1,38,128Zm90-87.83a110,110,0,0,1,15.19,19.45A124.24,124.24,0,0,1,156.65,90H99.35a124.24,124.24,0,0,1,13.46-30.38A110,110,0,0,1,128,40.17Zm-15.46-.84A132.58,132.58,0,0,0,86.81,90H46.43A90.29,90.29,0,0,1,112.54,39.33ZM46.43,166H86.81a132.58,132.58,0,0,0,25.73,50.67A90.29,90.29,0,0,1,46.43,166Zm97,50.67A132.58,132.58,0,0,0,169.19,166h40.38A90.29,90.29,0,0,1,143.46,216.67Z"/></svg></span>ecofrontiers.xyz</a>
             </div>
           </div>
         </div>
@@ -775,51 +648,47 @@
       <div>
         <div class="kicker">A track record that converged on this</div>
         <div class="chain">
-          <div class="cn"><div class="cn-h">The Green Crypto Handbook</div><div class="cn-d">Rawson &amp; Borreani, Taylor &amp; Francis—wrote the framework.</div></div>
+          <div class="cn"><div class="cn-h">The Green Crypto Handbook</div><div class="cn-d">Rawson &amp; Borreani, Taylor &amp; Francis—the market thesis AqueductX operationalizes.</div></div>
           <div class="carrow"><svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></div>
-          <div class="cn"><div class="cn-h">Regen Atlas</div><div class="cn-d">1st place, Infrastructure &amp; Digital Rights, PL_Genesis (572 submissions).</div></div>
+          <div class="cn"><div class="cn-h">Regen Atlas</div><div class="cn-d">1st place, Infrastructure &amp; Digital Rights, PL_Genesis (572 submissions)—the registry and map AqueductX is built on.</div></div>
           <div class="carrow"><svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></div>
-          <div class="cn"><div class="cn-h">SlabClaw</div><div class="cn-d">Agent-legibility rails proven on a live market.</div></div>
+          <div class="cn"><div class="cn-h">SlabClaw</div><div class="cn-d">Agent-legibility proven on a live market—the same rails now pointed at commodity lots.</div></div>
           <div class="carrow"><svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M220.24,132.24l-72,72a6,6,0,0,1-8.48-8.48L201.51,134H40a6,6,0,0,1,0-12H201.51L139.76,60.24a6,6,0,0,1,8.48-8.48l72,72A6,6,0,0,1,220.24,132.24Z"/></svg></div>
-          <div class="cn win"><div class="cn-h">AqueductX</div><div class="cn-d">The fusion.</div></div>
+          <div class="cn win"><div class="cn-h">AqueductX</div><div class="cn-d">The fusion: handbook thesis, atlas registry, and agent rails, live in one build.</div></div>
         </div>
-        <p class="src-line" style="margin-top:12px; font-size:12.5px; color:var(--ink-3);">
-          Ecofrontiers SARL—advises central banks and international organizations.
-        </p>
       </div>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>12 / 13</span></div>
+    <p style="position:absolute; left:76px; right:76px; bottom:56px; text-align:center; font-family:var(--mono); font-size:12.5px; color:var(--ink-3);">
+      Ecofrontiers SARL&mdash;advises central banks and international organizations &middot; <a href="https://ecofrontiers.xyz" style="display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:13px; color:var(--ink-3); text-decoration:none;"><span class="ph" style="color:var(--ink-4)"><svg viewBox="0 0 256 256" width="15" height="15" fill="currentColor"><path d="M128,26A102,102,0,1,0,230,128,102.12,102.12,0,0,0,128,26Zm81.57,64H169.19a132.58,132.58,0,0,0-25.73-50.67A90.29,90.29,0,0,1,209.57,90ZM218,128a89.7,89.7,0,0,1-3.83,26H171.81a155.43,155.43,0,0,0,0-52h42.36A89.7,89.7,0,0,1,218,128Zm-90,87.83a110,110,0,0,1-15.19-19.45A124.24,124.24,0,0,1,99.35,166h57.3a124.24,124.24,0,0,1-13.46,30.38A110,110,0,0,1,128,215.83ZM96.45,154a139.18,139.18,0,0,1,0-52h63.1a139.18,139.18,0,0,1,0,52ZM38,128a89.7,89.7,0,0,1,3.83-26H84.19a155.43,155.43,0,0,0,0,52H41.83A89.7,89.7,0,0,1,38,128Zm90-87.83a110,110,0,0,1,15.19,19.45A124.24,124.24,0,0,1,156.65,90H99.35a124.24,124.24,0,0,1,13.46-30.38A110,110,0,0,1,128,40.17Zm-15.46-.84A132.58,132.58,0,0,0,86.81,90H46.43A90.29,90.29,0,0,1,112.54,39.33ZM46.43,166H86.81a132.58,132.58,0,0,0,25.73,50.67A90.29,90.29,0,0,1,46.43,166Zm97,50.67A132.58,132.58,0,0,0,169.19,166h40.38A90.29,90.29,0,0,1,143.46,216.67Z"/></svg></span>ecofrontiers.xyz</a>
+    </p>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span></span><span>09 / 10</span></div>
   </section>
 
   <!-- ============================= 13 · ASK ============================= -->
   <section class="slide">
-    <div class="eyebrow"><span class="num">13</span><span class="tag">The ask</span><span class="rule"></span></div>
-    <h1 class="title wide">$50k buys four deliverables. Public good.</h1>
-    <div class="body" style="display:flex; flex-direction:column; justify-content:center; gap:16px; margin-top:22px;">
-      <div style="display:flex; align-items:baseline; gap:20px;">
-        <span style="font-size:60px; font-weight:720; letter-spacing:-.03em; color:var(--capital); line-height:1;">$50,000</span>
-        <span style="font-size:16px; color:var(--ink-3);">Grant track · no equity · no lockups · no take-rate</span>
-      </div>
-
+    <div class="eyebrow"><span class="num">10</span><span class="tag">The ask</span><span class="rule"></span></div>
+    <h1 class="title wide">$50k buys four deliverables. <span style="color:#9333ea;">Public Good.</span></h1>
+    <p class="dek" style="margin-top:14px; font-size:18px;">
+      Open-source MIT—aggregation and verification agents, the intent pipeline, a reference solver to fork.
+    </p>
+    <div class="body" style="display:flex; flex-direction:column; justify-content:center; gap:16px; margin-top:8px;">
       <div>
-        <div class="deliv"><span class="di">01</span><div><div class="dh">Harden the two live verticals</div><div class="dp">EthicHub + Glow reads, demo to production.</div></div><span class="dw">mo 1&ndash;2</span></div>
-        <div class="deliv"><span class="di">02</span><div><div class="dh">Ship the certifier attestation object</div><div class="dp">A signed EUDR deforestation-free credential (VC / BBS+).</div></div><span class="dw">mo 4&ndash;6</span></div>
-        <div class="deliv"><span class="di">03</span><div><div class="dh">Prototype the sealed-bid solver race</div><div class="dp">Against Interfold Alpha, MACI as fallback.</div></div><span class="dw">mo 2&ndash;4</span></div>
+        <div class="deliv"><span class="di">01</span><div><div class="dh">Harden three live verticals from existing partners on the Regen Atlas</div><div class="dp">EthicHub (coffee trade finance), Glow (solar finance), LandX (agri-commodity trade finance).</div></div><span class="dw">mo 1&ndash;2</span></div>
+        <div class="deliv"><span class="di">02</span><div><div class="dh">Wire the certification databases</div><div class="dp">Resolve every lot against real certifier registries (Fairtrade, Rainforest Alliance, TIC agencies) so compliance status is verified against the source, not declared.</div></div><span class="dw">mo 4&ndash;6</span></div>
+        <div class="deliv"><span class="di">03</span><div><div class="dh">Sealed-bid solver races</div><div class="dp">Solvers bid without seeing each other's prices, so coops keep bargaining power (Interfold alpha; MACI fallback).</div></div><span class="dw">mo 2&ndash;4</span></div>
         <div class="deliv"><span class="di">04</span><div><div class="dh">Run a named-corridor pilot</div><div class="dp">First coop / exporter in through the ERP path.</div></div><span class="dw">mo 2&ndash;6</span></div>
       </div>
 
-      <p style="font-size:16px; color:var(--ink-2); line-height:1.45; max-width:none; text-wrap:pretty;">
-        <b style="color:var(--ink);">EUDR enforcement begins 30 December 2026</b>—whatever origin infrastructure exists by then sets the standard.
-        Open-source MIT: aggregation and verification agents, the intent pipeline, a reference solver to fork.
-      </p>
+      <div style="font-family:var(--mono); font-size:12.5px; color:var(--ink-3);">
+        deadline &middot; EUDR enforcement begins 30 December 2026
+      </div>
 
       <div class="ctabar">
         <span style="font-size:24px; font-weight:680; letter-spacing:-.01em; color:var(--venue);">aqueductx.trade</span>
-        <span style="font-size:15px; color:var(--ink-2);">live demo, real-vs-sim ledger</span>
         <span style="margin-left:auto; font-family:var(--mono); font-size:13px; color:var(--ink-3);">public MIT repo</span>
       </div>
     </div>
-    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span> &nbsp;·&nbsp; <span class="url">aqueductx.trade</span></span><span>13 / 13</span></div>
+    <div class="foot"><span class="brand"><b>Aqueduct</b><span class="x">x</span> &nbsp;·&nbsp; <span class="url">aqueductx.trade</span></span><span>10 / 10</span></div>
   </section>
 
 </div>
