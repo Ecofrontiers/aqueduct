@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { ArrowRight, CaretDown, CaretUp, MapTrifold } from "@phosphor-icons/react";
+import type React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MapTrifold, CaretDown, CaretUp, ArrowRight } from "@phosphor-icons/react";
 import { ACCOUNT_COLORS } from "./AqueductNetworkLayer";
 
 /**
@@ -40,18 +41,36 @@ export function MapLegend(): React.ReactElement {
       <div className="px-3 py-2.5 space-y-2">
         <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Flows — two circuits</div>
         <LegendLine color={ACCOUNT_COLORS.goods} label="Current account — goods" note="origin → hub" />
-        <LegendLine color={ACCOUNT_COLORS.capitalExo} label="Capital account, exogenous" note="investment & payment, hub → origin" />
+        <LegendLine
+          color={ACCOUNT_COLORS.capitalExo}
+          label="Capital account, exogenous"
+          note="investment & payment, hub → origin"
+        />
         <LegendLine color={ACCOUNT_COLORS.settle} label="Settle — onchain leg" note="the tour's one arc (testnet)" />
 
-        <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide pt-1">Node halos — capital state</div>
-        <LegendRing color={ACCOUNT_COLORS.capitalEndo} label="Capital account, endogenous" note="credit facility revolving at the coop — REAL at the anchor (Celo USDC)" />
-        <LegendRing color={ACCOUNT_COLORS.capitalExo} dashed label="Financing opportunity" note="eligible + open, not yet filled" />
+        <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide pt-1">
+          Node halos — capital state
+        </div>
+        <LegendRing
+          color={ACCOUNT_COLORS.capitalEndo}
+          label="Capital account, endogenous"
+          note="credit facility revolving at the coop — REAL at the anchor (Celo USDC)"
+        />
+        <LegendRing
+          color={ACCOUNT_COLORS.capitalExo}
+          dashed
+          label="Financing opportunity"
+          note="eligible + open, not yet filled"
+        />
 
         <div className="text-[10px] text-gray-400 pt-1 border-t border-gray-100 leading-relaxed">
-          Solid = existing relation · dashed = opportunity. Nodes: <span style={{ color: ACCOUNT_COLORS.goods }}>●</span> lots ·{" "}
-          <span style={{ color: ACCOUNT_COLORS.goods }}>▢</span> coops · <span style={{ color: ACCOUNT_COLORS.capitalExo }}>●</span> demand hubs ·{" "}
-          <span style={{ color: ACCOUNT_COLORS.venue }}>◆</span> solvers · <span style={{ color: ACCOUNT_COLORS.venue }}>▪</span> venues.
-          Every element carries a LIVE / SIM / TESTNET chip on its page.
+          Solid = existing relation · dashed = opportunity. Nodes:{" "}
+          <span style={{ color: ACCOUNT_COLORS.goods }}>●</span> lots ·{" "}
+          <span style={{ color: ACCOUNT_COLORS.goods }}>▢</span> coops ·{" "}
+          <span style={{ color: ACCOUNT_COLORS.capitalExo }}>●</span> demand hubs ·{" "}
+          <span style={{ color: ACCOUNT_COLORS.venue }}>◆</span> solvers ·{" "}
+          <span style={{ color: ACCOUNT_COLORS.venue }}>▪</span> venues. Every element carries a LIVE / SIM / TESTNET
+          chip on its page.
         </div>
         <Link
           to="/guide"

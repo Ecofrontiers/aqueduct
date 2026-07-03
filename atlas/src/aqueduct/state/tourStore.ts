@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
-import { buildCascade } from "../sim/cascade.mjs";
 import type { AqueductLotSnapshot } from "../hooks/useAqueductLots";
+import { buildCascade } from "../sim/cascade.mjs";
 
 export const CHAPTERS = [
   { key: "aggregate", label: "Aggregate" },
@@ -187,7 +187,11 @@ export function selectChapterStatus(s: TourState): Record<string, "done" | "acti
   const status: Record<string, "done" | "active" | "upcoming"> = {};
   for (const ch of CHAPTERS) {
     if (ch.key === "ask") {
-      status[ch.key] = s.showAsk ? "active" : s.revealCount >= events.length && events.length > 0 ? "upcoming" : "upcoming";
+      status[ch.key] = s.showAsk
+        ? "active"
+        : s.revealCount >= events.length && events.length > 0
+          ? "upcoming"
+          : "upcoming";
       continue;
     }
     const range = ranges[ch.key];

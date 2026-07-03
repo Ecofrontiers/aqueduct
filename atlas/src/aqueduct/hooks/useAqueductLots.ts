@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchLotDetail } from "../connectors/ethichub.mjs";
 import { ANCHOR_PATH } from "../connectors/buildAnchorLots.mjs";
+import { fetchLotDetail } from "../connectors/ethichub.mjs";
 
 export interface AqueductLotSnapshot {
   aqueduct_id: string;
@@ -9,7 +9,13 @@ export interface AqueductLotSnapshot {
   identity_stage: string;
   ico_mark: null;
   producer: { initials: string; entity_type: string };
-  origin: { country: string | null; region: string | null; community: string | null; locality_raw: string | null; plot_geo: null };
+  origin: {
+    country: string | null;
+    region: string | null;
+    community: string | null;
+    locality_raw: string | null;
+    plot_geo: null;
+  };
   map_marker: { latitude: number; longitude: number; precision: string };
   altitude_masl: string | null;
   harvest_window: { season: string | null; note: string };
@@ -25,12 +31,22 @@ export interface AqueductLotSnapshot {
   composition: string;
   custody_model: string;
   certs: unknown[];
-  eudr: { plot_geo_present: boolean; harvest_window_present: boolean; legality_evidence: boolean; dds_ref: string | null };
+  eudr: {
+    plot_geo_present: boolean;
+    harvest_window_present: boolean;
+    legality_evidence: boolean;
+    dds_ref: string | null;
+  };
   price: { amount: number; currency: string; unit: string; incoterm: string } | null;
   image: string | null;
   producer_story: string | null;
   title_redacted: string;
-  lending: { matched: boolean; join_confidence: string; community_searched: string | null; projects: Array<{ id: number; community_name: string; status: number; objective: string }> };
+  lending: {
+    matched: boolean;
+    join_confidence: string;
+    community_searched: string | null;
+    projects: Array<{ id: number; community_name: string; status: number; objective: string }>;
+  };
   onchain: { chain: string; contract: string; total_credit_lines: number | null; note: string } | null;
   join_keys: { deterministic: string[]; fuzzy: string };
   join_confidence: string;
@@ -109,8 +125,8 @@ export function useAqueductLots(options: UseAqueductLotsOptions = {}) {
                     source: data.source,
                     price: data.price,
                   }
-                : l
-            )
+                : l,
+            ),
           );
           setRefetchState("live");
         } else {

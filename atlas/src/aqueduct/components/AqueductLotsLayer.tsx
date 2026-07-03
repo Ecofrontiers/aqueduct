@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo } from "react";
-import { Marker, Source, Layer, useMap } from "react-map-gl";
+import type React from "react";
+import { useEffect, useMemo } from "react";
+import { Layer, Marker, Source, useMap } from "react-map-gl";
 import { useNavigate } from "react-router-dom";
 import { useAqueductLots } from "../hooks/useAqueductLots";
 import { getEconomy } from "../sim/economy.mjs";
@@ -24,11 +25,17 @@ export function AqueductLotsLayer(): React.ReactElement | null {
     return {
       type: "FeatureCollection" as const,
       features: economy.lots.map(
-        (l: { aqueduct_id: string; weight_kg: number; commodity: string; title_redacted: string; map_marker: { longitude: number; latitude: number } }) => ({
+        (l: {
+          aqueduct_id: string;
+          weight_kg: number;
+          commodity: string;
+          title_redacted: string;
+          map_marker: { longitude: number; latitude: number };
+        }) => ({
           type: "Feature" as const,
           properties: { lotId: l.aqueduct_id, weight: l.weight_kg, commodity: l.commodity, title: l.title_redacted },
           geometry: { type: "Point" as const, coordinates: [l.map_marker.longitude, l.map_marker.latitude] },
-        })
+        }),
       ),
     };
   }, []);
@@ -69,14 +76,7 @@ export function AqueductLotsLayer(): React.ReactElement | null {
   return (
     <>
       {/* ── SIM economy lots: clustered circles ── */}
-      <Source
-        id="aq-sim-lots"
-        type="geojson"
-        data={simGeojson}
-        cluster={true}
-        clusterRadius={42}
-        clusterMaxZoom={7}
-      >
+      <Source id="aq-sim-lots" type="geojson" data={simGeojson} cluster={true} clusterRadius={42} clusterMaxZoom={7}>
         <Layer
           id="aq-sim-lots-clusters"
           type="circle"

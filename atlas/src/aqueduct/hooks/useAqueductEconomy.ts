@@ -1,15 +1,10 @@
 import { useMemo } from "react";
-import { useAqueductLots, type AqueductLotSnapshot } from "./useAqueductLots";
-import { buildFinanceIntent } from "../sim/financeIntent.mjs";
-import { getEconomy } from "../sim/economy.mjs";
-import { buildCoopRegistry } from "../sim/tradeFinance.mjs";
-import {
-  AGROFORESTRY_VENUES,
-  TO_BUILD_PLATFORM_NODES,
-  REGISTRAR_NODE,
-  VAULT_NODE,
-} from "../sim/venues.mjs";
 import type { Provenance } from "../components/Chips";
+import { getEconomy } from "../sim/economy.mjs";
+import { buildFinanceIntent } from "../sim/financeIntent.mjs";
+import { buildCoopRegistry } from "../sim/tradeFinance.mjs";
+import { AGROFORESTRY_VENUES, REGISTRAR_NODE, TO_BUILD_PLATFORM_NODES, VAULT_NODE } from "../sim/venues.mjs";
+import { type AqueductLotSnapshot, useAqueductLots } from "./useAqueductLots";
 
 /** A lot from either surface: real EthicHub read or the seeded SIM economy. */
 export type AqueductAnyLot = AqueductLotSnapshot & {
@@ -93,7 +88,7 @@ export function useAqueductEconomy() {
 
   const simLots = useMemo<AqueductAnyLot[]>(
     () => economy.lots.map((l: Record<string, unknown>) => normalizeSimLot(l)),
-    [economy]
+    [economy],
   );
 
   const lots = useMemo<AqueductAnyLot[]>(() => {
@@ -110,10 +105,14 @@ export function useAqueductEconomy() {
         intentType: "sell-this-lot",
         status: "open",
         title: `Sell — ${lot.title_redacted}`,
-        detail: lot.price ? `${lot.price.amount} ${lot.price.currency}/${lot.price.unit} ${lot.price.incoterm}` : "price on match",
+        detail: lot.price
+          ? `${lot.price.amount} ${lot.price.currency}/${lot.price.unit} ${lot.price.incoterm}`
+          : "price on match",
         provenance: "SIM",
         lotId: lot.aqueduct_id,
-        coordinates: lot.map_marker ? { longitude: lot.map_marker.longitude, latitude: lot.map_marker.latitude } : undefined,
+        coordinates: lot.map_marker
+          ? { longitude: lot.map_marker.longitude, latitude: lot.map_marker.latitude }
+          : undefined,
       });
     }
     if (realLots && realLots.length > 0) {
@@ -143,7 +142,7 @@ export function useAqueductEconomy() {
         provenance: "SIM" as Provenance,
         detail: s.note,
         winRatePct: s.winSharePct,
-      })
+      }),
     );
     solvers.push({
       id: "@solver-backstop",
@@ -172,29 +171,63 @@ export function useAqueductEconomy() {
         role: `${c.commodity} aggregation`,
         provenance: "SIM" as Provenance,
         coordinates: { longitude: c.coords[0], latitude: c.coords[1] },
-      })
+      }),
     );
     const venues: AqueductActor[] = [
-      ...AGROFORESTRY_VENUES.map((v: { handle: string; name: string; kind: string; status: string; note: string; coords?: { longitude: number; latitude: number } }) => ({
-        id: v.handle,
-        kind: "venue" as const,
-        name: v.name,
-        role: v.kind,
-        provenance: v.status as Provenance,
-        detail: v.note,
-        coordinates: v.coords,
-      })),
-      ...TO_BUILD_PLATFORM_NODES.map((v: { name: string; kind: string; status: string; note: string; coords?: { longitude: number; latitude: number } }, i: number) => ({
-        id: `venue-tobuild-${i}`,
-        kind: "venue" as const,
-        name: v.name,
-        role: v.kind,
-        provenance: v.status as Provenance,
-        detail: v.note,
-        coordinates: v.coords,
-      })),
-      { id: VAULT_NODE.handle, kind: "infrastructure" as const, name: VAULT_NODE.name, role: "accumulation vault", provenance: "SIM" as Provenance, detail: VAULT_NODE.note },
-      { id: REGISTRAR_NODE.handle, kind: "infrastructure" as const, name: REGISTRAR_NODE.name, role: "reputation registry", provenance: "TO-BUILD" as Provenance, detail: REGISTRAR_NODE.note },
+      ...AGROFORESTRY_VENUES.map(
+        (v: {
+          handle: string;
+          name: string;
+          kind: string;
+          status: string;
+          note: string;
+          coords?: { longitude: number; latitude: number };
+        }) => ({
+          id: v.handle,
+          kind: "venue" as const,
+          name: v.name,
+          role: v.kind,
+          provenance: v.status as Provenance,
+          detail: v.note,
+          coordinates: v.coords,
+        }),
+      ),
+      ...TO_BUILD_PLATFORM_NODES.map(
+        (
+          v: {
+            name: string;
+            kind: string;
+            status: string;
+            note: string;
+            coords?: { longitude: number; latitude: number };
+          },
+          i: number,
+        ) => ({
+          id: `venue-tobuild-${i}`,
+          kind: "venue" as const,
+          name: v.name,
+          role: v.kind,
+          provenance: v.status as Provenance,
+          detail: v.note,
+          coordinates: v.coords,
+        }),
+      ),
+      {
+        id: VAULT_NODE.handle,
+        kind: "infrastructure" as const,
+        name: VAULT_NODE.name,
+        role: "accumulation vault",
+        provenance: "SIM" as Provenance,
+        detail: VAULT_NODE.note,
+      },
+      {
+        id: REGISTRAR_NODE.handle,
+        kind: "infrastructure" as const,
+        name: REGISTRAR_NODE.name,
+        role: "reputation registry",
+        provenance: "TO-BUILD" as Provenance,
+        detail: REGISTRAR_NODE.note,
+      },
     ];
     return [...solvers, ...realCoopSeats, ...coops, ...venues];
   }, [economy, realLots]);
@@ -217,7 +250,16 @@ export function useAqueductEconomy() {
     intents,
     actors,
     events,
-    flows: economy.flows as Array<{ coopId: string; hubId: string; from: [number, number]; to: [number, number]; totalKg: number; totalEur: number; laneCount: number; commodity: string }>,
+    flows: economy.flows as Array<{
+      coopId: string;
+      hubId: string;
+      from: [number, number];
+      to: [number, number];
+      totalKg: number;
+      totalEur: number;
+      laneCount: number;
+      commodity: string;
+    }>,
     hubs: economy.hubs as Array<{ id: string; name: string; coords: [number, number] }>,
     coops: economy.coops as Array<{ id: string; name: string; commodity: string; coords: [number, number] }>,
     routes: economy.routes,

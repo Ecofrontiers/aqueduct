@@ -1,11 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react";
-import Header from "../../Header";
+import type React from "react";
+import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import Footer from "../../Footer";
-import { ProvenanceChip } from "../components/Chips";
+import Header from "../../Header";
 import { ACCOUNT_COLORS } from "../components/AqueductNetworkLayer";
+import { ProvenanceChip } from "../components/Chips";
 
 /**
  * Reading the map — the full documentation of Aqueduct's visual language.
@@ -38,24 +38,20 @@ export default function AqueductMapGuide(): React.ReactElement {
           {/* ── 1. The premise ── */}
           <Section title="One earth, two circuits">
             <p>
-              Every trade corridor on this map carries two flows in opposite directions. Goods
-              move from smallholder origins to import hubs — coffee north to Hamburg, cacao to
-              New York. Value moves the other way: payment and investment travel from the hubs
-              back to the origins. Most agricultural maps draw only the first circuit, which is
-              why the farmer appears as a supplier and never as a counterparty. Aqueduct draws
-              both, in the vocabulary economists already use for exactly this: the{" "}
-              <strong>current account</strong> (goods and services) and the{" "}
-              <strong>capital account</strong> (the financing that mirrors them).
+              Every trade corridor on this map carries two flows in opposite directions. Goods move from smallholder
+              origins to import hubs — coffee north to Hamburg, cacao to New York. Value moves the other way: payment
+              and investment travel from the hubs back to the origins. Most agricultural maps draw only the first
+              circuit, which is why the farmer appears as a supplier and never as a counterparty. Aqueduct draws both,
+              in the vocabulary economists already use for exactly this: the <strong>current account</strong> (goods and
+              services) and the <strong>capital account</strong> (the financing that mirrors them).
             </p>
             <p>
-              The capital account splits once more, and the split is the whole point.{" "}
-              <strong>Exogenous</strong> capital enters the system from outside — an importer's
-              payment, an impact fund's allocation, a grant. <strong>Endogenous</strong> credit
-              is created <em>inside</em> the system, against its own receivables — a
-              cooperative borrowing against a season it can now prove. Exogenous capital
-              crosses oceans, so it is drawn as arcs. Endogenous credit revolves in place, so
-              it is drawn as a halo around the node it revolves at. The geometry is the
-              economics.
+              The capital account splits once more, and the split is the whole point. <strong>Exogenous</strong> capital
+              enters the system from outside — an importer's payment, an impact fund's allocation, a grant.{" "}
+              <strong>Endogenous</strong> credit is created <em>inside</em> the system, against its own receivables — a
+              cooperative borrowing against a season it can now prove. Exogenous capital crosses oceans, so it is drawn
+              as arcs. Endogenous credit revolves in place, so it is drawn as a halo around the node it revolves at. The
+              geometry is the economics.
             </p>
           </Section>
 
@@ -64,20 +60,49 @@ export default function AqueductMapGuide(): React.ReactElement {
             <div className="bg-white border border-gray-100 px-4 py-5 mb-3 overflow-x-auto">
               <svg width="100%" height="150" viewBox="0 0 640 150" style={{ minWidth: 560 }}>
                 {/* goods arc */}
-                <path d="M110 84 Q 320 18 530 74" fill="none" stroke={ACCOUNT_COLORS.goods} strokeWidth="2.5" strokeLinecap="round" />
+                <path
+                  d="M110 84 Q 320 18 530 74"
+                  fill="none"
+                  stroke={ACCOUNT_COLORS.goods}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
                 <polygon points="518,68 532,74 520,80" fill={ACCOUNT_COLORS.goods} />
                 <text x="320" y="32" textAnchor="middle" fontSize="11" fill={ACCOUNT_COLORS.goods} fontWeight="600">
                   goods — current account
                 </text>
                 {/* capital arc */}
-                <path d="M530 90 Q 320 148 110 100" fill="none" stroke={ACCOUNT_COLORS.capitalExo} strokeWidth="2" strokeDasharray="6 4" strokeLinecap="round" />
+                <path
+                  d="M530 90 Q 320 148 110 100"
+                  fill="none"
+                  stroke={ACCOUNT_COLORS.capitalExo}
+                  strokeWidth="2"
+                  strokeDasharray="6 4"
+                  strokeLinecap="round"
+                />
                 <polygon points="122,106 108,99 120,92" fill={ACCOUNT_COLORS.capitalExo} />
-                <text x="320" y="143" textAnchor="middle" fontSize="11" fill={ACCOUNT_COLORS.capitalExo} fontWeight="600">
+                <text
+                  x="320"
+                  y="143"
+                  textAnchor="middle"
+                  fontSize="11"
+                  fill={ACCOUNT_COLORS.capitalExo}
+                  fontWeight="600"
+                >
                   payment &amp; investment — capital account, exogenous
                 </text>
                 {/* coop node with endo halo */}
                 <circle cx="90" cy="90" r="17" fill="none" stroke={ACCOUNT_COLORS.capitalEndo} strokeWidth="2.5" />
-                <rect x="83" y="83" width="14" height="14" rx="3" fill="#ffffff" stroke={ACCOUNT_COLORS.goods} strokeWidth="2.5" />
+                <rect
+                  x="83"
+                  y="83"
+                  width="14"
+                  height="14"
+                  rx="3"
+                  fill="#ffffff"
+                  stroke={ACCOUNT_COLORS.goods}
+                  strokeWidth="2.5"
+                />
                 <text x="90" y="126" textAnchor="middle" fontSize="10" fill="#6b7280">
                   coop · credit facility
                 </text>
@@ -99,12 +124,11 @@ export default function AqueductMapGuide(): React.ReactElement {
               </svg>
             </div>
             <p>
-              Lots (sienna circles, sized by weight) aggregate into a cooperative (the outlined
-              square). The coop's season travels the sienna arc to a demand hub; the hub's
-              payment and the market's investment travel back along the indigo arc — drawn
-              with opposite curvature so the pair reads as one circuit, not two overlapping
-              lines. The emerald halo on the coop is the third account: credit revolving
-              locally against the receivable the corridor just made legible.
+              Lots (sienna circles, sized by weight) aggregate into a cooperative (the outlined square). The coop's
+              season travels the sienna arc to a demand hub; the hub's payment and the market's investment travel back
+              along the indigo arc — drawn with opposite curvature so the pair reads as one circuit, not two overlapping
+              lines. The emerald halo on the coop is the third account: credit revolving locally against the receivable
+              the corridor just made legible.
             </p>
           </Section>
 
@@ -136,48 +160,149 @@ export default function AqueductMapGuide(): React.ReactElement {
               body="Atlas blue is reserved for one thing: the settle arc the tour draws when a fill completes, prepared against the deployed IntentRegistry on Base Sepolia. It is drawn once per run — settlement is an event, not a texture."
             />
             <p className="text-xs text-gray-400 mt-2">
-              The fourth classical account — transfers (unrequited flows: grants with no
-              receivable behind them) — is distinguished in the capital roster but not yet on
-              the map. Roadmap, not omission.
+              The fourth classical account — transfers (unrequited flows: grants with no receivable behind them) — is
+              distinguished in the capital roster but not yet on the map. Roadmap, not omission.
             </p>
           </Section>
 
           {/* ── 4. Node grammar ── */}
           <Section title="Node grammar">
             <p className="mb-3">
-              Shape is entity type. Fill is commodity or role. The outline is never
-              decoration: a white ring is the resting state, a second solid ring means a LIVE
-              read, and a colored halo is a capital-account state.
+              Shape is entity type. Fill is commodity or role. The outline is never decoration: a white ring is the
+              resting state, a second solid ring means a LIVE read, and a colored halo is a capital-account state.
             </p>
             <div className="grid sm:grid-cols-2 gap-1.5">
-              <NodeRow glyph={<span style={{ width: 12, height: 12, borderRadius: "50%", background: ACCOUNT_COLORS.goods, border: "2px solid #fff", boxShadow: "0 0 0 1px #d1d5db", display: "inline-block" }} />} name="Lot" body="Circle, sienna, radius ∝ weight. LIVE reads carry a second sienna ring. Clusters show counts; click to zoom." />
-              <NodeRow glyph={<span style={{ width: 12, height: 12, borderRadius: 3, background: "#fff", border: `2px solid ${ACCOUNT_COLORS.goods}`, display: "inline-block" }} />} name="Cooperative / exporter" body="Outlined square. Settlement credits the coop, never the farmer directly. Click to open its seat." />
-              <NodeRow glyph={<span style={{ width: 12, height: 12, borderRadius: "50%", background: ACCOUNT_COLORS.capitalExo, border: "2px solid #fff", boxShadow: "0 0 0 1px #d1d5db", display: "inline-block" }} />} name="Demand hub" body="Filled indigo circle at real port cities — where goods land and exogenous capital enters." />
-              <NodeRow glyph={<span style={{ width: 11, height: 11, background: "#fff", border: `2px dashed ${ACCOUNT_COLORS.venue}`, transform: "rotate(45deg)", display: "inline-block" }} />} name="Solver" body="Purple diamond, visible during the tour's Fill beat. Dashed = SIM archetype; solid = the open reference backstop, whose bid is a real computation." />
-              <NodeRow glyph={<span style={{ width: 11, height: 11, borderRadius: 2, background: ACCOUNT_COLORS.venue, border: "2px solid #fff", boxShadow: "0 0 0 1px #d1d5db", display: "inline-block" }} />} name="Venue / platform" body="Purple square at its HQ or project city (positions approximate, labeled). Dashed + faded = TO-BUILD: researched-real, not yet integrated, never overclaimed." />
-              <NodeRow glyph={<span className="aq-mono" style={{ fontSize: 9, border: "1px solid #d1d5db", borderRadius: 4, padding: "1px 4px" }}>2 lots · €2,618</span>} name="Vault badge" body="The accumulator during Settle — counts persist across replays. SIM, no new contracts." />
+              <NodeRow
+                glyph={
+                  <span
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      background: ACCOUNT_COLORS.goods,
+                      border: "2px solid #fff",
+                      boxShadow: "0 0 0 1px #d1d5db",
+                      display: "inline-block",
+                    }}
+                  />
+                }
+                name="Lot"
+                body="Circle, sienna, radius ∝ weight. LIVE reads carry a second sienna ring. Clusters show counts; click to zoom."
+              />
+              <NodeRow
+                glyph={
+                  <span
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: 3,
+                      background: "#fff",
+                      border: `2px solid ${ACCOUNT_COLORS.goods}`,
+                      display: "inline-block",
+                    }}
+                  />
+                }
+                name="Cooperative / exporter"
+                body="Outlined square. Settlement credits the coop, never the farmer directly. Click to open its seat."
+              />
+              <NodeRow
+                glyph={
+                  <span
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      background: ACCOUNT_COLORS.capitalExo,
+                      border: "2px solid #fff",
+                      boxShadow: "0 0 0 1px #d1d5db",
+                      display: "inline-block",
+                    }}
+                  />
+                }
+                name="Demand hub"
+                body="Filled indigo circle at real port cities — where goods land and exogenous capital enters."
+              />
+              <NodeRow
+                glyph={
+                  <span
+                    style={{
+                      width: 11,
+                      height: 11,
+                      background: "#fff",
+                      border: `2px dashed ${ACCOUNT_COLORS.venue}`,
+                      transform: "rotate(45deg)",
+                      display: "inline-block",
+                    }}
+                  />
+                }
+                name="Solver"
+                body="Purple diamond, visible during the tour's Fill beat. Dashed = SIM archetype; solid = the open reference backstop, whose bid is a real computation."
+              />
+              <NodeRow
+                glyph={
+                  <span
+                    style={{
+                      width: 11,
+                      height: 11,
+                      borderRadius: 2,
+                      background: ACCOUNT_COLORS.venue,
+                      border: "2px solid #fff",
+                      boxShadow: "0 0 0 1px #d1d5db",
+                      display: "inline-block",
+                    }}
+                  />
+                }
+                name="Venue / platform"
+                body="Purple square at its HQ or project city (positions approximate, labeled). Dashed + faded = TO-BUILD: researched-real, not yet integrated, never overclaimed."
+              />
+              <NodeRow
+                glyph={
+                  <span
+                    className="aq-mono"
+                    style={{ fontSize: 9, border: "1px solid #d1d5db", borderRadius: 4, padding: "1px 4px" }}
+                  >
+                    2 lots · €2,618
+                  </span>
+                }
+                name="Vault badge"
+                body="The accumulator during Settle — counts persist across replays. SIM, no new contracts."
+              />
             </div>
           </Section>
 
           {/* ── 5. Honesty system ── */}
           <Section title="The honesty system">
             <p className="mb-3">
-              Every element in Aqueduct carries provenance. The chips are one axis (where the
-              data comes from); line style is the other (what the relationship is). Nothing on
-              the map renders as live that isn't.
+              Every element in Aqueduct carries provenance. The chips are one axis (where the data comes from); line
+              style is the other (what the relationship is). Nothing on the map renders as live that isn't.
             </p>
             <div className="space-y-1.5 mb-3">
-              <ChipRow chip={<ProvenanceChip provenance="LIVE" />} body="Read from the source this session — the EthicHub shop, the lending API, the Celo contract. Re-fetchable by anyone." />
-              <ChipRow chip={<ProvenanceChip provenance="SNAPSHOT" dated="2026-07-02" />} body="A real read, persisted with its timestamp. A valid state, not a failure." />
-              <ChipRow chip={<ProvenanceChip provenance="SIM" />} body="The seeded synthetic economy — deterministic (one seed, replays identically), calibrated to cited research, and labeled at every appearance." />
-              <ChipRow chip={<ProvenanceChip provenance="TESTNET" />} body="Prepared against a deployed contract on Base Sepolia; real when broadcast." />
-              <ChipRow chip={<ProvenanceChip provenance="TO-BUILD" />} body="Researched-real platforms rendered for ecosystem breadth — dashed, faded, never shown as integrated." />
+              <ChipRow
+                chip={<ProvenanceChip provenance="LIVE" />}
+                body="Read from the source this session — the EthicHub shop, the lending API, the Celo contract. Re-fetchable by anyone."
+              />
+              <ChipRow
+                chip={<ProvenanceChip provenance="SNAPSHOT" dated="2026-07-02" />}
+                body="A real read, persisted with its timestamp. A valid state, not a failure."
+              />
+              <ChipRow
+                chip={<ProvenanceChip provenance="SIM" />}
+                body="The seeded synthetic economy — deterministic (one seed, replays identically), calibrated to cited research, and labeled at every appearance."
+              />
+              <ChipRow
+                chip={<ProvenanceChip provenance="TESTNET" />}
+                body="Prepared against a deployed contract on Base Sepolia; real when broadcast."
+              />
+              <ChipRow
+                chip={<ProvenanceChip provenance="TO-BUILD" />}
+                body="Researched-real platforms rendered for ecosystem breadth — dashed, faded, never shown as integrated."
+              />
             </div>
             <p>
-              <strong>Solid means an existing relation. Dashed means an opportunity.</strong>{" "}
-              This holds across every mark: a solid arc is a filled route, a dashed halo is an
-              open financing intent, a dashed venue is a connector not yet built. A real EUDR
-              check that finds real gaps renders PARTIAL — the gap is the credibility.
+              <strong>Solid means an existing relation. Dashed means an opportunity.</strong> This holds across every
+              mark: a solid arc is a filled route, a dashed halo is an open financing intent, a dashed venue is a
+              connector not yet built. A real EUDR check that finds real gaps renders PARTIAL — the gap is the
+              credibility.
             </p>
             <p className="mt-2">
               The full receipts live on the{" "}
@@ -200,17 +325,15 @@ export default function AqueductMapGuide(): React.ReactElement {
           {/* ── 6. Why this vocabulary ── */}
           <Section title="Why draw it this way">
             <p>
-              Impact investment already has a network — funds, grants, credit lines, buyers
-              with standards — but it is usually visible only as rosters and PDFs. Drawn as
-              accounts over geography, the network unveils itself: where liquidity already
-              flows (solid), where it is eligible but hasn't arrived (dashed), and where credit
-              is already revolving without any outside allocator (the emerald halos). The
-              coop seat shows the same picture from one chair:{" "}
+              Impact investment already has a network — funds, grants, credit lines, buyers with standards — but it is
+              usually visible only as rosters and PDFs. Drawn as accounts over geography, the network unveils itself:
+              where liquidity already flows (solid), where it is eligible but hasn't arrived (dashed), and where credit
+              is already revolving without any outside allocator (the emerald halos). The coop seat shows the same
+              picture from one chair:{" "}
               <Link to="/financing" className="text-blue-500 hover:text-blue-700">
                 Financing
               </Link>{" "}
-              shows it from the allocator's. The map is the thesis: structure the lot, and
-              both circuits can find it.
+              shows it from the allocator's. The map is the thesis: structure the lot, and both circuits can find it.
             </p>
           </Section>
 

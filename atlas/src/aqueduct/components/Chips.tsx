@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 export type Provenance = "LIVE" | "SNAPSHOT" | "SIM" | "TESTNET" | "TO-BUILD";
 
@@ -30,14 +30,15 @@ export function StatusPill({ status }: { status: Status }): React.ReactElement {
     status === "OK" || status === "SETTLED" || status === "FILLED"
       ? "aq-status--ok"
       : status === "FAILED" || status === "DECLINED"
-      ? "aq-status--failed"
-      : "aq-status--partial";
+        ? "aq-status--failed"
+        : "aq-status--partial";
   return <span className={`aq-status ${cls}`}>{status}</span>;
 }
 
 /** join_confidence — labeled level, never a number (DESIGN-BRIEF §5.2). */
 export function JoinConfidenceTag({ level }: { level: string }): React.ReactElement {
-  const text = level === "name_place_match" ? "name+place match" : level === "deterministic" ? "deterministic" : "unmatched";
+  const text =
+    level === "name_place_match" ? "name+place match" : level === "deterministic" ? "deterministic" : "unmatched";
   return <span className="aq-join-confidence">{text}</span>;
 }
 

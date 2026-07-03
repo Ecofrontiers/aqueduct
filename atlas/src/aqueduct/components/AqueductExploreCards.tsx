@@ -1,6 +1,16 @@
-import { ArrowRight, Coffee, ArrowsLeftRight, Cpu, Storefront, Bank, Plant, Flower, Users } from "@phosphor-icons/react";
+import {
+  ArrowRight,
+  ArrowsLeftRight,
+  Bank,
+  Coffee,
+  Cpu,
+  Flower,
+  Plant,
+  Storefront,
+  Users,
+} from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import type { AqueductIntent, AqueductActor, AqueductAnyLot } from "../hooks/useAqueductEconomy";
+import type { AqueductActor, AqueductAnyLot, AqueductIntent } from "../hooks/useAqueductEconomy";
 import { ProvenanceChip } from "./Chips";
 
 const COMMODITY_ICONS = { coffee: Coffee, cacao: Plant, honey: Flower } as const;
@@ -54,9 +64,7 @@ export function LotExploreCard({
                 dated={lot.provenance === "SNAPSHOT" ? lot.source?.fetched_at : undefined}
               />
               {lot.quality.sca_score != null && (
-                <span className="text-[11px] text-gray-500 whitespace-nowrap">
-                  {lot.quality.sca_score} SCA
-                </span>
+                <span className="text-[11px] text-gray-500 whitespace-nowrap">{lot.quality.sca_score} SCA</span>
               )}
             </div>
             {lot.price && (
@@ -173,9 +181,7 @@ export function ActorExploreCard({
             <ProvenanceChip provenance={actor.provenance} />
             <span className="text-[11px] text-gray-500 whitespace-nowrap capitalize">{actor.kind}</span>
             {actor.winRatePct != null && (
-              <span className="text-[11px] text-gray-500 whitespace-nowrap">
-                ~{actor.winRatePct}% win rate
-              </span>
+              <span className="text-[11px] text-gray-500 whitespace-nowrap">~{actor.winRatePct}% win rate</span>
             )}
           </div>
           <div className="flex items-center justify-between gap-2">

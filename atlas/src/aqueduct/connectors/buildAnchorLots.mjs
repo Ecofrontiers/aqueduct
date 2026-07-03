@@ -9,14 +9,14 @@
 // browser build could re-run this against a dev-proxy for a true on-load
 // live re-fetch (Gate 2 concern — see atlas/vite.config.ts proxy).
 
+import { JOIN_CONFIDENCE, computeLotId } from "../schema/canonicalLot.mjs";
 import {
-  fetchShopIndex,
-  fetchLotDetail,
-  fetchLendingProjects,
-  matchCommunityProjects,
   fetchCeloCreditLineSupply,
+  fetchLendingProjects,
+  fetchLotDetail,
+  fetchShopIndex,
+  matchCommunityProjects,
 } from "./ethichub.mjs";
-import { computeLotId, JOIN_CONFIDENCE } from "../schema/canonicalLot.mjs";
 
 // Anchor + 2 fallbacks, all Chiapas, all confirmed live on the shop index
 // (research/03 + this session's own read). Locked at build time per spec.
@@ -43,11 +43,7 @@ const COMMUNITY_COORDS = {
 const SOCONUSCO_FALLBACK_COORD = { latitude: 15.15, longitude: -92.3 }; // Sierra Madre de Chiapas / Soconusco region centroid
 
 function normKey(s) {
-  return (s || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .trim();
+  return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
 }
 
 function communityCoords(community) {
@@ -96,7 +92,9 @@ async function buildLot(path, { lendingProjects, celoRead }, ledger) {
       verb: "matched",
       detail: `joined shop lot ${detail.source.platform_lot_id} ↔ lending project(s) ${matches
         .map((m) => m.id)
-        .join(", ")} by producer/community name "${community}" — join_confidence: ${joinConfidence} (cross-surface, both EthicHub)`,
+        .join(
+          ", ",
+        )} by producer/community name "${community}" — join_confidence: ${joinConfidence} (cross-surface, both EthicHub)`,
       status: "PARTIAL",
     });
   }
@@ -145,10 +143,20 @@ async function buildLot(path, { lendingProjects, celoRead }, ledger) {
       matched: matches.length > 0,
       join_confidence: joinConfidence,
       community_searched: community,
-      projects: matches.map((m) => ({ id: m.id, community_name: m.communityName, status: m.status, objective: m.objective })),
+      projects: matches.map((m) => ({
+        id: m.id,
+        community_name: m.communityName,
+        status: m.status,
+        objective: m.objective,
+      })),
     },
     onchain: celoRead
-      ? { chain: "celo", contract: celoRead.contract, total_credit_lines: celoRead.totalSupply, note: "platform-level aggregate, not per-lot financing (research/03 caveat)" }
+      ? {
+          chain: "celo",
+          contract: celoRead.contract,
+          total_credit_lines: celoRead.totalSupply,
+          note: "platform-level aggregate, not per-lot financing (research/03 caveat)",
+        }
       : null,
     join_keys: {
       deterministic: [],

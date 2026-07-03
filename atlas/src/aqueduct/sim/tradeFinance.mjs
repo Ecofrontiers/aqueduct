@@ -24,7 +24,7 @@
 //    community identity, never presented as that community's actual figures.
 
 import { runCapitalFormationsMatch } from "./capitalFormations.mjs";
-import { getEconomy, ORIGIN_REGIONS } from "./economy.mjs";
+import { ORIGIN_REGIONS, getEconomy } from "./economy.mjs";
 
 export const ADVANCE_RATE = 0.6; // declared assumption — see header
 export const VERIFIED_AT = "2026-07-02";
@@ -66,7 +66,7 @@ export const STABLECOIN_RAIL = {
 // as economy.mjs, separate stream so economy output is unchanged).
 function mulberry32(seed) {
   let a = seed >>> 0;
-  return function () {
+  return () => {
     a |= 0;
     a = (a + 0x6d2b79f5) | 0;
     let t = Math.imul(a ^ (a >>> 15), 1 | a);
@@ -175,9 +175,7 @@ export function buildCoopRegistry(realLots) {
  * @param {CoopSeat} seat
  */
 export function projectCoopTradeFinance(seat) {
-  const receivableEur = Math.round(
-    seat.lots.reduce((sum, l) => sum + (l.price?.amount ?? 0) * (l.weight_kg ?? 70), 0)
-  );
+  const receivableEur = Math.round(seat.lots.reduce((sum, l) => sum + (l.price?.amount ?? 0) * (l.weight_kg ?? 70), 0));
   const formations = runCapitalFormationsMatch(seat.lots);
   const eligibleActors = formations.actors
     .filter((a) => a.matchedLotCount > 0)

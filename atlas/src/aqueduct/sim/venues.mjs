@@ -29,12 +29,48 @@ export const AGROFORESTRY_VENUES = [
 // illustrative map positions for TO-BUILD ecosystem breadth, never a claimed
 // integration or office pin.
 export const TO_BUILD_PLATFORM_NODES = [
-  { name: "Algrano", kind: "coffee marketplace", status: "TO-BUILD", note: "priority 2 connector — cleanest scrapeable coffee marketplace (research/05)", coords: { longitude: 8.54, latitude: 47.37, precision: "HQ city approximate" } },
-  { name: "Agrotoken", kind: "onchain grain index tokens", status: "TO-BUILD", note: "priority 3 connector — not smallholder-granular", coords: { longitude: -58.38, latitude: -34.6, precision: "HQ city approximate" } },
-  { name: "Beyco", kind: "coffee traceability platform", status: "TO-BUILD", note: "deprioritized (research/05)", coords: { longitude: 4.9, latitude: 52.37, precision: "HQ city approximate" } },
-  { name: "DeHaat", kind: "agri-input + output platform", status: "TO-BUILD", note: "closed-by-design (research/05) — node only, never live-integrated", coords: { longitude: 85.14, latitude: 25.59, precision: "HQ city approximate" } },
-  { name: "Farmer Connect", kind: "traceability platform", status: "TO-BUILD", note: "dormant (research/05) — node only, never live-integrated", coords: { longitude: 6.14, latitude: 46.2, precision: "HQ city approximate" } },
-  { name: "WFP Building Blocks", kind: "humanitarian blockchain cash transfer", status: "TO-BUILD", note: "closed-by-design — node only", coords: { longitude: 12.45, latitude: 41.9, precision: "HQ city approximate" } },
+  {
+    name: "Algrano",
+    kind: "coffee marketplace",
+    status: "TO-BUILD",
+    note: "priority 2 connector — cleanest scrapeable coffee marketplace (research/05)",
+    coords: { longitude: 8.54, latitude: 47.37, precision: "HQ city approximate" },
+  },
+  {
+    name: "Agrotoken",
+    kind: "onchain grain index tokens",
+    status: "TO-BUILD",
+    note: "priority 3 connector — not smallholder-granular",
+    coords: { longitude: -58.38, latitude: -34.6, precision: "HQ city approximate" },
+  },
+  {
+    name: "Beyco",
+    kind: "coffee traceability platform",
+    status: "TO-BUILD",
+    note: "deprioritized (research/05)",
+    coords: { longitude: 4.9, latitude: 52.37, precision: "HQ city approximate" },
+  },
+  {
+    name: "DeHaat",
+    kind: "agri-input + output platform",
+    status: "TO-BUILD",
+    note: "closed-by-design (research/05) — node only, never live-integrated",
+    coords: { longitude: 85.14, latitude: 25.59, precision: "HQ city approximate" },
+  },
+  {
+    name: "Farmer Connect",
+    kind: "traceability platform",
+    status: "TO-BUILD",
+    note: "dormant (research/05) — node only, never live-integrated",
+    coords: { longitude: 6.14, latitude: 46.2, precision: "HQ city approximate" },
+  },
+  {
+    name: "WFP Building Blocks",
+    kind: "humanitarian blockchain cash transfer",
+    status: "TO-BUILD",
+    note: "closed-by-design — node only",
+    coords: { longitude: 12.45, latitude: 41.9, precision: "HQ city approximate" },
+  },
 ];
 
 /** The ERC-8004 reputation registrar — roadmap node, greyed, never a live actor (spec §3 item 7). */

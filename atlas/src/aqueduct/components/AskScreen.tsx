@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
 
 /** The ask — final tour beat. Atlas light styling; the prose walks, nothing is sold. */
@@ -14,9 +14,26 @@ export function AskScreen({
   return (
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-1.5">
-        <StatCard title="What $50k funds" lines={["Registry API hardening", "Cropster ERP import adapter", "2nd + 3rd connector (Algrano, Agrotoken)"]} />
-        <StatCard title="Milestones" lines={["M1 · registry API public + first external query", "M2 · first non-anchor platform via ERP import", "M3 · first external self-host"]} />
-        <StatCard title="What compounds in the open" lines={["Canonical lot schema", "Content-addressed lot ID", "Open registry — connectors + solver are reference implementations"]} />
+        <StatCard
+          title="What $50k funds"
+          lines={["Registry API hardening", "Cropster ERP import adapter", "2nd + 3rd connector (Algrano, Agrotoken)"]}
+        />
+        <StatCard
+          title="Milestones"
+          lines={[
+            "M1 · registry API public + first external query",
+            "M2 · first non-anchor platform via ERP import",
+            "M3 · first external self-host",
+          ]}
+        />
+        <StatCard
+          title="What compounds in the open"
+          lines={[
+            "Canonical lot schema",
+            "Content-addressed lot ID",
+            "Open registry — connectors + solver are reference implementations",
+          ]}
+        />
       </div>
 
       <div className="flex gap-4 flex-wrap">
@@ -27,8 +44,8 @@ export function AskScreen({
       </div>
 
       <p className="text-[11px] text-gray-400 leading-relaxed border-t border-gray-100 pt-2">
-        The RCT record: matching without price-info-alone is the unlock — an intent/solver
-        layer, not a price feed, is what moved outcomes when it existed (docs/research/02).
+        The RCT record: matching without price-info-alone is the unlock — an intent/solver layer, not a price feed, is
+        what moved outcomes when it existed (docs/research/02).
       </p>
 
       <div className="flex gap-2">

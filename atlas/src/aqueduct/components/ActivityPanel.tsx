@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Pulse, CaretDown, CaretUp } from "@phosphor-icons/react";
+import { CaretDown, CaretUp, Pulse } from "@phosphor-icons/react";
+import type React from "react";
+import { useState } from "react";
 import type { AqueductEvent } from "../hooks/useAqueductEconomy";
 import { ProvenanceChip } from "./Chips";
 
@@ -53,7 +54,11 @@ export function ActivityPanel({ events }: { events: AqueductEvent[] }): React.Re
           </div>
         ))}
         <div className="px-3 py-2 text-[10px] text-gray-400">
-          Full stream on the <a href="/ledger" className="underline hover:text-gray-600">ledger</a>.
+          Full stream on the{" "}
+          <a href="/ledger" className="underline hover:text-gray-600">
+            ledger
+          </a>
+          .
         </div>
       </div>
     </div>

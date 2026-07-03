@@ -23,9 +23,7 @@ export function stableStringify(value) {
     return `[${value.map(stableStringify).join(",")}]`;
   }
   const keys = Object.keys(value).sort();
-  const body = keys
-    .map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`)
-    .join(",");
+  const body = keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(",");
   return `{${body}}`;
 }
 
@@ -107,8 +105,13 @@ export function redactName(text, fullName, initials, extraNames = []) {
   // variants so neither form survives redaction. (Gate 1 verification
   // caught an accented surname escaping the plain \b-token regex.)
   const ACCENTS = {
-    a: "[aáàâäã]", e: "[eéèêë]", i: "[iíìîï]",
-    o: "[oóòôöõ]", u: "[uúùûü]", n: "[nñ]", c: "[cç]",
+    a: "[aáàâäã]",
+    e: "[eéèêë]",
+    i: "[iíìîï]",
+    o: "[oóòôöõ]",
+    u: "[uúùûü]",
+    n: "[nñ]",
+    c: "[cç]",
   };
   const fold = (s) =>
     s
@@ -123,10 +126,7 @@ export function redactName(text, fullName, initials, extraNames = []) {
   // are not derivable from the producer slug — connectors pass them per lot.
   // Each is reduced to a bare initial.
   for (const name of extraNames.filter((n) => n && n.length > 2)) {
-    out = out.replace(
-      new RegExp(`\\b${fold(name)}\\b`, "gi"),
-      `${name[0].toUpperCase()}.`
-    );
+    out = out.replace(new RegExp(`\\b${fold(name)}\\b`, "gi"), `${name[0].toUpperCase()}.`);
   }
   // Collapse consecutive duplicate redactions ("N.O.P. N.O.P.," -> "N.O.P.,")
   // that happen when prose uses a partial name (e.g. a first-plus-middle

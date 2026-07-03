@@ -19,7 +19,7 @@ const BASE_TS = Date.parse("2026-07-02T12:00:00Z");
 // ── Seeded PRNG (mulberry32) + helpers ─────────────────────────────────────
 function mulberry32(seed) {
   let a = seed >>> 0;
-  return function () {
+  return () => {
     a |= 0;
     a = (a + 0x6d2b79f5) | 0;
     let t = Math.imul(a ^ (a >>> 15), 1 | a);
@@ -46,7 +46,7 @@ const round2 = (n) => Math.round(n * 100) / 100;
 const LETTERS = "ABCDEFGHIJLMNOPRSTVY";
 function initials(rnd) {
   const n = rnd() < 0.3 ? 3 : 2;
-  let out = [];
+  const out = [];
   for (let i = 0; i < n; i++) out.push(LETTERS[Math.floor(rnd() * LETTERS.length)]);
   return out.join(".") + ".";
 }
@@ -58,29 +58,218 @@ function initials(rnd) {
 // are labeled coarse calibration in meta.
 export const ORIGIN_REGIONS = [
   // coffee — deep (research-calibrated)
-  { key: "chiapas", name: "Chiapas (Soconusco)", country: "México", commodity: "coffee", centroid: [-92.4, 15.4], lots: 90, band: [3.2, 9.5], premiumBand: [12, 19] },
-  { key: "oaxaca", name: "Oaxaca (Pluma)", country: "México", commodity: "coffee", centroid: [-96.5, 16.2], lots: 60, band: [3.0, 8.5], premiumBand: [11, 16] },
-  { key: "huila", name: "Huila", country: "Colombia", commodity: "coffee", centroid: [-75.9, 2.5], lots: 110, band: [3.4, 10], premiumBand: [12, 18] },
-  { key: "narino", name: "Nariño", country: "Colombia", commodity: "coffee", centroid: [-77.3, 1.2], lots: 70, band: [3.4, 9.5], premiumBand: [12, 17] },
-  { key: "cajamarca", name: "Cajamarca", country: "Perú", commodity: "coffee", centroid: [-78.8, -6.2], lots: 75, band: [3.0, 8.5], premiumBand: [10, 15] },
-  { key: "sidama", name: "Sidama", country: "Ethiopia", commodity: "coffee", centroid: [38.4, 6.7], lots: 95, band: [3.2, 9.0], premiumBand: [12, 18] },
-  { key: "yirgacheffe", name: "Yirgacheffe", country: "Ethiopia", commodity: "coffee", centroid: [38.2, 6.16], lots: 65, band: [3.6, 10.5], premiumBand: [13, 19] },
-  { key: "elgon", name: "Mount Elgon", country: "Uganda", commodity: "coffee", centroid: [34.5, 1.1], lots: 55, band: [2.8, 7.0], premiumBand: [9, 13] },
-  { key: "nyeri", name: "Nyeri", country: "Kenya", commodity: "coffee", centroid: [36.95, -0.42], lots: 50, band: [3.8, 11], premiumBand: [13, 19] },
-  { key: "daklak", name: "Đắk Lắk", country: "Việt Nam", commodity: "coffee", centroid: [108.2, 12.7], lots: 80, band: [2.4, 5.5], premiumBand: [7, 11] },
-  { key: "jinotega", name: "Jinotega", country: "Nicaragua", commodity: "coffee", centroid: [-85.99, 13.09], lots: 55, band: [3.0, 8.0], premiumBand: [10, 15] },
-  { key: "huehuetenango", name: "Huehuetenango", country: "Guatemala", commodity: "coffee", centroid: [-91.6, 15.5], lots: 65, band: [3.2, 9.5], premiumBand: [12, 17] },
+  {
+    key: "chiapas",
+    name: "Chiapas (Soconusco)",
+    country: "México",
+    commodity: "coffee",
+    centroid: [-92.4, 15.4],
+    lots: 90,
+    band: [3.2, 9.5],
+    premiumBand: [12, 19],
+  },
+  {
+    key: "oaxaca",
+    name: "Oaxaca (Pluma)",
+    country: "México",
+    commodity: "coffee",
+    centroid: [-96.5, 16.2],
+    lots: 60,
+    band: [3.0, 8.5],
+    premiumBand: [11, 16],
+  },
+  {
+    key: "huila",
+    name: "Huila",
+    country: "Colombia",
+    commodity: "coffee",
+    centroid: [-75.9, 2.5],
+    lots: 110,
+    band: [3.4, 10],
+    premiumBand: [12, 18],
+  },
+  {
+    key: "narino",
+    name: "Nariño",
+    country: "Colombia",
+    commodity: "coffee",
+    centroid: [-77.3, 1.2],
+    lots: 70,
+    band: [3.4, 9.5],
+    premiumBand: [12, 17],
+  },
+  {
+    key: "cajamarca",
+    name: "Cajamarca",
+    country: "Perú",
+    commodity: "coffee",
+    centroid: [-78.8, -6.2],
+    lots: 75,
+    band: [3.0, 8.5],
+    premiumBand: [10, 15],
+  },
+  {
+    key: "sidama",
+    name: "Sidama",
+    country: "Ethiopia",
+    commodity: "coffee",
+    centroid: [38.4, 6.7],
+    lots: 95,
+    band: [3.2, 9.0],
+    premiumBand: [12, 18],
+  },
+  {
+    key: "yirgacheffe",
+    name: "Yirgacheffe",
+    country: "Ethiopia",
+    commodity: "coffee",
+    centroid: [38.2, 6.16],
+    lots: 65,
+    band: [3.6, 10.5],
+    premiumBand: [13, 19],
+  },
+  {
+    key: "elgon",
+    name: "Mount Elgon",
+    country: "Uganda",
+    commodity: "coffee",
+    centroid: [34.5, 1.1],
+    lots: 55,
+    band: [2.8, 7.0],
+    premiumBand: [9, 13],
+  },
+  {
+    key: "nyeri",
+    name: "Nyeri",
+    country: "Kenya",
+    commodity: "coffee",
+    centroid: [36.95, -0.42],
+    lots: 50,
+    band: [3.8, 11],
+    premiumBand: [13, 19],
+  },
+  {
+    key: "daklak",
+    name: "Đắk Lắk",
+    country: "Việt Nam",
+    commodity: "coffee",
+    centroid: [108.2, 12.7],
+    lots: 80,
+    band: [2.4, 5.5],
+    premiumBand: [7, 11],
+  },
+  {
+    key: "jinotega",
+    name: "Jinotega",
+    country: "Nicaragua",
+    commodity: "coffee",
+    centroid: [-85.99, 13.09],
+    lots: 55,
+    band: [3.0, 8.0],
+    premiumBand: [10, 15],
+  },
+  {
+    key: "huehuetenango",
+    name: "Huehuetenango",
+    country: "Guatemala",
+    commodity: "coffee",
+    centroid: [-91.6, 15.5],
+    lots: 65,
+    band: [3.2, 9.5],
+    premiumBand: [12, 17],
+  },
   // cacao — coarse calibration
-  { key: "esmeraldas", name: "Esmeraldas", country: "Ecuador", commodity: "cacao", centroid: [-79.2, 0.6], lots: 55, band: [2.6, 7.5], premiumBand: [8, 12] },
-  { key: "sanmartin", name: "San Martín", country: "Perú", commodity: "cacao", centroid: [-76.6, -6.6], lots: 50, band: [2.4, 6.5], premiumBand: [7, 11] },
-  { key: "bahia", name: "Bahia", country: "Brasil", commodity: "cacao", centroid: [-39.3, -14.8], lots: 45, band: [2.2, 6.0], premiumBand: [7, 10] },
-  { key: "ashanti", name: "Ashanti", country: "Ghana", commodity: "cacao", centroid: [-1.5, 6.7], lots: 60, band: [2.0, 4.5], premiumBand: [5, 8] },
-  { key: "sambirano", name: "Sambirano", country: "Madagascar", commodity: "cacao", centroid: [48.45, -13.7], lots: 35, band: [3.0, 8.0], premiumBand: [9, 13] },
+  {
+    key: "esmeraldas",
+    name: "Esmeraldas",
+    country: "Ecuador",
+    commodity: "cacao",
+    centroid: [-79.2, 0.6],
+    lots: 55,
+    band: [2.6, 7.5],
+    premiumBand: [8, 12],
+  },
+  {
+    key: "sanmartin",
+    name: "San Martín",
+    country: "Perú",
+    commodity: "cacao",
+    centroid: [-76.6, -6.6],
+    lots: 50,
+    band: [2.4, 6.5],
+    premiumBand: [7, 11],
+  },
+  {
+    key: "bahia",
+    name: "Bahia",
+    country: "Brasil",
+    commodity: "cacao",
+    centroid: [-39.3, -14.8],
+    lots: 45,
+    band: [2.2, 6.0],
+    premiumBand: [7, 10],
+  },
+  {
+    key: "ashanti",
+    name: "Ashanti",
+    country: "Ghana",
+    commodity: "cacao",
+    centroid: [-1.5, 6.7],
+    lots: 60,
+    band: [2.0, 4.5],
+    premiumBand: [5, 8],
+  },
+  {
+    key: "sambirano",
+    name: "Sambirano",
+    country: "Madagascar",
+    commodity: "cacao",
+    centroid: [48.45, -13.7],
+    lots: 35,
+    band: [3.0, 8.0],
+    premiumBand: [9, 13],
+  },
   // honey — coarse calibration
-  { key: "yucatan", name: "Yucatán", country: "México", commodity: "honey", centroid: [-89.0, 20.5], lots: 40, band: [2.4, 5.5], premiumBand: [6, 9] },
-  { key: "chiapas-honey", name: "Chiapas (highlands)", country: "México", commodity: "honey", centroid: [-92.7, 16.4], lots: 30, band: [2.4, 5.5], premiumBand: [6, 9] },
-  { key: "tigray", name: "Tigray", country: "Ethiopia", commodity: "honey", centroid: [39.5, 13.9], lots: 35, band: [2.2, 5.0], premiumBand: [5.5, 8] },
-  { key: "zambezia", name: "Zambézia", country: "Moçambique", commodity: "honey", centroid: [36.8, -16.8], lots: 30, band: [2.0, 4.5], premiumBand: [5, 7.5] },
+  {
+    key: "yucatan",
+    name: "Yucatán",
+    country: "México",
+    commodity: "honey",
+    centroid: [-89.0, 20.5],
+    lots: 40,
+    band: [2.4, 5.5],
+    premiumBand: [6, 9],
+  },
+  {
+    key: "chiapas-honey",
+    name: "Chiapas (highlands)",
+    country: "México",
+    commodity: "honey",
+    centroid: [-92.7, 16.4],
+    lots: 30,
+    band: [2.4, 5.5],
+    premiumBand: [6, 9],
+  },
+  {
+    key: "tigray",
+    name: "Tigray",
+    country: "Ethiopia",
+    commodity: "honey",
+    centroid: [39.5, 13.9],
+    lots: 35,
+    band: [2.2, 5.0],
+    premiumBand: [5.5, 8],
+  },
+  {
+    key: "zambezia",
+    name: "Zambézia",
+    country: "Moçambique",
+    commodity: "honey",
+    centroid: [36.8, -16.8],
+    lots: 30,
+    band: [2.0, 4.5],
+    premiumBand: [5, 7.5],
+  },
 ];
 
 /** Import demand hubs (real port/market cities, positions approximate). */
@@ -107,11 +296,29 @@ function hubRegionClass(origin) {
 // race and the market roster tell one story. Win shares concentrate: top
 // ~45%, top-3 ~75% (research/04 §Sim-economy parameters).
 const ARCHETYPES = [
-  { kind: "top", count: 1, winShare: 45, margin: [200, 240], note: "network-wide top solver — CoW/Across concentration analog" },
+  {
+    kind: "top",
+    count: 1,
+    winShare: 45,
+    margin: [200, 240],
+    note: "network-wide top solver — CoW/Across concentration analog",
+  },
   { kind: "optimizer", count: 2, winShare: 15, margin: [150, 210], note: "route optimizer, wins on tight lanes" },
   { kind: "multi-strategy", count: 9, winShare: 2.2, margin: [60, 160], note: "near-break-even multi-strategy book" },
-  { kind: "noisy", count: 14, winShare: 0, margin: [280, 380], note: "sporadic bidder, thin capital — bids, never wins" },
-  { kind: "conservative", count: 10, winShare: 0.5, margin: [140, 180], note: "risk desk — declines partial-EUDR / thin routes" },
+  {
+    kind: "noisy",
+    count: 14,
+    winShare: 0,
+    margin: [280, 380],
+    note: "sporadic bidder, thin capital — bids, never wins",
+  },
+  {
+    kind: "conservative",
+    count: 10,
+    winShare: 0.5,
+    margin: [140, 180],
+    note: "risk desk — declines partial-EUDR / thin routes",
+  },
 ];
 
 function buildSolvers(rnd) {
@@ -166,10 +373,7 @@ export function generateEconomy(seed = ECONOMY_SEED) {
         kind: "coop",
         name: `Cooperative node — ${origin.name}${coopCount > 1 ? ` ${c + 1}` : ""}`,
         commodity: origin.commodity,
-        coords: [
-          origin.centroid[0] + range(rnd, -0.5, 0.5),
-          origin.centroid[1] + range(rnd, -0.35, 0.35),
-        ],
+        coords: [origin.centroid[0] + range(rnd, -0.5, 0.5), origin.centroid[1] + range(rnd, -0.35, 0.35)],
         provenance: "SIM",
       };
       originCoops.push(coop);
@@ -197,7 +401,13 @@ export function generateEconomy(seed = ECONOMY_SEED) {
         commodity: origin.commodity,
         title_redacted: `${prod} / ${origin.name} (${origin.country}) — ${origin.commodity === "coffee" ? `${sca} SCA` : origin.commodity}`,
         producer: { initials: prod, entity_type: rnd() < 0.35 ? "group" : "person" },
-        origin: { country: origin.country, region: origin.name, community: null, locality_raw: origin.name, plot_geo: null },
+        origin: {
+          country: origin.country,
+          region: origin.name,
+          community: null,
+          locality_raw: origin.name,
+          plot_geo: null,
+        },
         map_marker: {
           longitude: origin.centroid[0] + range(rnd, -0.8, 0.8),
           latitude: origin.centroid[1] + range(rnd, -0.55, 0.55),
@@ -212,7 +422,12 @@ export function generateEconomy(seed = ECONOMY_SEED) {
         // reference is only issued once the legality-evidence chain it documents exists —
         // it was hardcoded null before (docs/research/09 Phase 4 stress-test finding),
         // which made full EUDR confirmation structurally unreachable for every SIM lot.
-        eudr: { plot_geo_present: eudrReady, harvest_window_present: rnd() < 0.7, legality_evidence: eudrReady, dds_ref: eudrReady ? `DDS-${hash.slice(0, 8)}` : null },
+        eudr: {
+          plot_geo_present: eudrReady,
+          harvest_window_present: rnd() < 0.7,
+          legality_evidence: eudrReady,
+          dds_ref: eudrReady ? `DDS-${hash.slice(0, 8)}` : null,
+        },
         harvest_window: { season: pick(rnd, ["2025", "2025/26", "2026"]), note: "SIM" },
         coop_id: coop.id,
         image: null,
@@ -242,7 +457,7 @@ export function generateEconomy(seed = ECONOMY_SEED) {
         const solver = solvers.find((s) => s.id === solverId);
         const landed = round2(
           fob * (1 + solver.freightPct + 0.025 + 0.009 + (solver.financingAprPct * solver.tenorDays) / 365) +
-            (fob * solver.marginBps) / 10000
+            (fob * solver.marginBps) / 10000,
         );
         routes.push({
           id: `route-${hash.slice(0, 10)}`,
@@ -257,7 +472,16 @@ export function generateEconomy(seed = ECONOMY_SEED) {
           provenance: "SIM",
         });
         const key = `${coop.id}->${hub.id}`;
-        const flow = flowMap.get(key) ?? { coopId: coop.id, hubId: hub.id, from: coop.coords, to: hub.coords, totalKg: 0, totalEur: 0, laneCount: 0, commodity: origin.commodity };
+        const flow = flowMap.get(key) ?? {
+          coopId: coop.id,
+          hubId: hub.id,
+          from: coop.coords,
+          to: hub.coords,
+          totalKg: 0,
+          totalEur: 0,
+          laneCount: 0,
+          commodity: origin.commodity,
+        };
         flow.totalKg += weightKg;
         flow.totalEur += Math.round(weightKg * landed);
         flow.laneCount += 1;
@@ -287,7 +511,11 @@ export function generateEconomy(seed = ECONOMY_SEED) {
   // ── Events (the feed): newest first, deterministic timestamps ──
   const verbs = [
     (l) => [`@scout-${l.sim ? "sim" : "ethichub"}`, "pinned", `pinned ${l.title_redacted} · ${l.price.amount} EUR/kg`],
-    (l) => ["@diligence-identity", "checked", `EUDR check on ${l.title_redacted} — ${l.eudr.plot_geo_present ? "OK" : "PARTIAL"}`],
+    (l) => [
+      "@diligence-identity",
+      "checked",
+      `EUDR check on ${l.title_redacted} — ${l.eudr.plot_geo_present ? "OK" : "PARTIAL"}`,
+    ],
     (l) => ["@oracle-floor", "priced", `floor ref for ${l.origin.region} — ICE C + differential`],
   ];
   const eventLots = [...lots].filter((_, i) => i % 7 === 0).slice(0, 60);

@@ -1,21 +1,22 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { ArrowCounterClockwise, Path, Pause, Play, X } from "@phosphor-icons/react";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { MapRef } from "react-map-gl";
-import { Play, Pause, ArrowCounterClockwise, X, Path } from "@phosphor-icons/react";
+import { useAqueductLots } from "../hooks/useAqueductLots";
 import {
   CHAPTERS,
   type ChapterKey,
-  useTourStore,
-  setAnchorLot,
-  playTour,
-  pauseTour,
-  replayTour,
   jumpToChapter,
-  selectChapterStatus,
+  pauseTour,
+  playTour,
+  replayTour,
   selectActiveChapter,
+  selectChapterStatus,
+  setAnchorLot,
+  useTourStore,
 } from "../state/tourStore";
-import { useAqueductLots } from "../hooks/useAqueductLots";
-import { ProvenanceChip, type Provenance } from "./Chips";
 import { AskScreen } from "./AskScreen";
+import { type Provenance, ProvenanceChip } from "./Chips";
 
 /**
  * The judge tour, docked — a compact Atlas-styled chapter panel on the map
@@ -54,7 +55,7 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
             [Math.min(a.longitude, 9.99) - 4, Math.min(a.latitude, 53.55) - 4],
             [Math.max(a.longitude, 9.99) + 4, Math.max(a.latitude, 53.55) + 4],
           ],
-          { padding: 60, duration: 1600 }
+          { padding: 60, duration: 1600 },
         ),
     };
     presets[activeChapter]?.();
@@ -82,9 +83,7 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
     <div className="absolute bottom-4 right-4 z-10 w-[340px] max-h-[70%] flex flex-col bg-cardBackground border border-gray-200 shadow-lg overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-3.5 h-9 border-b border-gray-100 shrink-0">
-        <span className="text-xs font-bold text-gray-900">
-          One lot, end to end
-        </span>
+        <span className="text-xs font-bold text-gray-900">One lot, end to end</span>
         <div className="flex items-center gap-1">
           {tour.started &&
             (tour.playing ? (
@@ -119,8 +118,8 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
                 activeChapter === ch.key && tour.started
                   ? "bg-blue-600 text-white"
                   : status === "done"
-                  ? "bg-blue-50 text-blue-700"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    ? "bg-blue-50 text-blue-700"
+                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
               }`}
             >
               {i + 1} {ch.label}
@@ -134,10 +133,9 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
         {!tour.started ? (
           <div className="space-y-3">
             <p className="text-xs text-gray-600 leading-relaxed">
-              Watch agents take one real coffee lot end to end: scouts read it live from
-              EthicHub, a diligence agent checks it, an oracle floors it, solvers race to
-              fill it, and the settle leg is prepared onchain. Live reads and simulation
-              are labeled at every step.
+              Watch agents take one real coffee lot end to end: scouts read it live from EthicHub, a diligence agent
+              checks it, an oracle floors it, solvers race to fill it, and the settle leg is prepared onchain. Live
+              reads and simulation are labeled at every step.
             </p>
             <button
               onClick={playTour}
@@ -156,10 +154,7 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
               <p className="text-[11px] text-gray-400">Playing — events land here beat by beat.</p>
             )}
             {chapterEvents.map(
-              (
-                e: { prov: string; agent: string; verb: string; object: string; detail?: string },
-                i: number
-              ) => (
+              (e: { prov: string; agent: string; verb: string; object: string; detail?: string }, i: number) => (
                 <div key={i} className="bg-gray-50 px-2.5 py-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <ProvenanceChip provenance={e.prov as Provenance} />
@@ -169,7 +164,7 @@ export function TourDock({ mapRef }: { mapRef: React.RefObject<MapRef> }): React
                   <div className="text-[11px] text-gray-700 mt-0.5">{e.object}</div>
                   {e.detail && <div className="text-[10px] text-gray-400 mt-0.5">{e.detail}</div>}
                 </div>
-              )
+              ),
             )}
             {done && !tour.showAsk && (
               <button

@@ -24,9 +24,7 @@ export const SIM_BUYER = {
  */
 export function evaluateBuyerMatch({ lot, winningBid }) {
   const scaScore = lot?.quality?.sca_score ?? null;
-  const eudrPartial = lot?.eudr
-    ? !(lot.eudr.plot_geo_present && lot.eudr.legality_evidence && lot.eudr.dds_ref)
-    : true;
+  const eudrPartial = lot?.eudr ? !(lot.eudr.plot_geo_present && lot.eudr.legality_evidence && lot.eudr.dds_ref) : true;
   const landed = winningBid?.landedEurPerKg ?? null;
   const fob = lot?.price?.amount ?? null;
   const landedCeiling = fob !== null ? Math.round(fob * 1.15 * 2) / 2 : null; // nearest €0.50

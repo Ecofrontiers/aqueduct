@@ -14,7 +14,7 @@
 // Every exported fetch* function returns { data, ledgerEntry } where
 // ledgerEntry is a real-vs-sim ledger row: { ts, source, url, ok, note }.
 
-import { initialsFromName, redactName, computeLotId, JOIN_CONFIDENCE } from "../schema/canonicalLot.mjs";
+import { JOIN_CONFIDENCE, computeLotId, initialsFromName, redactName } from "../schema/canonicalLot.mjs";
 
 const SHOP_ORIGIN = "https://greencoffee.ethichub.com";
 const APP_ORIGIN = "https://app.ethichub.com";
@@ -129,7 +129,7 @@ export async function fetchLotDetail(path, originOverride) {
     const acidity = matchOne(html, /<strong>\s*Acidity:\s*<\/strong>\s*([^<]+)/i);
 
     const priceRaw = matchOne(html, /<span itemprop="price"[^>]*>([\d.]+)<\/span>/i);
-    const price = priceRaw ? parseFloat(priceRaw) : null;
+    const price = priceRaw ? Number.parseFloat(priceRaw) : null;
     const currency = matchOne(html, /<span itemprop="priceCurrency"[^>]*>([^<]+)<\/span>/i) ?? "EUR";
 
     const imgPath = matchOne(html, /data-zoom-image="([^"]+)"/i);
@@ -138,7 +138,9 @@ export async function fetchLotDetail(path, originOverride) {
     // Story paragraph — captured for the "producer story" block, redacted below.
     const descBlockMatch = html.match(/<div class="oe_structure"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
     const rawDescHtml = descBlockMatch ? descBlockMatch[1] : "";
-    const storyMatch = rawDescHtml.match(/About the (?:Coffee producer|origin):<\/strong><\/p>([\s\S]*?)(?:<div><span class="o_small-fs">|$)/i);
+    const storyMatch = rawDescHtml.match(
+      /About the (?:Coffee producer|origin):<\/strong><\/p>([\s\S]*?)(?:<div><span class="o_small-fs">|$)/i,
+    );
     let story = storyMatch ? decodeEntities(storyMatch[1].replace(/<[^>]+>/g, " ")) : null;
     // Full stripped description text — used ONLY server-side to find a more
     // specific village/community name than the "Origin:" line carries (e.g.
@@ -153,7 +155,7 @@ export async function fetchLotDetail(path, originOverride) {
     const titleRedacted = redactName(title, fullProducerName, initials);
 
     const variety = attrPairs["Variety"] ?? null;
-    const sca = attrPairs["SCA"] ? parseFloat(attrPairs["SCA"]) : null;
+    const sca = attrPairs["SCA"] ? Number.parseFloat(attrPairs["SCA"]) : null;
     const country = attrPairs["Country"] ?? null;
     const lotType = attrPairs["Lot Type"] ?? null;
     const format = attrPairs["Format"] ?? null;
@@ -187,7 +189,10 @@ export async function fetchLotDetail(path, originOverride) {
         coffee_type: coffeeType,
         weight_state: "green",
         format,
-        price: price !== null ? { amount: price, currency, unit: "kg", incoterm: "FOB (origin, price as published incl. VAT)" } : null,
+        price:
+          price !== null
+            ? { amount: price, currency, unit: "kg", incoterm: "FOB (origin, price as published incl. VAT)" }
+            : null,
         image,
         producer_story: story,
       },
@@ -291,7 +296,7 @@ export async function fetchCeloCreditLineSupply() {
       }),
     });
     const json = await res.json();
-    const totalSupply = json.result ? parseInt(json.result, 16) : null;
+    const totalSupply = json.result ? Number.parseInt(json.result, 16) : null;
     return {
       data: { contract: CREDIT_LINE_CONTRACT, totalSupply, chain: "celo" },
       ledgerEntry: {
