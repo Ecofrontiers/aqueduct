@@ -11,8 +11,9 @@ function fmtTime(ts: number) {
 /**
  * The live-marketplace pulse — a compact activity column docked in the map
  * view (feed register 3 of the FABLE-KICKOFF supersession §5). Real reads
- * carry LIVE/SNAPSHOT chips; the seeded economy's events carry SIM. The
- * full firehose stays on /ledger.
+ * carry LIVE/SNAPSHOT chips; the seeded economy's events carry SIM. There is
+ * no separate firehose page anymore — this panel + each lot's own activity
+ * trail (AqueductLotDetails/LotCard) are the whole feed.
  */
 export function ActivityPanel({ events }: { events: AqueductEvent[] }): React.ReactElement {
   const [open, setOpen] = useState(false);
@@ -43,23 +44,26 @@ export function ActivityPanel({ events }: { events: AqueductEvent[] }): React.Re
         <CaretUp size={11} className="text-gray-400" />
       </button>
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {events.slice(0, 40).map((e, i) => (
-          <div key={i} className="px-3 py-2 border-b border-gray-50">
+        {events.slice(0, 100).map((e, i) => (
+          <div key={`${e.ts}-${e.actor}-${i}`} className="px-3 py-2 border-b border-gray-50">
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-[10px] text-gray-400 aq-mono">{fmtTime(e.ts)}</span>
               <ProvenanceChip provenance={e.provenance} />
               <span className="text-[10px] font-semibold text-gray-700 aq-mono">{e.actor}</span>
             </div>
             <div className="text-[11px] text-gray-600 mt-0.5 leading-snug">{e.summary}</div>
+            {e.url && (
+              <a
+                href={e.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-blue-500 hover:text-blue-700 underline inline-block mt-0.5"
+              >
+                source ↗
+              </a>
+            )}
           </div>
         ))}
-        <div className="px-3 py-2 text-[10px] text-gray-400">
-          Full stream on the{" "}
-          <a href="/ledger" className="underline hover:text-gray-600">
-            ledger
-          </a>
-          .
-        </div>
       </div>
     </div>
   );

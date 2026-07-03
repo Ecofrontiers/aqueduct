@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 import Header from "../../Header";
 import { ProvenanceChip, ValueOrDash } from "../components/Chips";
+import { getGccOracleState, getGlwPriceSnapshot } from "../connectors/glow.mjs";
 import { useAqueductLots } from "../hooks/useAqueductLots";
 import { CAPITAL_ROSTER } from "../sim/buyerRoster.mjs";
 import { runCapitalFormationsMatch } from "../sim/capitalFormations.mjs";
@@ -16,6 +17,10 @@ const KIND_COLOR: Record<string, string> = { buyer: "#4f46e5", grant: "#059669",
 
 function eur(n: number): string {
   return `€${Math.round(n).toLocaleString()}`;
+}
+
+function usd(n: number): string {
+  return `$${Math.round(n).toLocaleString()}`;
 }
 
 /**
@@ -47,6 +52,11 @@ export default function AqueductFinancing(): React.ReactElement {
     () => runTokenizerRace({ instrumentValueEur: formations.totalCapitalEur }),
     [formations.totalCapitalEur],
   );
+
+  // Glow oracle registers — one honest line: GLW has a healthy live pool read; GCC has no
+  // usable register today (auction drained, pool dust). Both are pure snapshot reads.
+  const glwPrice = getGlwPriceSnapshot();
+  const gccOracle = getGccOracleState();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -132,44 +142,80 @@ export default function AqueductFinancing(): React.ReactElement {
             Illustrated at this economy's total declared capital ({eur(formations.totalCapitalEur)}) — a real instrument
             would size off one actual asset or org, not this pool total. Archetypes are modeled on real RWA tokenization
             platforms (Centrifuge, Maple, Goldfinch, Ondo); fee figures are labeled estimates, not those platforms'
-            actual quoted terms.
+            actual quoted terms. The Glow Miner is the exception — real observed-market terms on its own instrument.
           </div>
+
+          {/* ── Glow oracle registers: one honest line ── */}
+          <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] px-3 py-2 border border-gray-100 bg-gray-50">
+            <ProvenanceChip provenance="LIVE" />
+            <span className="text-gray-700">
+              GLW <span className="aq-mono text-gray-900">${glwPrice.usdPerGlw}</span> (live pool read, $
+              {Math.round(glwPrice.liquidityUsd / 1000)}k depth)
+            </span>
+            <span className="text-gray-300">·</span>
+            <ProvenanceChip provenance="SNAPSHOT" dated={gccOracle.fetched_at} />
+            <span className="text-gray-700">GCC: {gccOracle.verdict} (auction drained, pool dust)</span>
+          </div>
+
           <div className="divide-y divide-gray-100 border border-gray-100">
-            {tokenizerRace.bids.map((b) => (
-              <div key={b.handle} className="flex items-center justify-between gap-2 px-3.5 py-2.5">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-semibold text-gray-900 truncate">{b.name}</span>
-                    <ProvenanceChip provenance="SIM" />
-                    {b.handle === tokenizerRace.winner?.handle && (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-green-50 text-green-700">
-                        winner
-                      </span>
+            {tokenizerRace.bids.map((b) => {
+              const confidence: string | undefined = b.instrument ? b.confidence : b.cost?.lines?.[0]?.confidence;
+              const source: string | undefined = b.instrument ? b.source : b.cost?.lines?.[0]?.source;
+              return (
+                <div key={b.handle} className="flex items-center justify-between gap-2 px-3.5 py-2.5">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm font-semibold text-gray-900 truncate">{b.name}</span>
+                      {b.instrument ? (
+                        <ProvenanceChip provenance="SNAPSHOT" dated={b.fetched_at} />
+                      ) : (
+                        <ProvenanceChip provenance="SIM" />
+                      )}
+                      {b.handle === tokenizerRace.winner?.handle && (
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-green-50 text-green-700">
+                          winner
+                        </span>
+                      )}
+                      {confidence && (
+                        <span className="text-[9px] font-semibold uppercase tracking-wide px-1 py-0.5 rounded bg-gray-100 text-gray-500">
+                          {confidence}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-gray-500">{b.note}</p>
+                    {source && <p className="text-[10px] text-gray-400 truncate">source: {source}</p>}
+                  </div>
+                  <div className="text-right shrink-0">
+                    {b.status === "DECLINED" ? (
+                      <span className="aq-status aq-status--failed">DECLINED</span>
+                    ) : b.instrument ? (
+                      <>
+                        <div className="text-xs font-semibold text-gray-900 aq-mono">
+                          {usd(b.yield.grossUsd)} gross · {b.yield.netMultiple}×
+                        </div>
+                        <div className="text-[11px] text-gray-400">
+                          {usd(b.yield.principalUsd)} → {b.yield.glwPerWeek} GLW/wk × {b.yield.termWeeks}wk
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-xs font-semibold text-gray-900 aq-mono">
+                          {eur(b.cost?.allInYear1Eur ?? 0)} ({b.cost?.allInYear1Pct}%)
+                        </div>
+                        <div className="text-[11px] text-gray-400">{b.cost?.listingDays}d to list</div>
+                      </>
                     )}
                   </div>
-                  <p className="text-[11px] text-gray-500">{b.note}</p>
                 </div>
-                <div className="text-right shrink-0">
-                  {b.status === "DECLINED" ? (
-                    <span className="aq-status aq-status--failed">DECLINED</span>
-                  ) : (
-                    <>
-                      <div className="text-xs font-semibold text-gray-900 aq-mono">
-                        {eur(b.cost?.allInYear1Eur ?? 0)} ({b.cost?.allInYear1Pct}%)
-                      </div>
-                      <div className="text-[11px] text-gray-400">{b.cost?.listingDays}d to list</div>
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Section>
 
         <p className="text-[11px] text-gray-400 mt-6">
           Roster: <code className="aq-mono">sim/buyerRoster.mjs</code> ({CAPITAL_ROSTER.length} actors, SIM). Matching
           engine: <code className="aq-mono">sim/policy.mjs</code> — the same engine the{" "}
-          <Link to="/ledger" className="underline hover:text-gray-600">
+          <Link to="/" className="underline hover:text-gray-600">
             solver race
           </Link>{" "}
           runs.

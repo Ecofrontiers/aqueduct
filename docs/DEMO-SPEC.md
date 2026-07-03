@@ -1,19 +1,19 @@
-# Aqueduct — Demo Spec (build contract) — v2
+# AqueductX — Demo Spec (build contract) — v2
 
 > v1 locked 2026-07-02 via 15-question spec session with Pat; v2 same day after 11 more
 > questions + the 6-report research cycle (`docs/research/01`–`06`). This is the contract the
 > build is verified against. Deviations require Pat's sign-off, not silent judgment calls.
-> The name is **Aqueduct**. Never "Farmgate" — anywhere, including code, comments, and commits.
+> The name is **AqueductX**. Never "Farmgate" — anywhere, including code, comments, and commits.
 
 ## 1. The product (one paragraph)
 
 **Canonical definition (Pat, updated 2026-07-03 to name the finance layer explicitly):**
-"Aqueduct is a generalized peer-to-peer logistics and finance layer for smallholder
+"AqueductX is a generalized peer-to-peer logistics and finance layer for smallholder
 farmers: agents aggregate, verify, and price commodity lots, and intents match and
 settle them."
 
 
-Aqueduct is an **open financial + logistics layer for smallholder commodities**: an
+AqueductX is an **open financial + logistics layer for smallholder commodities**: an
 aggregation + certification + intent/solver network over the platforms where smallholder
 production already lives. It is NOT a farmer-facing app and NOT a regen-ag project —
 regen/sustainability is one certification type inside the cert layer (already wired in the
@@ -40,13 +40,13 @@ License MIT. Repo: `~/Desktop/1_projects/aqueduct/`.
 | Swarm meaning | **Farmer empowerment** — the judge watches agents compete and concludes "this machinery works for the producer." Rendered SUBTLY: no meters/tickers/preaching; spread + producer-share data sits quietly in lot detail panels; the explicit argument lives in the deck, not the UI |
 | Card lineage | **Omitted entirely** — no SlabClaw/Charizard/collectibles reference anywhere (demo, application, repo UI). Team credibility = Regen Atlas + The Green Crypto Handbook + the Hedera diligence build. Scrub forked `routes/` of card-domain references; `api.slabclaw.com` appears nowhere |
 | End of tour | **The ask, stated** — final screen renders Q5: what the grant funds, milestones, what compounds in the open |
-| Visual identity | **SUPERSEDED 2026-07-02 (Pat: "you just built an app on top of the other app — there's no integration at all").** Original intent stands for STYLE (don't restyle Atlas's look); it was wrongly obeyed as STRUCTURE (overlay-only). Binding correction: **Aqueduct is a MODE of the app, not an overlay.** The demo build opens IN Aqueduct mode: the map IS the aggregation view (commodity lots, venues, storage nodes, intent arcs as first-class map content, Chiapas-framed), the feed is part of that view's layout, and the tour DRIVES app state (route, camera, panels) rather than floating over whatever page is showing. Atlas's own browse (bioregions/assets) stays functional and reachable but is not the front door; tour chrome never renders on non-Aqueduct pages; zero z-fighting with Atlas UI |
-| Lineage framing | **Openly a fork/extension of Regen Atlas** (Pat, 2026-07-02) — the UI and application say so explicitly ("Aqueduct extends the open Regen Atlas"). Lineage is a feature: the base layer is already live, open (MIT), and ours — not something to disguise. regenatlas.xyz remains live as the standing proof |
+| Visual identity | **SUPERSEDED 2026-07-02 (Pat: "you just built an app on top of the other app — there's no integration at all").** Original intent stands for STYLE (don't restyle Atlas's look); it was wrongly obeyed as STRUCTURE (overlay-only). Binding correction: **AqueductX is a MODE of the app, not an overlay.** The demo build opens IN AqueductX mode: the map IS the aggregation view (commodity lots, venues, storage nodes, intent arcs as first-class map content, Chiapas-framed), the feed is part of that view's layout, and the tour DRIVES app state (route, camera, panels) rather than floating over whatever page is showing. Atlas's own browse (bioregions/assets) stays functional and reachable but is not the front door; tour chrome never renders on non-AqueductX pages; zero z-fighting with Atlas UI |
+| Lineage framing | **Openly a fork/extension of Regen Atlas** (Pat, 2026-07-02) — the UI and application say so explicitly ("AqueductX extends the open Regen Atlas"). Lineage is a feature: the base layer is already live, open (MIT), and ours — not something to disguise. regenatlas.xyz remains live as the standing proof |
 | Map aesthetic (A1) | **Keep Atlas's current Mapbox style** — zero restyle risk, visual continuity with the cited live product |
 | Swarm rendering (A2) | **Feed-first, map secondary** — the activity feed (terminal-log aesthetic) IS the swarm view; the map shows results. Honest to how agents actually work; consistent with the subtle mandate |
 | Tour chrome (A3) | **Chaptered side rail** — persistent rail lists the beats (Aggregate → Verify → Price → Publish → Fill → Settle → Ask); click a chapter to play it; judge sees the whole arc upfront and can jump |
 | Tour pacing | **Judge-clicked, ~8-10 steps** — each click advances one captioned beat (map → lot → certs → diligence → oracle → intent → solver race → settle → ask); ~3 min read fully |
-| Incumbent stance | **Neutral rails they join** — venues (Algrano, GrainChain, AgriDex…) render as first-class nodes the layer aggregates and routes intents TO; Aqueduct adds no toll and replaces nobody |
+| Incumbent stance | **Neutral rails they join** — venues (Algrano, GrainChain, AgriDex…) render as first-class nodes the layer aggregates and routes intents TO; AqueductX adds no toll and replaces nobody |
 | Rails lineage | **Domain-neutral citation — FINAL** (F5 revisited with the provenance-trail argument 2026-07-02; Pat kept it, risk accepted): "we deployed an intent-settlement registry (Base Sepolia) and closed a live USDC→marketplace buy rail"; zero collectibles language anywhere. Accepted risk: a reviewer tracing the deployer/fork lineage discovers the collectibles provenance — deemed survivable |
 | Backstop solver | **Open reference solver** — a forkable, open-source backstop that wins ONLY when no other solver bids; code public, margin visible. Cold-start realism (research/04: no network ever bootstrapped without one) that reinforces neutrality instead of undercutting it |
 | Sentient stack ties | **Offer, don't commit** — name the compatibility (diligence agents mirror ROMA's Verifier role; GRID publication is natural) without making either a milestone |
@@ -56,13 +56,20 @@ License MIT. Repo: `~/Desktop/1_projects/aqueduct/`.
 | Feed register (A5) | **Delegated to design-research** — the pre-build design-research pass decides the feed line format against real references (flight radars, block explorers, terminal UIs, agent dashboards); hypothesis to validate: structured log with plain-language expand. Currency/unit display (EUR/kg vs bag equivalents) decided in the same pass |
 | Scraping posture (F1) | **Read anything reachable** — if it renders, it's data (the house doctrine). Connectors read any publicly reachable surface; auth-gated surfaces are the only hard line |
 | Moat (M1) | **Stated: "no moat, by design"** — the win condition is the standard existing, not owning it (coherent with grant track + funder's "Linux Foundation of AI" register). Practical answer under venture pressure: ops muscle (production scraper/agent operations, daily) + accumulated lot registry & join-confidence history — clones get code, not the running network. *(Best-judgment while Pat AFK; re-openable.)* |
-| OPEN — M2/M3/M4 | First real user (month 2)? · Aqueduct's portfolio position (grant bid vs first-class direction)? · Kill criteria? — queued for Pat; the market attack treats M2 as a finding |
+| OPEN — M2/M3/M4 | First real user (month 2)? · AqueductX's portfolio position (grant bid vs first-class direction)? · Kill criteria? — queued for Pat; the market attack treats M2 as a finding |
 | ROMA mapping (Q36) | **Our domain names in the UI; the ROMA-role mapping is first-class in the ledger page + application.** Verified from github.com/sentient-agi/ROMA: loop = Atomizer→Planner→Executor→Aggregator, Verifier optional ("inspects the aggregate output against the original goal"). Mapping: scouts/oracles = Executors-with-tools ("Executors can be LLMs, APIs, or even other agents"); diligence agents = the Verifier concept; intent pipeline = Planner/Aggregator. HONESTY BOUNDARY: this is structural congruence with receipts — NEVER "built on ROMA" (the ROMA authors read the applications and provide the grant's engineering support); ROMA port stays an offer (Q26) |
 | Sustainability answer | **REVISED per MARKET-ATTACK F2 (supersedes the services-not-tolls draft):** layer free + forkable; Ecofrontiers sustains on **lender/factor-facing services over the open registry** — duplicate-financing checks, attestation queries, diligence-agent reports, EUDR-readiness checks (the MonetaGo precedent: banks have paid for exactly this since 2018) — plus integration consulting. The backstop solver is a **cold-start mechanism, not a business** (it's bistable: zero revenue if the network works, middleman if it doesn't — and a two-person agency can't fill a T+90 physical export anyway). Never present solver margin as the revenue line |
 | Repo timing | **Public at submission** — private during build; openness verifiable the moment a reviewer checks |
 | Amount | **$50k, scoped honestly** — the layer build justifies it; >$50k would force the Investment track |
 | Outreach | **None pre-submission — FINAL** (pre-mortem dissent surfaced once, Pat kept the call 2026-07-02). Attribution + initialing + source links carry legitimacy |
 | Anchor render | **Real lot facts as published + source link; producer INITIALED ("N.O.P.") in our UI** — realness verifiable in one click, the person is not a demo prop |
+
+> **Amendment 2026-07-03 (Pat) — two verticals, visible.** The "one deep + map breadth"
+> corridor above stays true, but the demo is no longer one commodity: it is **the same loop,
+> two commodities — one settled over oceans (coffee), one over wires (solar)**. Glow solar
+> farms render as a live-read second vertical on the map (farm = lot, GCA audit = certifier,
+> GLW/GCC = oracle registers), entering the LOTS category as a `solar` commodity alongside
+> coffee. The generalized-layer claim is now shown, not just asserted.
 
 ## 3. The swarm (most important element — Pat's ranking)
 
@@ -115,7 +122,7 @@ physical, graded, origin-bound commodity lots.
 - **Identity resolution is a HEADLINE capability (B3, my call):** one tour beat shows two real surfaces (EthicHub shop lot ↔ lending project) resolving into one entity with a visible join-confidence label. Application names cross-platform identity resolution as core shipped competence, domain-neutral per Q24.
 - **Blend lineage:** the lot card carries composition when data exists — the anchor is a single-producer micro-lot (renders simply); one sim lot demonstrates a community blend (N deliveries → one lot) so the commingling reality is visible. Custody model (IP/Segregation/Mass-Balance) is a card field, not a lecture.
 - **Cropster-import connector:** named in the roadmap (application, not demo) — co-op data enters the layer through the ERP co-ops already use (Cropster lot records carry External ID + ICO mark fields, research/07).
-- **Canonical lot schema (research/07 — binding for the build):** the demo lot object carries: source provenance {platform, platform_lot_id, url, fetched_at} · identity_stage (cherry/parchment/green/export) · nullable ico_mark {mark, coffee_year} · producer + origin (nullable plot_geo) · harvest window · process/variety/quality · weight_state · blend-composition lineage · custody_model (IP/Segregation/Mass-Balance) · EUDR sub-object (nullable dds_ref) · **join_keys + join_confidence (deterministic | name_place_match | unmatched)**. The anchor lot renders "linked by producer/community, not by platform id" as a labeled confidence level — the absence of a universal lot ID is Aqueduct's PITCH, not its embarrassment (no universal join key exists: ICO marks are shipment-level and reset yearly; identity below IP custody is bookkeeping, not physics).
+- **Canonical lot schema (research/07 — binding for the build):** the demo lot object carries: source provenance {platform, platform_lot_id, url, fetched_at} · identity_stage (cherry/parchment/green/export) · nullable ico_mark {mark, coffee_year} · producer + origin (nullable plot_geo) · harvest window · process/variety/quality · weight_state · blend-composition lineage · custody_model (IP/Segregation/Mass-Balance) · EUDR sub-object (nullable dds_ref) · **join_keys + join_confidence (deterministic | name_place_match | unmatched)**. The anchor lot renders "linked by producer/community, not by platform id" as a labeled confidence level — the absence of a universal lot ID is AqueductX's PITCH, not its embarrassment (no universal join key exists: ICO marks are shipment-level and reset yearly; identity below IP custody is bookkeeping, not physics).
 - **Storage facilities as first-class route nodes (Pat, 2026-07-02):** warehouses/dry mills/custody points render on the map as nodes in the route graph — they are where the FINANCIAL unlocks attach in Routes (custody → receipt → collateral/financing). The vault pattern ties to physical storage: a lot resting at a verified storage node is what a modernized warehouse receipt looks like — solving the two documented WRS failure modes (payout latency, identity loss on commingling, research/01-02) with transparent, lot-identity-preserving custody. Solver route bids already itemize storage as a cost line; the deck's unlock ladder features storage-based financing as a rung.
 - **Prices:** ≥1 real tier (ICE C public + differential). Sim tiers labeled. **Day-one feasibility spike** (pre-mortem: this was never spiked, unlike EthicHub) — if no clean free ICE C source, named fallbacks in order: ICO composite indicator daily price (public), World Bank Pink Sheet monthly, then a labeled snapshot price with source+date. The real tier must exist in SOME honest form; an all-sim price stack fails the money shot.
 
@@ -128,7 +135,7 @@ physical, graded, origin-bound commodity lots.
 
 ## 7. Acceptance criteria (what "done" means)
 
-1. A cold visitor at the URL, with zero context, understands within the tour what Aqueduct is and watches an intent get filled on the map.
+1. A cold visitor at the URL, with zero context, understands within the tour what AqueductX is and watches an intent get filled on the map.
 2. At least one lot on the map renders from a **real EthicHub read** (verifiable in the ledger page with fetch timestamp + source URL), with snapshot fallback per §4.
 3. The full swarm cascade (scout → diligence → oracle → intent → solver race → buyer match → settle) **replays cleanly on demand** without manual intervention (pre-mortem: "replays cleanly," not "runs live," is the honest zero-breakage bar for an on-rails tour).
 4. The settle receipt is a real Base Sepolia tx the judge can open on the explorer.

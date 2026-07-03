@@ -11,13 +11,14 @@ import {
   HandCoins,
   MapPin,
   Mountains,
+  Pulse,
   ShieldCheck,
   Users,
 } from "@phosphor-icons/react";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { CollapsibleSection } from "../../shared/components/CollapsibleSection";
-import type { AqueductAnyLot } from "../hooks/useAqueductEconomy";
+import type { AqueductAnyLot, AqueductEvent } from "../hooks/useAqueductEconomy";
 import { runSolverRace } from "../sim/solverRoster.mjs";
 import { JoinConfidenceTag, ProvenanceChip, ValueOrDash } from "./Chips";
 
@@ -35,7 +36,7 @@ function eurKgToCentsLb(eurPerKg: number) {
   return usdPerLb * 100;
 }
 
-type SectionId = "price" | "origin" | "sensory" | "eudr" | "lending" | "identity" | "story";
+type SectionId = "price" | "origin" | "sensory" | "eudr" | "lending" | "identity" | "story" | "activity";
 
 /**
  * Aqueduct lot detail card — the Atlas detail-card anatomy
@@ -45,7 +46,10 @@ type SectionId = "price" | "origin" | "sensory" | "eudr" | "lending" | "identity
  */
 const COMMODITY_LABELS = { coffee: "Coffee", cacao: "Cacao", honey: "Honey" } as const;
 
-export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
+/** `events` is optional and pre-filtered to this lot by the caller (AqueductLotDetails
+ *  passes useAqueductEconomy's own `events`, matched on lotId) — the ex-/ledger page's
+ *  real source links (ethichub.com reads, onchain reads) now surface here instead. */
+export function LotCard({ lot, events = [] }: { lot: AqueductAnyLot; events?: AqueductEvent[] }): React.ReactElement {
   const [openSections, setOpenSections] = useState<Set<SectionId>>(new Set(["origin", "eudr"]));
   const [showJson, setShowJson] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -472,6 +476,43 @@ export function LotCard({ lot }: { lot: AqueductAnyLot }): React.ReactElement {
           >
             <p className="text-xs text-gray-600 leading-relaxed">{lot.producer_story}</p>
             <p className="text-[11px] text-gray-400 mt-1.5">As published; name initialed per house rule.</p>
+          </CollapsibleSection>
+        )}
+
+        {/* Activity trail — this lot's own slice of the events memo (real reads +
+            seeded-economy events). Replaces the standalone /ledger page's per-lot rows. */}
+        {events.length > 0 && (
+          <CollapsibleSection
+            id="activity"
+            icon={<Pulse size={13} />}
+            label={`Activity (${events.length})`}
+            isOpen={openSections.has("activity")}
+            onToggle={toggleSection}
+          >
+            <div className="space-y-1">
+              {events.map((e, i) => (
+                <div key={`${e.ts}-${e.actor}-${i}`} className="bg-gray-50 px-3 py-2">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] text-gray-400 aq-mono">
+                      {new Date(e.ts).toISOString().slice(11, 16)}Z
+                    </span>
+                    <ProvenanceChip provenance={e.provenance} />
+                    <span className="text-[11px] font-semibold text-gray-700 aq-mono">{e.actor}</span>
+                  </div>
+                  <div className="text-[11px] text-gray-600 mt-0.5 leading-snug">{e.summary}</div>
+                  {e.url && (
+                    <a
+                      href={e.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-blue-500 hover:text-blue-700 underline inline-block mt-0.5"
+                    >
+                      source ↗
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
           </CollapsibleSection>
         )}
       </div>

@@ -14,6 +14,7 @@
 // confidence honestly, the same discipline commodity-landed-cost.mjs uses for its own
 // unconfirmed figures. This is a SIM roster illustrating the mechanism, not a live quote.
 
+import { getGlwPriceSnapshot, getMinerTerms } from "../connectors/glow.mjs";
 import { evaluatePolicy } from "./policy.mjs";
 
 /** @typedef {'confirmed'|'reported'|'estimate'} Confidence */
@@ -87,6 +88,55 @@ export const TOKENIZER_ARCHETYPES = [
     },
   },
 ];
+
+/**
+ * The FIFTH profile, and the first with observed-market terms rather than an `estimate`
+ * archetype: a Glow "Miner" — a fractional claim on a specific solar farm's GLW reward
+ * stream, priced in USDC, paid out over ~89 protocol weeks. Unlike the four archetypes above
+ * (which are structuring SERVICES quoting a fee to turn some instrument into a tradable one),
+ * the Miner is an already-listed, already-structured instrument — so it doesn't bid a
+ * structuring cost on the pool total; it bids ITS OWN real economics. Its yield is computed
+ * live from two dated snapshots (getMinerTerms + getGlwPriceSnapshot), never a hardcoded
+ * product, so if either snapshot is refreshed the math tracks.
+ *
+ * Confidence is "reported", NOT "confirmed": the app.glow.org listing that quotes these terms
+ * is auth-gated and was not independently fetchable — it's corroborated only by the live
+ * mainnet OFFCHAIN_FRACTIONS contract that represents Miner positions. Because it carries no
+ * structuring fee, it is deliberately excluded from the lowest-structuring-cost `winner` sort
+ * (cost: null → filtered out below) rather than allowed to spuriously "win" a race it isn't
+ * running in. It renders alongside the four as the real-terms reference point.
+ */
+export function buildMinerBid() {
+  const terms = getMinerTerms();
+  const price = getGlwPriceSnapshot();
+  const grossGlw = terms.glwPerWeek * terms.termWeeks;
+  const grossUsd = grossGlw * price.usdPerGlw;
+  const netMultiple = grossUsd / terms.principalUsd;
+  return {
+    handle: "@glow-miner",
+    name: "Glow Miner (solar fraction)",
+    status: "BID",
+    instrument: true, // an already-structured, listed instrument, not a structuring service
+    confidence: terms.confidence, // "reported" — listing not independently fetchable
+    cost: null, // no structuring fee → excluded from the structuring-cost winner sort
+    yield: {
+      principalUsd: terms.principalUsd,
+      glwPerWeek: terms.glwPerWeek,
+      termWeeks: terms.termWeeks,
+      usdPerGlw: price.usdPerGlw,
+      grossGlw: Math.round(grossGlw * 100) / 100,
+      grossUsd: Math.round(grossUsd * 100) / 100,
+      netMultiple: Math.round(netMultiple * 1000) / 1000,
+    },
+    note: `${terms.source} — corroborated by ${terms.corroboration}`,
+    source: terms.source,
+    corroboration: terms.corroboration,
+    provenance: "SNAPSHOT",
+    observedAt: terms.observedAt,
+    fetched_at: terms.fetched_at,
+    priceMethod: price.method,
+  };
+}
 
 /**
  * All-in structuring cost for one tokenizer profile, deterministic — mirrors
@@ -166,6 +216,11 @@ export function runTokenizerRace({ instrumentValueEur, policies = {} }) {
     const cost = computeTokenizationCost({ instrumentValueEur, profile: archetype.profile });
     bids.push({ handle: archetype.handle, name: archetype.name, status: "BID", cost, note: archetype.realWorldAnalog });
   }
+
+  // The Glow Miner is a real, already-listed instrument (observed-market terms) — it rides in
+  // the bids list as the real-terms reference point, but with cost:null it's excluded from the
+  // structuring-cost winner sort below (it isn't a structuring service competing on fees).
+  bids.push(buildMinerBid());
 
   const competing = bids.filter((b) => b.status === "BID" && b.cost);
   competing.sort((a, b) => a.cost.allInYear1Eur - b.cost.allInYear1Eur);

@@ -1,5 +1,6 @@
 import { ArrowRight, Truck } from "@phosphor-icons/react";
 import type React from "react";
+import { useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { Marker } from "react-map-gl";
 import { Link, useParams } from "react-router-dom";
@@ -22,9 +23,14 @@ import { type AqueductAnyLot, useAqueductEconomy } from "../hooks/useAqueductEco
 export default function AqueductLotDetails(): React.ReactElement {
   const { lotId } = useParams<{ lotId: string }>();
   const { mapStyle } = useMapState();
-  const { lots, loading } = useAqueductEconomy();
+  const { lots, events, loading } = useAqueductEconomy();
 
   const lot = lots.find((l) => l.aqueduct_id === lotId || l.source?.platform_lot_id === lotId);
+
+  // This lot's own slice of the events memo — real reads (ethichub.com, onchain) plus
+  // seeded-economy events, filtered to lotId. The ex-/ledger page's source links now
+  // surface here, on LotCard's Activity section.
+  const lotEvents = useMemo(() => events.filter((e) => e.lotId === lot?.aqueduct_id), [events, lot]);
 
   if (loading) {
     return (
@@ -64,7 +70,7 @@ export default function AqueductLotDetails(): React.ReactElement {
         <div className="pt-[60px] md:pt-[80px]">
           <div className="grid lg:grid-cols-[440px_1fr] md:grid-cols-2 gap-4">
             <div>
-              <LotCard lot={lot} />
+              <LotCard lot={lot} events={lotEvents} />
             </div>
             <div className="space-y-4">
               {/* Map: a location-context inset, not a hero — the pin is community-

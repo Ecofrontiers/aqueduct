@@ -1,7 +1,7 @@
 import type React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useRealVsSimSummary } from "../hooks/useRealVsSimSummary";
+import { ProvenanceChip } from "./Chips";
 
 const STORAGE_KEY = "aq-dev-mode";
 
@@ -9,9 +9,10 @@ const STORAGE_KEY = "aq-dev-mode";
  * The real-vs-sim honesty indicator. Collapsed state sits inline in the header row
  * (left of the wallet connect button, Header.tsx) — a small notice, not a floating
  * corner badge. Toggling it open turns it into a full-width dev-mode bar pinned under
- * the header, rather than sending a visitor to /ledger just to see the breakdown
- * exists. Persisted across navigation/reload via localStorage: once a visitor has
- * opened dev mode, it stays open until they close it.
+ * the header. The /ledger page is gone — its settle-payload block (lot id, TESTNET
+ * chip, tx link or the honest "awaiting broadcast" note) now renders inline here, the
+ * one place left that shows it. Persisted across navigation/reload via localStorage:
+ * once a visitor has opened dev mode, it stays open until they close it.
  */
 export function RealVsSimNotice(): React.ReactElement {
   const [open, setOpen] = useState(() => {
@@ -63,9 +64,26 @@ export function RealVsSimNotice(): React.ReactElement {
             </>
           )}
         </span>
-        <Link to="/ledger" className="ml-auto underline hover:text-gray-300 flex-shrink-0">
-          full ledger →
-        </Link>
+        {summary.settlePayload && (
+          <span className="ml-auto flex items-center gap-1.5 flex-shrink-0 aq-mono">
+            <ProvenanceChip provenance="TESTNET" />
+            <span className="text-gray-300">{summary.settlePayload.lot_id}</span>
+            {summary.settlePayload.explorer_url ? (
+              <a
+                href={summary.settlePayload.explorer_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-green-300 hover:text-green-200"
+              >
+                settled — view tx ↗
+              </a>
+            ) : (
+              <span className="text-amber-300">
+                awaiting broadcast — expects env var {summary.settlePayload.expected_env_var}
+              </span>
+            )}
+          </span>
+        )}
       </div>
     </div>
   );

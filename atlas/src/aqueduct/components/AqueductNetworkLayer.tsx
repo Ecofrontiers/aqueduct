@@ -2,20 +2,47 @@ import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Layer, Marker, Source, useMap } from "react-map-gl";
 import { useNavigate } from "react-router-dom";
+import Supercluster from "supercluster";
 import { useAqueductLots } from "../hooks/useAqueductLots";
 import { getEconomy } from "../sim/economy.mjs";
 import { AGROFORESTRY_VENUES, TO_BUILD_PLATFORM_NODES } from "../sim/venues.mjs";
+import { matchesInstitution, useAqueductFilters } from "../state/aqueductFiltersStore";
 import { selectActiveChapter, useTourStore } from "../state/tourStore";
+import { AqueductNodeGlyph } from "./AqueductNodeGlyph";
 
-// Institution markers (coop/venue/hub) only render past this zoom — below it, the
-// flow lines carry the visual weight (per the brief's "calm over complete"); dozens of
-// individually-rendered markers at world/continent zoom is exactly the density that
-// made the map unreadable (docs/research/09 marker-language pass). Native clustering
-// (like AqueductLotsLayer's SIM-lot circles) is the deeper fix; this zoom gate is the
-// immediate one — cheap, no new rendering pipeline, and it's the same lever
-// (CLAUDE.md gotcha: react-map-gl Markers have no z-index, only mount order/visibility
-// levers exist).
-const INSTITUTION_MARKER_MIN_ZOOM = 4;
+// Institutions (hub/coop/venue) cluster client-side via supercluster: below the
+// individuate zoom they collapse into quiet "N institutions" badges (the deeper
+// fix the old INSTITUTION_MARKER_MIN_ZOOM gate only gestured at — dozens of bare
+// markers at world zoom is the density that made the map unreadable, research/09).
+// Above it, each point renders its typed glyph + NodeRing. The anchor coop is
+// exempt (always visible — it's the anchor, not a background institution).
+const CLUSTER_MAX_ZOOM = 5; // above this, every institution renders individually
+const CLUSTER_RADIUS = 64; // px proximity for collapsing into a badge
+
+// Feature shapes for the institution supercluster. `data` carries the original
+// entity so an individuated point can render its glyph, title, and click target.
+type HubData = { id: string; name: string; coords: [number, number] };
+type CoopData = { id: string; name: string; coords: [number, number] };
+type VenueData = {
+  name: string;
+  kind: string;
+  status: string;
+  coords: { longitude: number; latitude: number; precision: string };
+};
+type InstitutionProps =
+  | { kind: "hub"; data: HubData }
+  | { kind: "coop"; data: CoopData }
+  | { kind: "venue"; data: VenueData };
+type InstitutionPointFeature = {
+  type: "Feature";
+  properties: InstitutionProps;
+  geometry: { type: "Point"; coordinates: [number, number] };
+};
+type ClusterFeature = {
+  type: "Feature";
+  properties: { cluster: true; cluster_id: number; point_count: number; point_count_abbreviated: string | number };
+  geometry: { type: "Point"; coordinates: [number, number] };
+};
 
 /**
  * The Aqueduct network layer — the map as a balance of payments, not just
@@ -144,33 +171,38 @@ function NodeRing({
 export function AqueductNetworkLayer(): React.ReactElement | null {
   const { lots: realLots } = useAqueductLots({ liveRefetch: false });
   const navigate = useNavigate();
+  const filters = useAqueductFilters();
   const tour = useTourStore();
   const chapter = selectActiveChapter(tour);
   const [dashStep, setDashStep] = useState(0);
   const [settleProgress, setSettleProgress] = useState(0);
   const { current: mapRef } = useMap();
   const [zoom, setZoom] = useState(3);
+  const [bounds, setBounds] = useState<[number, number, number, number] | null>(null);
 
   useEffect(() => {
     const t = setInterval(() => setDashStep((s) => (s + 1) % DASH_STEPS.length), 120);
     return () => clearInterval(t);
   }, []);
 
-  // Reactive zoom — react-map-gl's useMap() is imperative (getZoom() at call time),
-  // so subscribe to the underlying mapbox-gl instance's own zoom event to re-render
-  // institution markers in/out as the visitor zooms.
+  // Reactive zoom + bounds — react-map-gl's useMap() is imperative (getZoom() at
+  // call time), so subscribe to the underlying mapbox-gl instance's own move event
+  // to re-query the institution clusters as the visitor pans/zooms. "move" is a
+  // superset of "zoom" (fires for both); setZoom bails when the value is unchanged.
   useEffect(() => {
     if (!mapRef) return;
     const map = mapRef.getMap();
-    const update = () => setZoom(map.getZoom());
+    const update = () => {
+      setZoom(map.getZoom());
+      const b = map.getBounds();
+      if (b) setBounds([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
+    };
     update();
-    map.on("zoom", update);
+    map.on("move", update);
     return () => {
-      map.off("zoom", update);
+      map.off("move", update);
     };
   }, [mapRef]);
-
-  const showInstitutionMarkers = zoom >= INSTITUTION_MARKER_MIN_ZOOM;
 
   const settleActive = tour.started && chapter === "settle";
   useEffect(() => {
@@ -205,41 +237,134 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
     return state;
   }, [economy]);
 
+  // Static institution point set (hubs + coops + venues) — the anchor coop is NOT
+  // here; it's rendered always-visible below. Memoized on `economy` identity so the
+  // 120ms dashStep re-render never rebuilds it.
+  const institutionPoints = useMemo<InstitutionPointFeature[]>(() => {
+    // "institutions" category off → empty point set (markers AND the rail's
+    // Solvers & Venues section vanish in the same click; the rail gates on the
+    // same `activeCategories`). Individual points are gated by `matchesInstitution`
+    // (kind + provenance sub-filters). Hubs/coops from the SIM economy carry no
+    // kind/provenance field of their own, so we build the minimal match object
+    // here — hubs/coops are SIM; a venue's `status` IS its provenance.
+    // Dep array is [economy, filters] only — the 120ms dashStep never touches
+    // either, so this never recomputes on an animation tick.
+    if (!filters.activeCategories.has("institutions")) return [];
+    const feats: InstitutionPointFeature[] = [];
+    for (const hub of economy.hubs as HubData[]) {
+      if (!matchesInstitution({ kind: "hub", provenance: "SIM" }, filters)) continue;
+      feats.push({
+        type: "Feature",
+        properties: { kind: "hub", data: hub },
+        geometry: { type: "Point", coordinates: hub.coords },
+      });
+    }
+    for (const coop of economy.coops as CoopData[]) {
+      if (!matchesInstitution({ kind: "coop", provenance: "SIM" }, filters)) continue;
+      feats.push({
+        type: "Feature",
+        properties: { kind: "coop", data: coop },
+        geometry: { type: "Point", coordinates: coop.coords },
+      });
+    }
+    for (const v of [...AGROFORESTRY_VENUES, ...TO_BUILD_PLATFORM_NODES] as VenueData[]) {
+      if (!v.coords) continue;
+      if (!matchesInstitution({ kind: "venue", provenance: v.status }, filters)) continue;
+      feats.push({
+        type: "Feature",
+        properties: { kind: "venue", data: v },
+        geometry: { type: "Point", coordinates: [v.coords.longitude, v.coords.latitude] },
+      });
+    }
+    return feats;
+  }, [economy, filters]);
+
+  // ONE supercluster index, memoized on the point-array identity — the perf-critical
+  // line: without this the index rebuilds 8×/sec against the dashStep interval.
+  const clusterIndex = useMemo(() => {
+    const index = new Supercluster({ radius: CLUSTER_RADIUS, maxZoom: CLUSTER_MAX_ZOOM, minPoints: 2 });
+    index.load(institutionPoints);
+    return index;
+  }, [institutionPoints]);
+
+  // Cluster query, memoized on [index, zoom, bounds] — dashStep ticks leave all three
+  // referentially stable, so no re-query per animation frame; only real pan/zoom
+  // recomputes. Bounds clamped to the valid world box at low zoom.
+  const clusters = useMemo<Array<InstitutionPointFeature | ClusterFeature>>(() => {
+    if (!bounds) return [];
+    const [w, s, e, n] = bounds;
+    const bbox: [number, number, number, number] = [
+      Math.max(-180, w),
+      Math.max(-85, s),
+      Math.min(180, e),
+      Math.min(85, n),
+    ];
+    return clusterIndex.getClusters(bbox, Math.round(zoom)) as Array<InstitutionPointFeature | ClusterFeature>;
+  }, [clusterIndex, zoom, bounds]);
+
+  // Arcs are gated by the "routes" category and its intentType sub-filter. The
+  // mapping is APPROXIMATE and flagged as such: the arcs are coop-level balance-
+  // of-payments aggregates, NOT per-intent edges, so intent types map onto arc
+  // ACCOUNTS, not onto individual intents —
+  //   sell-this-lot            → goods (current-account) arcs
+  //   finance-this-planting/-farm → capitalExo (capital-account) arcs
+  // An empty intentType set means "no route sub-filter" → both accounts show.
+  const routesActive = filters.activeCategories.has("routes");
+  const intentTypes = filters.route.intentTypes;
+  const showGoods = intentTypes.size === 0 || intentTypes.has("sell-this-lot");
+  const showCapital =
+    intentTypes.size === 0 || intentTypes.has("finance-this-planting") || intentTypes.has("finance-this-farm");
+
   const { staticGeo, activeGeo, arrows } = useMemo(() => {
+    const empty = { type: "FeatureCollection" as const, features: [] };
+    // "routes" off → no arcs at all (the settle arc is separately gated below).
+    if (!routesActive) {
+      return {
+        staticGeo: empty,
+        activeGeo: empty,
+        arrows: [] as Array<{ id: string; color: string; at: [number, number]; bearing: number }>,
+      };
+    }
+
     const flows = economy.flows as Array<{ from: [number, number]; to: [number, number]; totalKg: number }>;
     const top = flows.slice(0, MAX_STATIC_FLOWS);
 
-    // Current account: goods, origin → hub (sienna).
-    const goods: EdgeLike[] = top.map((f) => ({ ...f, kind: "goods" as const, side: 1 as const }));
+    // Current account: goods, origin → hub (sienna). Gated by the sell-this-lot
+    // approximation.
+    const goods: EdgeLike[] = showGoods ? top.map((f) => ({ ...f, kind: "goods" as const, side: 1 as const })) : [];
     const active = goods.slice(0, ANIMATED_FLOWS);
     const rest = goods.slice(ANIMATED_FLOWS);
 
     // Capital account, exogenous: paired counter-arcs on the busiest lanes —
     // payment/investment flowing back hub → origin, opposite curvature so the
-    // pair reads as a circuit, not an overlap.
-    const capital: EdgeLike[] = top.slice(0, CAPITAL_COUNTER_FLOWS).map((f) => ({
-      from: f.to,
-      to: f.from,
-      totalKg: f.totalKg * 0.8,
-      kind: "capitalExo" as const,
-      side: 1 as const, // same geometric side as its pair's reverse = visually opposite
-    }));
+    // pair reads as a circuit, not an overlap. Gated by the finance-* approximation.
+    const capital: EdgeLike[] = showCapital
+      ? top.slice(0, CAPITAL_COUNTER_FLOWS).map((f) => ({
+          from: f.to,
+          to: f.from,
+          totalKg: f.totalKg * 0.8,
+          kind: "capitalExo" as const,
+          side: 1 as const, // same geometric side as its pair's reverse = visually opposite
+        }))
+      : [];
 
     // Anchor detail: real lots → coop (goods), Silvi → community (exogenous capital).
     const anchor = realLots?.[0];
     const anchorEdges: EdgeLike[] = [];
     if (anchor) {
       const coop: [number, number] = [anchor.map_marker.longitude + 0.6, anchor.map_marker.latitude - 0.3];
-      for (const lot of realLots ?? []) {
-        anchorEdges.push({
-          from: [lot.map_marker.longitude, lot.map_marker.latitude],
-          to: coop,
-          totalKg: 5000,
-          kind: "goods",
-        });
+      if (showGoods) {
+        for (const lot of realLots ?? []) {
+          anchorEdges.push({
+            from: [lot.map_marker.longitude, lot.map_marker.latitude],
+            to: coop,
+            totalKg: 5000,
+            kind: "goods",
+          });
+        }
       }
       const silvi = AGROFORESTRY_VENUES[0] as { coords?: { longitude: number; latitude: number } };
-      if (silvi?.coords) {
+      if (showCapital && silvi?.coords) {
         anchorEdges.push({
           from: [silvi.coords.longitude, silvi.coords.latitude],
           to: [anchor.map_marker.longitude, anchor.map_marker.latitude],
@@ -261,7 +386,7 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
       activeGeo: edgesToGeojson(animated),
       arrows: arrowList,
     };
-  }, [economy, realLots]);
+  }, [economy, realLots, routesActive, showGoods, showCapital]);
 
   const settleGeo = useMemo(() => {
     const anchor = realLots?.[0];
@@ -317,8 +442,12 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         />
       </Source>
 
-      {/* ── The settle arc (tour Settle beat) ── */}
-      {settleActive && settleGeo && settleProgress > 0 && (
+      {/* ── The settle arc (tour Settle beat) — a route, so it draws only when
+          "routes" is on. The tour stays exempt from filters for EMPHASIS (the
+          solver ring, the always-visible anchor coop), but it never resurrects a
+          filtered-out category: with routes off the tour still plays, this arc
+          just doesn't render (no error). ── */}
+      {routesActive && settleActive && settleGeo && settleProgress > 0 && (
         <Source id="aq-settle-arc" type="geojson" data={settleGeo(settleProgress)}>
           <Layer
             id="aq-settle-arc-line"
@@ -352,39 +481,68 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
         </Marker>
       ))}
 
-      {/* ── Demand hubs: circle, indigo (typed glyph grammar — lot-detail-and-network
-          brief §B: "buyer/demand hub = circle, indigo"). Zoom-gated: institutions
-          only render past INSTITUTION_MARKER_MIN_ZOOM, flow lines carry the weight
-          below that. ── */}
-      {showInstitutionMarkers &&
-        (economy.hubs as Array<{ id: string; name: string; coords: [number, number] }>).map((hub) => (
-          <Marker key={hub.id} longitude={hub.coords[0]} latitude={hub.coords[1]} anchor="center">
-            <div
-              title={`${hub.name} — import demand hub (SIM): goods land here, capital enters here`}
-              style={{
-                width: 13,
-                height: 13,
-                borderRadius: "50%",
-                background: ACCOUNT_COLORS.capitalExo,
-                border: "2px solid #ffffff",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
+      {/* ── Institutions (hub/coop/venue), client-side clustered ──
+          Below the individuate zoom, a region collapses into a quiet "N institutions"
+          badge (click zooms in); above it, each point renders its typed glyph. Identity
+          is the icon+color (stable); the coop's NodeRing carries transient capital-
+          account state. The anchor coop is rendered separately below (always visible). */}
+      {clusters.map((c) => {
+        const [lng, lat] = c.geometry.coordinates;
+        if ("cluster" in c.properties && c.properties.cluster) {
+          const count = c.properties.point_count;
+          return (
+            <Marker
+              key={`aq-inst-cluster-${c.properties.cluster_id}`}
+              longitude={lng}
+              latitude={lat}
+              anchor="center"
+              onClick={(e) => {
+                e.originalEvent?.stopPropagation();
+                const map = mapRef?.getMap();
+                if (map) map.easeTo({ center: [lng, lat], zoom: map.getZoom() + 2, duration: 500 });
               }}
-            />
-          </Marker>
-        ))}
+            >
+              <div
+                title={`${count} institutions here — zoom in to individuate (SIM network)`}
+                style={{
+                  fontSize: 11,
+                  color: "#374151",
+                  background: "rgba(255,255,255,0.95)",
+                  border: "1px solid #d1d5db",
+                  borderRadius: 999,
+                  padding: "3px 9px",
+                  whiteSpace: "nowrap",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                  cursor: "pointer",
+                }}
+              >
+                {count} institutions
+              </div>
+            </Marker>
+          );
+        }
 
-      {/* ── Coops: rounded square, sienna outline (brief §B: "Coop/exporter = rounded
-          square, sienna outline") — NOT a circle; a circle here is indistinguishable
-          from a hub/lot at a glance, which is the "uniform dots" anti-pattern the
-          brief explicitly warns against. Outline color = capital-account state. ── */}
-      {showInstitutionMarkers &&
-        (economy.coops as Array<{ id: string; name: string; coords: [number, number] }>).map((coop) => {
+        const props = c.properties;
+        if (props.kind === "hub") {
+          const hub = props.data;
+          return (
+            <Marker key={`aq-inst-hub-${hub.id}`} longitude={lng} latitude={lat} anchor="center">
+              <AqueductNodeGlyph
+                kind="hub"
+                title={`${hub.name} — import demand hub (SIM): goods land here, capital enters here`}
+              />
+            </Marker>
+          );
+        }
+
+        if (props.kind === "coop") {
+          const coop = props.data;
           const capState = coopCapitalState.get(coop.id);
           return (
             <Marker
-              key={coop.id}
-              longitude={coop.coords[0]}
-              latitude={coop.coords[1]}
+              key={`aq-inst-coop-${coop.id}`}
+              longitude={lng}
+              latitude={lat}
               anchor="center"
               onClick={(e) => {
                 e.originalEvent?.stopPropagation();
@@ -408,24 +566,29 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
                       : `${coop.name} (SIM) — open the coop seat`
                 }
               >
-                <div
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 3,
-                    background: "#ffffff",
-                    border: `2px solid ${ACCOUNT_COLORS.goods}`,
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
-                    cursor: "pointer",
-                  }}
-                />
+                <AqueductNodeGlyph kind="coop" clickable />
               </NodeRing>
             </Marker>
           );
-        })}
+        }
+
+        // venue
+        const v = props.data;
+        const toBuild = v.status === "TO-BUILD";
+        return (
+          <Marker key={`aq-inst-venue-${v.name}`} longitude={lng} latitude={lat} anchor="center">
+            <AqueductNodeGlyph
+              kind="venue"
+              dashed={toBuild}
+              opacity={toBuild ? 0.5 : 1}
+              title={`${v.name} — ${v.kind} (${v.status}, position ${v.coords.precision})`}
+            />
+          </Marker>
+        );
+      })}
 
       {/* Anchor coop: the REAL endogenous facility — Celo USDC credit lines. Same
-          rounded-square shape as every other coop; ring + fill carry the meaning.
+          coop glyph as every other coop; ring + fill carry the meaning.
           Always visible regardless of zoom — this is the anchor, not a background
           institution. */}
       {anchorCoop && (
@@ -434,53 +597,17 @@ export function AqueductNetworkLayer(): React.ReactElement | null {
             color={ACCOUNT_COLORS.capitalEndo}
             title="Cooperative / exporter node — Soconusco. Endogenous credit facility REAL: EthicHub credit lines on Celo settle in USDC (line 2 completed a 192,600 → 212,369.79 repay cycle). Settle credits the coop, never the farmer directly."
           >
-            <div
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: 3,
-                background: settleActive ? ACCOUNT_COLORS.goods : "#ffffff",
-                border: `2.5px solid ${ACCOUNT_COLORS.goods}`,
-                boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
-              }}
+            <AqueductNodeGlyph
+              kind="coop"
+              size={24}
+              // On settle, the chip fills sienna (goods landing) with a white icon —
+              // the same "filled" cue the old primitive carried.
+              iconColor={settleActive ? "#ffffff" : undefined}
+              style={settleActive ? { background: ACCOUNT_COLORS.goods } : undefined}
             />
           </NodeRing>
         </Marker>
       )}
-
-      {/* ── Venues: square, purple (brief §B: "Venue = square, purple"); TO-BUILD =
-          hollow + dashed outline. ── */}
-      {showInstitutionMarkers &&
-        [...AGROFORESTRY_VENUES, ...TO_BUILD_PLATFORM_NODES]
-          .filter((v: { coords?: { longitude: number; latitude: number } }) => v.coords)
-          .map(
-            (v: {
-              name: string;
-              kind: string;
-              status: string;
-              coords: { longitude: number; latitude: number; precision: string };
-            }) => (
-              <Marker
-                key={`venue-${v.name}`}
-                longitude={v.coords.longitude}
-                latitude={v.coords.latitude}
-                anchor="center"
-              >
-                <div
-                  title={`${v.name} — ${v.kind} (${v.status}, position ${v.coords.precision})`}
-                  style={{
-                    width: 11,
-                    height: 11,
-                    borderRadius: 2,
-                    background: v.status === "TO-BUILD" ? "transparent" : ACCOUNT_COLORS.venue,
-                    border: `2px ${v.status === "TO-BUILD" ? "dashed" : "solid"} ${ACCOUNT_COLORS.venue}`,
-                    opacity: v.status === "TO-BUILD" ? 0.5 : 1,
-                    boxShadow: v.status === "TO-BUILD" ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
-                  }}
-                />
-              </Marker>
-            ),
-          )}
 
       {/* ── Tour emphasis: the race, charted as ONE ring on the anchor itself —
           not six new markers. A pulsing halo around the existing lot marker IS

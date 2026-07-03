@@ -60,7 +60,7 @@ export default (): React.ReactElement => {
       <div className="border-t border-gray-200 flex items-center justify-between px-4 h-[36px] overflow-hidden">
         {/* Left: copyright + legal */}
         <div className="flex items-center gap-1 text-[10px] text-gray-500 shrink-0">
-          <span>&copy; Aqueduct 2026</span>
+          <span>&copy; AqueductX 2026</span>
           <span>&middot;</span>
           <a
             className="text-gray-500 hover:text-gray-700 transition-colors"

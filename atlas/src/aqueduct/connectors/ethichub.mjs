@@ -150,6 +150,11 @@ export async function fetchLotDetail(path, originOverride) {
     // verbatim to output; only used for matching, then redacted like `story`.
     const descriptionTextRaw = decodeEntities(rawDescHtml.replace(/<[^>]+>/g, " "));
 
+    // Redaction here is a deliberate privacy default, not cosmetic truncation:
+    // docs/research/13-privacy-and-swarm-coordination.md names it policy —
+    // AqueductX renders compliance status and aggregates, never full farmer
+    // names or plot geometry. `redactName` is the enforcement point for that
+    // policy on this connector's output.
     const initials = initialsFromName(fullProducerName);
     if (story) story = redactName(story, fullProducerName, initials);
     const titleRedacted = redactName(title, fullProducerName, initials);

@@ -2,14 +2,18 @@
 // about any specific connector); this file is the one place mapping a
 // PolicyRule.citesStandards `source` string to the connector that can actually resolve it.
 // Sources: GIIN's IRIS+ (connectors/giin.mjs), real commodity certifiers — TIC firms +
-// sustainability schemes (connectors/certifiers.mjs). Add new sources here, not in policy.mjs.
+// sustainability schemes (connectors/certifiers.mjs), and Glow's GCA solar audits
+// (connectors/glow.mjs — a farm id resolves to its real GCA audit record: auditor, date,
+// panels, wattage). Add new sources here, not in policy.mjs.
 
 import { resolveCertifier } from "../connectors/certifiers.mjs";
 import { resolveIrisMetric } from "../connectors/giin.mjs";
+import { resolveGlowAudit } from "../connectors/glow.mjs";
 
 export const STANDARD_RESOLVERS = {
   "GIIN-IRIS+": resolveIrisMetric,
   CERTIFIER: resolveCertifier,
+  "GLOW-GCA": resolveGlowAudit,
 };
 
 /** @param {{source: string, code: string}} citation */

@@ -163,6 +163,10 @@ export default function AqueductMapGuide(): React.ReactElement {
               The fourth classical account — transfers (unrequited flows: grants with no receivable behind them) — is
               distinguished in the capital roster but not yet on the map. Roadmap, not omission.
             </p>
+            <p className="text-xs text-gray-400 mt-2">
+              A lot carries its EUDR status — ready, partial, or gap — never its plot geometry: compliance rendered,
+              exposure declined, by design.
+            </p>
           </Section>
 
           {/* ── 4. Node grammar ── */}
@@ -305,11 +309,8 @@ export default function AqueductMapGuide(): React.ReactElement {
               credibility.
             </p>
             <p className="mt-2">
-              The full receipts live on the{" "}
-              <Link to="/ledger" className="text-blue-500 hover:text-blue-700">
-                real-vs-sim ledger
-              </Link>
-              ; the research the calibration cites lives in{" "}
+              The full receipts live inline now — the dev-mode bar in the header (every real read and the settle
+              payload) and each lot's own activity trail on its detail page; the research the calibration cites lives in{" "}
               <a
                 href="https://github.com/Ecofrontiers/aqueduct/tree/main/docs/research"
                 target="_blank"

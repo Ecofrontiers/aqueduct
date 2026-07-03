@@ -7,8 +7,10 @@ import {
   Fingerprint,
   HandCoins,
   MagnifyingGlass,
+  Repeat,
   ShieldCheck,
   Truck,
+  Users,
 } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
@@ -78,12 +80,15 @@ export default function About() {
               <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-primary-200/80 mb-5">
                 MIT Licensed · Built on Regen Atlas
               </p>
-              <h1 className="text-[36px] md:text-[48px] lg:text-[56px] font-bold leading-[1.08] tracking-[-0.025em] mb-5 max-w-[760px] mx-auto text-white">
-                A common API for green investment
+              <h1 className="text-[32px] md:text-[46px] lg:text-[54px] font-bold leading-[1.15] tracking-[-0.025em] mb-5 max-w-[820px] mx-auto text-white">
+                A peer-to-peer logistics and finance layer for smallholder farmers
               </h1>
-              <p className="text-primary-200/60 text-sm md:text-base max-w-[600px] mx-auto mb-8 leading-relaxed">
-                Aqueduct is a generalized peer-to-peer logistics and finance layer for smallholder farmers: agents
+              <p className="text-primary-200/60 text-sm md:text-base max-w-[600px] mx-auto mb-4 leading-relaxed">
+                AqueductX is a generalized peer-to-peer logistics and finance layer for smallholder farmers: agents
                 aggregate, verify, and price commodity lots, and intents match and settle them.
+              </p>
+              <p className="text-primary-200/40 text-xs md:text-sm max-w-[600px] mx-auto mb-8">
+                A common API for green investment.
               </p>
               <div className="flex items-center justify-center gap-3 flex-wrap">
                 <Link
@@ -116,7 +121,7 @@ export default function About() {
             </div>
           </section>
 
-          {/* Real chains — honest, two entries, no marquee implying breadth Aqueduct doesn't have */}
+          {/* Real chains — honest, two entries, no marquee implying breadth AqueductX doesn't have */}
           <section className="border-b border-gray-200 py-4 bg-background">
             <div className="max-w-[1040px] mx-auto px-4 flex flex-wrap items-center gap-x-8 gap-y-2">
               {realChains.map((c) => (
@@ -189,13 +194,13 @@ export default function About() {
             </div>
           </section>
 
-          {/* What Aqueduct Coordinates */}
+          {/* What AqueductX Coordinates */}
           <section className="border-t border-gray-200 bg-white">
             <div className="max-w-[1040px] mx-auto px-4 py-12 md:py-16">
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-primary-300 mb-4">
                 Not Just Logistics
               </p>
-              <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">What Aqueduct Coordinates</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">What AqueductX Coordinates</h2>
               <p className="text-sm text-gray-500 mb-10 max-w-[600px] leading-[1.7]">
                 An intent isn't one number. It's five vectors that normally get renegotiated separately at every hop
                 between a smallholder's lot and the market that consumes it. Posting them together, once, is where the
@@ -226,7 +231,7 @@ export default function About() {
               <p className="text-sm text-gray-500 mb-6 max-w-[640px] leading-[1.7]">
                 Komgo, we.trade, Marco Polo, and Contour: every closed, bank-consortium trade-finance blockchain from
                 the 2018-19 wave failed or pivoted away from blockchain entirely. No competing institution fully trusts
-                a rail a rival co-owns. Aqueduct is a read-only aggregator over platforms that already exist: it never
+                a rail a rival co-owns. AqueductX is a read-only aggregator over platforms that already exist: it never
                 asks a competitor to change anything or hand over control, so it can't die that death. Centrifuge,
                 Maple, Goldfinch, and Ondo, the RWA tokenization giants, don't touch agricultural commodities at all.
                 None of them solve the smallholder-lot verification problem underneath the capital they'd happily
@@ -244,6 +249,30 @@ export default function About() {
                 <span>
                   Freight, customs, and certification are one blended quote from the same shared reference engine every
                   solver bids through, never invented for the page that happens to show it.
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
+                <Repeat size={16} className="text-primary-300 flex-shrink-0" />
+                <span>
+                  A lot is an economic resource, an intent a commitment, a fill an event; financing creates a claim —
+                  capital now, repayment later at a stated rate and term — so selling a lot and financing a planting are
+                  the same kind of exchange, not two unrelated features.
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
+                <Users size={16} className="text-primary-300 flex-shrink-0" />
+                <span>
+                  In category terms, AqueductX is a swarm decision-support system for agricultural trade finance: many
+                  small agents aggregate, verify, price, and match; people and institutions make the allocation call,
+                  and settlement is the action taken.
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
+                <ShieldCheck size={16} className="text-primary-300 flex-shrink-0" />
+                <span>
+                  The map proves EUDR status without exposing the farmer behind it: status renders, plot geometry never
+                  does, and names appear as initials by design — knowledge sufficient to enable a right, a benefit, or a
+                  protective measure, and no more.
                 </span>
               </div>
             </div>

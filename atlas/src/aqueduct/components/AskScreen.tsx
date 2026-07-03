@@ -56,10 +56,10 @@ export function AskScreen({
           Replay the fill
         </button>
         <Link
-          to="/ledger"
+          to="/"
           className="px-3 py-1.5 text-[11px] font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
         >
-          Read the real-vs-sim ledger
+          Back to the map
         </Link>
       </div>
     </div>

@@ -9,12 +9,11 @@ import { router } from "./main";
 import { analytics } from "./modules/analytics";
 import { Modal } from "./shared/components/Modal";
 
-type NavKey = "map" | "ledger" | "financing" | "about";
+type NavKey = "map" | "financing" | "about";
 
 const primaryNav: { key: NavKey; name: string; link: string }[] = [
   { key: "about", name: "About", link: "/about" },
   { key: "map", name: "Map", link: "/" },
-  { key: "ledger", name: "Ledger", link: "/ledger" },
   { key: "financing", name: "Financing", link: "/financing" },
 ];
 
@@ -63,6 +62,9 @@ export default (): React.ReactElement => {
         <div className="flex items-center h-[60px] lg:h-[36px]">
           <Link className="font-extrabold tracking-[0.04em] text-[17px] lg:text-[15px] leading-none select-none" to="/">
             AQUEDUCT
+            <span className="text-[#9333ea]" title="exchange">
+              X
+            </span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
@@ -173,7 +175,7 @@ export default (): React.ReactElement => {
 
               {/* Footer — pinned to bottom */}
               <div className="flex flex-col items-center pb-8 text-xs text-gray-500">
-                <p>&copy; Aqueduct 2026 &middot; built on Regen Atlas</p>
+                <p>&copy; AqueductX 2026 &middot; built on Regen Atlas</p>
                 <div className="flex gap-4 mt-2">
                   {legalLinks.map((item) => (
                     <div

@@ -1,14 +1,4 @@
-import {
-  ArrowRight,
-  CaretDown,
-  CaretLeft,
-  CaretRight,
-  Globe,
-  Lightning,
-  MagnifyingGlass,
-  TreeStructure,
-  Users,
-} from "@phosphor-icons/react";
+import { ArrowRight, CaretDown, CaretLeft, CaretRight, Globe, MagnifyingGlass } from "@phosphor-icons/react";
 import { ArrowsLeftRight, Coffee, Cpu } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -24,17 +14,24 @@ import {
   IntentExploreCard,
   LotExploreCard,
 } from "../aqueduct/components/AqueductExploreCards";
+import { AqueductFilterBar } from "../aqueduct/components/AqueductFilterBar";
 import { AqueductLotsLayer } from "../aqueduct/components/AqueductLotsLayer";
 import { AqueductNetworkLayer } from "../aqueduct/components/AqueductNetworkLayer";
+import { GlowFarmsLayer, SolarFarmRow, buildGlowFarmLots } from "../aqueduct/components/GlowFarmsLayer";
 import { MapLegend } from "../aqueduct/components/MapLegend";
 import { TourDock } from "../aqueduct/components/TourDock";
 import { useAqueductEconomy } from "../aqueduct/hooks/useAqueductEconomy";
+import {
+  matchesInstitution,
+  matchesIntent,
+  matchesLot,
+  useAqueductFilters,
+} from "../aqueduct/state/aqueductFiltersStore";
 import { useNewFiltersDispatch, useNewFiltersState } from "../context/filters";
-import type { EntityType } from "../context/filters/filtersContext";
+import type { ActorTypeKey, EntityType, EntityTypeKey } from "../context/filters/filtersContext";
 import { useMapState } from "../context/map";
 import { loadEIIScores } from "../lib/api";
 import type { Asset } from "../modules/assets";
-import { ChainIcon } from "../modules/chains/components/ChainIcon";
 import {
   findBioregionForPoint,
   getBioregionForAsset,
@@ -43,47 +40,26 @@ import {
 } from "../modules/intelligence/bioregionIntelligence";
 import { BioregionLayer, type BioregionProperties } from "../shared/components/BioregionLayer";
 import { CompositeClusterLayer } from "../shared/components/CompositeClusterLayer";
-import { ENTITY_COLORS } from "../shared/components/CompositeClusterLayer";
 import { MapBox } from "../shared/components/MapBox";
 import { BIOREGION_PROXIMITY } from "../shared/consts";
 import type { Action, Org } from "../shared/types";
 import { ActionBioregionCard } from "./ActionBioregionCard";
 import { AssetBioregionCard } from "./AssetBioregionCard";
 import { BioregionPanel } from "./BioregionPanel";
-import {
-  ActionExploreCard,
-  AssetExploreCard,
-  BioregionExploreCard,
-  type BioregionListItem,
-  OrgExploreCard,
-} from "./ExploreCards";
-import FiltersMobile from "./FiltersMobile";
-import { type ActionFilters, MapFilterBar } from "./MapFilterBar";
+import { BioregionExploreCard, type BioregionListItem } from "./ExploreCards";
 import { OrgBioregionCard } from "./OrgBioregionCard";
 // EntityType still used for URL param handling
 
 export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {}): React.ReactElement => {
-  const {
-    filteredAssets,
-    allAssets,
-    filters,
-    selectedAssetId,
-    activeEntityTypes,
-    activeActorTypes,
-    allOrgs,
-    allActions,
-  } = useNewFiltersState();
+  const { filteredAssets, allAssets, filters, selectedAssetId, activeEntityTypes, allOrgs, allActions } =
+    useNewFiltersState();
   const dispatch = useNewFiltersDispatch();
-  const [showPrimaryAssets, setShowPrimaryAssets] = useState(true);
-  // Investment view (default on): the base Atlas registers 500+ assets/actors globally,
-  // most with no financial instrument attached — on Aqueduct's narrower commodity-finance
-  // scope, defaulting to only investable/purchasable entities keeps the map matched to
-  // what this build is actually for, not the full base-Atlas breadth. Investable = the
-  // asset already carries one of the base platform's own financial-instrument flags
-  // (prefinancing/pretoken/yield_bearing — real fields, not invented for this filter);
-  // for orgs, a populated treasury (a real fund/account someone could actually route
-  // capital through, not just a description).
-  const [investableOnly, setInvestableOnly] = useState(true);
+  const [showPrimaryAssets] = useState(true);
+  // Aqueduct filter store (singleton) — this route's Lots/Routes/Institutions
+  // ontology. Explore subscribes so the rail sections, their counts, and the
+  // base-Atlas investable overlay all re-render live on any filter toggle.
+  const aqFilters = useAqueductFilters();
+  const { activeCategories, atlasInvestableOverlay } = aqFilters;
   const mapRef = useRef<MapRef>();
   const { mapStyle } = useMapState();
   const [searchParams] = useSearchParams();
@@ -102,11 +78,6 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
   const [bioregionDefaultTab, setBioregionDefaultTab] = useState<"overview" | "assets" | "actors" | "actions">(
     "overview",
   );
-  const [actionFilters, setActionFilters] = useState<ActionFilters>({
-    protocols: new Set(),
-    sdgs: new Set(),
-    timeRange: null,
-  });
 
   // Read ?entity= URL param on mount
   useEffect(() => {
@@ -196,66 +167,6 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
       .sort((a, b) => b.assetCount + b.actionCount - (a.assetCount + a.actionCount));
   }, [bioregionGeoJSON, filteredAssets, allOrgs, allActions]);
 
-  // Item count for the filter bar — reflects what's currently visible
-  const itemCount = useMemo(() => {
-    let count = 0;
-    if (activeEntityTypes.has("asset")) {
-      count += filteredAssets.length;
-    }
-    if (activeEntityTypes.has("actor")) {
-      // Count based on active actor type toggles
-      if (activeActorTypes.has("orgs")) {
-        count += allOrgs.length;
-      }
-      if (activeActorTypes.has("agents")) {
-        // Estimate agent count (sum of agents per bioregion with entities)
-        const agentCount = bioregionList.reduce((sum, b) => sum + (3 + (b.code.charCodeAt(0) % 5)), 0);
-        count += Math.min(agentCount, 50); // Cap at reasonable number
-      }
-    }
-    if (activeEntityTypes.has("action")) {
-      count += allActions.length;
-    }
-    return count;
-  }, [activeEntityTypes, activeActorTypes, filteredAssets.length, allOrgs.length, allActions.length, bioregionList]);
-
-  // Format bioregion stats for the filter bar
-  const formattedBioregionStats = useMemo(() => {
-    if (!selectedBioregion) return null;
-    const assetsInBioregion = filteredAssets.filter((a) =>
-      a.region?.startsWith(selectedBioregion.code.split("_")[0]),
-    ).length;
-    const orgsInBioregion = allOrgs.filter(
-      (o) => o.coordinates && Math.abs(o.coordinates.latitude - (selectedBioregion.centroid?.[1] || 0)) < 5,
-    ).length;
-    const actorCount = orgsInBioregion + 1; // +1 for owockibot
-    const actionsInBioregion = allActions.filter(
-      (a) =>
-        a.location &&
-        selectedBioregion.centroid &&
-        Math.abs(a.location.latitude - selectedBioregion.centroid[1]) < 5 &&
-        Math.abs(a.location.longitude - selectedBioregion.centroid[0]) < 10,
-    ).length;
-
-    return {
-      id: selectedBioregion.code,
-      name: selectedBioregion.name || selectedBioregion.code,
-      eii: 0,
-      eiiDelta: 0,
-      assetCount: assetsInBioregion,
-      actionCount: actionsInBioregion,
-      actorCount,
-    };
-  }, [selectedBioregion, filteredAssets, allOrgs]);
-
-  const handleAssetCardPinClick = (asset: Asset) => {
-    dispatch({ type: "SET_SELECTED_ASSET", payload: asset.id });
-    mapRef?.current?.flyTo({
-      center: [asset.coordinates.longitude, asset?.coordinates?.latitude],
-      zoom: 10,
-    });
-  };
-
   const handleAssetMarkerClick = useCallback(
     (assetId: string) => {
       dispatch({ type: "SET_SELECTED_ASSET", payload: assetId });
@@ -281,32 +192,6 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
       navigate(`/agents/${address}`);
     },
     [navigate],
-  );
-
-  const handleOrgCardClick = useCallback(
-    (org: Org) => {
-      if (!org.coordinates) return;
-      const { longitude, latitude } = org.coordinates;
-      mapRef?.current?.flyTo({ center: [longitude, latitude], zoom: 6 });
-
-      // Detect bioregion and open panel with actors tab
-      setBioregionDefaultTab("actors");
-      if (bioregionGeoJSON) {
-        const feature = findBioregionForPoint(longitude, latitude, bioregionGeoJSON);
-        if (feature?.properties) {
-          const p = feature.properties as Record<string, any>;
-          setSelectedBioregion({
-            code: p.code,
-            name: p.name ?? p.code,
-            realm: p.realm,
-            realm_name: p.realm_name,
-            color: p.color,
-            centroid: typeof p.centroid === "string" ? JSON.parse(p.centroid) : p.centroid,
-          });
-        }
-      }
-    },
-    [bioregionGeoJSON],
   );
 
   const handleActionCardClick = useCallback(
@@ -407,43 +292,18 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
     }
   }, []);
 
-  // Reorder orgs/actions to put selected one first
-  const orgsToDisplay = useMemo(() => {
-    if (!selectedOrgId) return allOrgs;
-    const selected = allOrgs.find((o) => o.id === selectedOrgId);
-    if (!selected) return allOrgs;
-    return [selected, ...allOrgs.filter((o) => o.id !== selectedOrgId)];
-  }, [allOrgs, selectedOrgId]);
-
+  // The base-Atlas action-filter UI (protocol/SDG/time) is gone from this route,
+  // so `actionFilters` no longer exists — this memo now just reorders the selected
+  // action to the front. It still feeds `actionsWithLocation`, which the
+  // still-mounted BioregionLayer/CompositeClusterLayer consume (they render no
+  // actions here, but the props stay wired).
   const actionsToDisplay = useMemo(() => {
-    let list = allActions;
-
-    // Apply protocol filter (exclusion: protocols in the set are HIDDEN)
-    if (actionFilters.protocols.size > 0) {
-      list = list.filter((a) => !a.proofs.every((p) => actionFilters.protocols.has(p.protocol.id)));
-    }
-    // Apply SDG filter (exclusion: SDGs in the set are HIDDEN)
-    if (actionFilters.sdgs.size > 0) {
-      list = list.filter((a) => !a.sdg_outcomes.every((s) => actionFilters.sdgs.has(s.code)));
-    }
-    // Apply time range filter
-    if (actionFilters.timeRange) {
-      const { from, to } = actionFilters.timeRange;
-      list = list.filter((a) => {
-        const d = a.action_start_date || a.created_at;
-        if (!d) return false;
-        const date = new Date(d);
-        const ym = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-        return ym >= from && ym <= to;
-      });
-    }
-
     if (selectedActionId) {
-      const selected = list.find((a) => a.id === selectedActionId);
-      if (selected) return [selected, ...list.filter((a) => a.id !== selectedActionId)];
+      const selected = allActions.find((a) => a.id === selectedActionId);
+      if (selected) return [selected, ...allActions.filter((a) => a.id !== selectedActionId)];
     }
-    return list;
-  }, [allActions, selectedActionId, actionFilters]);
+    return allActions;
+  }, [allActions, selectedActionId]);
 
   // Expand filtered assets to include parent assets of second-order assets
   const expandedFilteredAssets = useMemo(() => {
@@ -466,17 +326,29 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
     return extras.length > 0 ? [...filteredAssets, ...extras] : filteredAssets;
   }, [filteredAssets, allAssets, showPrimaryAssets]);
 
-  // Investment view: assets with at least one real financial-instrument flag.
-  const investableFilteredAssets = useMemo(() => {
-    if (!investableOnly) return expandedFilteredAssets;
-    return expandedFilteredAssets.filter((a) => a.prefinancing || a.pretoken || a.yield_bearing);
-  }, [expandedFilteredAssets, investableOnly]);
+  // Base-Atlas investable overlay (default off, driven by the store's
+  // `atlasInvestableOverlay`). These memos always compute the investable subset;
+  // the overlay chip governs VISIBILITY via `overlayActiveTypes` below — when the
+  // overlay is off the cluster layer gets an empty active-type set and renders
+  // nothing, so the subset is only ever painted when the chip is on. Investable =
+  // an asset carrying a real financial-instrument flag (prefinancing/pretoken/
+  // yield_bearing), or an org with a populated treasury.
+  const investableFilteredAssets = useMemo(
+    () => expandedFilteredAssets.filter((a) => a.prefinancing || a.pretoken || a.yield_bearing),
+    [expandedFilteredAssets],
+  );
+  const investableOrgs = useMemo(() => allOrgs.filter((o) => o.treasury && o.treasury.length > 0), [allOrgs]);
 
-  // Investment view: orgs with a real treasury (a fund/account, not just a description).
-  const investableOrgs = useMemo(() => {
-    if (!investableOnly) return allOrgs;
-    return allOrgs.filter((o) => o.treasury && o.treasury.length > 0);
-  }, [allOrgs, investableOnly]);
+  // Stable Set references for the map layers (never inline `new Set()` in JSX —
+  // a fresh reference every render defeats the layers' memoization). The overlay
+  // shows asset+actor clusters when on, nothing when off; the BioregionLayer gets
+  // empty active sets so its polygons/labels survive but its count badges zero.
+  const overlayActiveTypes = useMemo<Set<EntityTypeKey>>(
+    () => (atlasInvestableOverlay ? new Set<EntityTypeKey>(["asset", "actor"]) : new Set<EntityTypeKey>()),
+    [atlasInvestableOverlay],
+  );
+  const emptyEntityTypes = useMemo<Set<EntityTypeKey>>(() => new Set<EntityTypeKey>(), []);
+  const emptyActorTypes = useMemo<Set<ActorTypeKey>>(() => new Set<ActorTypeKey>(), []);
 
   // Filter actions to only those with valid locations (respecting action filters)
   const actionsWithLocation = useMemo(
@@ -630,34 +502,60 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
     setHoveredDot(null);
   }, []);
 
-  const hasDetailSelection = selectedBioregion || selectedAssetId || selectedOrgId || selectedActionId;
   // Always show panel on lg (accordion is default content). On md, only when detail selected.
   const showLeftPanel = true;
 
   // Aqueduct economy — lots / intents & routes / solvers & venues for the rail
   const economy = useAqueductEconomy();
 
-  // Accordion: priority order Lots > Bioregions > Intents > Solvers > Assets > Actions > Actors
-  type AccordionSection = "bioregion" | "lot" | "intent" | "aqActor" | "asset" | "action" | "actor";
+  // The rail reads through the SAME predicate module the map layers do (one
+  // predicate, three consumers → rail/map/bar counts always agree). Memoized on
+  // the economy slice + the filter snapshot; the snapshot changes only on a user
+  // toggle, so these never churn. A category toggled off zeroes its section
+  // BOTH by emptying the array here AND by the `activeCategories` gate in the JSX
+  // (which also removes the section header) — rail and map vanish in one click.
+  const filteredLots = useMemo(() => economy.lots.filter((l) => matchesLot(l, aqFilters)), [economy.lots, aqFilters]);
+  // Glow solar farms as the second commodity vertical. Same `buildGlowFarmLots()`
+  // source the map's GlowFarmsLayer reads, run through the SAME `matchesLot`
+  // predicate — so the rail Lots count and the map's solar markers are always the
+  // same N (e.g. commodity→solar-only leaves exactly 10 in both; an EUDR filter
+  // derives "gap" for every farm and drops them all from both at once).
+  const glowFarmLots = useMemo(() => buildGlowFarmLots(), []);
+  const filteredGlowFarms = useMemo(
+    () => glowFarmLots.filter((l) => matchesLot(l, aqFilters)),
+    [glowFarmLots, aqFilters],
+  );
+  // Combined Lots-section size = coffee/sim lots + solar farms (both live under the
+  // one "lots" category and its single header count).
+  const lotsCount = filteredLots.length + filteredGlowFarms.length;
+  const filteredIntents = useMemo(
+    () => economy.intents.filter((it) => matchesIntent(it, aqFilters)),
+    [economy.intents, aqFilters],
+  );
+  const filteredActors = useMemo(
+    () => economy.actors.filter((a) => matchesInstitution(a, aqFilters)),
+    [economy.actors, aqFilters],
+  );
+
+  // Accordion: priority order Lots > Bioregions > Intents > Solvers (base-Atlas
+  // Assets/Actions/Actors sections are gone from this route — rail and map agree).
+  type AccordionSection = "bioregion" | "lot" | "intent" | "aqActor";
   const [openSection, setOpenSection] = useState<AccordionSection | null>(null);
 
-  // Auto-select highest priority section when panel content changes
+  // Auto-select highest priority section when panel content changes. The first
+  // branch uses the FILTERED lot count and is gated on the "lots" category (and
+  // both are in the dep array), so an all-filtered-out / lots-off state never
+  // forces open an empty Lots section.
   useEffect(() => {
     if (selectedBioregion) return; // accordion only used in card-list mode
-    if (economy.lots.length > 0) {
+    if (activeCategories.has("lots") && lotsCount > 0) {
       setOpenSection("lot");
     } else if (bioregionList.length > 0) {
       setOpenSection("bioregion");
-    } else if (activeEntityTypes.has("asset") && filteredAssets.length > 0) {
-      setOpenSection("asset");
-    } else if (activeEntityTypes.has("action") && actionsToDisplay.length > 0) {
-      setOpenSection("action");
-    } else if (activeEntityTypes.has("actor") && orgsToDisplay.length > 0) {
-      setOpenSection("actor");
     } else {
       setOpenSection(null);
     }
-  }, [activeEntityTypes, selectedBioregion, bioregionList.length, economy.lots.length]);
+  }, [selectedBioregion, bioregionList.length, lotsCount, activeCategories]);
 
   const [accordionSearch, setAccordionSearch] = useState("");
 
@@ -718,37 +616,33 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                 onMouseLeave={isSecondOrder ? handleMapMouseLeave : undefined}
                 cursor={isSecondOrder && hoveredDot ? "pointer" : undefined}
               >
-                {/* Map filter bar (desktop) */}
-                <MapFilterBar
-                  itemCount={itemCount}
-                  selectedBioregion={formattedBioregionStats}
-                  actionFilters={actionFilters}
-                  onActionFiltersChange={setActionFilters}
-                  showPrimaryAssets={showPrimaryAssets}
-                  onTogglePrimaryAssets={() => setShowPrimaryAssets((v) => !v)}
-                  investableOnly={investableOnly}
-                  onToggleInvestableOnly={() => setInvestableOnly((v) => !v)}
-                  filteredActionCount={actionsToDisplay.length}
-                />
+                {/* Aqueduct filter bar (desktop/tablet) — writes the singleton
+                    filter store; the two map layers and the rail read it. */}
+                <AqueductFilterBar />
 
                 {/* Hide bioregion + cluster layers when viewing second-order assets */}
                 {!isSecondOrder && (
                   <>
+                    {/* Bioregion polygons/labels survive; count badges zero out
+                        (empty active sets) — bioregions are context, not a filtered
+                        Aqueduct category. */}
                     <BioregionLayer
                       selectedBioregion={selectedBioregion?.code ?? null}
                       allAssets={expandedFilteredAssets}
                       allOrgs={allOrgs}
                       allActions={actionsWithLocation}
-                      activeEntityTypes={activeEntityTypes}
-                      activeActorTypes={activeActorTypes}
+                      activeEntityTypes={emptyEntityTypes}
+                      activeActorTypes={emptyActorTypes}
                       onBioregionSelect={handleBioregionSelect}
                     />
 
+                    {/* Base-Atlas investable clusters — visible ONLY when the
+                        overlay chip is on (empty active set → renders nothing). */}
                     <CompositeClusterLayer
                       assets={investableFilteredAssets.filter((asset) => !asset.second_order)}
                       orgs={investableOrgs}
                       actions={actionsWithLocation}
-                      activeTypes={activeEntityTypes}
+                      activeTypes={overlayActiveTypes}
                       onAssetClick={handleAssetMarkerClick}
                       onOrgClick={handleOrgClick}
                       onActionClick={handleActionClick}
@@ -763,6 +657,11 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                         react-map-gl Markers paint in DOM/mount order, no
                         z-index available, so order is the only lever. */}
                     <AqueductNetworkLayer />
+                    {/* Glow solar farms — the second commodity vertical (10 real
+                        farms, live-read SNAPSHOT). Mounted BEFORE the coffee lot
+                        layer so real coffee lot chips stay on top (mount order =
+                        stacking; react-map-gl Markers have no z-index). */}
+                    <GlowFarmsLayer />
                     {/* Aqueduct lot markers (EthicHub reads) — separate from
                         the Atlas assets pipeline above. Mounted last so lot
                         chips always stay on top of route lines/nodes. */}
@@ -809,18 +708,12 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
               <MapLegend />
             </div>
           </div>
+          {/* Base-Atlas mobile filter row removed — this route has no base-Atlas
+              filter row on any viewport. Empty spacer keeps the mobile grid cell's
+              top offset intact. */}
           <div
             className={clsx("h-[60px] z-10 md:row-start-1 md:row-end-2 md:order-1 md:col-span-2 lg:hidden", "md:h-0")}
-          >
-            <div
-              className={clsx(
-                "filters-row-mobile bg-background",
-                "md:fixed md:!top-[70px] md:left-0 md:w-full md:!px-4",
-              )}
-            >
-              <FiltersMobile actionFilters={actionFilters} onActionFiltersChange={setActionFilters} />
-            </div>
-          </div>
+          />
           <div
             className={clsx(
               "md:order-2 md:row-start-2 lg:row-start-1 lg:row-end-2 md:row-end-3",
@@ -996,8 +889,9 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </>
                 )}
 
-                {/* Lots — Aqueduct commodity lots */}
-                {economy.lots.length > 0 && (
+                {/* Lots — Aqueduct commodity lots (filtered; hidden when the
+                    "lots" category is off, so rail and map vanish together) */}
+                {activeCategories.has("lots") && lotsCount > 0 && (
                   <>
                     <button
                       onClick={() => toggleSection("lot")}
@@ -1006,7 +900,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     >
                       <span className="flex items-center gap-1.5">
                         <Coffee size={14} style={{ color: AQUEDUCT_SECTION_COLORS.lot }} />
-                        Lots <span className="font-normal text-gray-400">({economy.lots.length.toLocaleString()})</span>
+                        Lots <span className="font-normal text-gray-400">({lotsCount.toLocaleString()})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1017,13 +911,20 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       (() => {
                         const q = accordionSearch.toLowerCase();
                         const items = q
-                          ? economy.lots.filter(
+                          ? filteredLots.filter(
                               (l) =>
                                 l.title_redacted.toLowerCase().includes(q) ||
                                 (l.origin.region ?? "").toLowerCase().includes(q) ||
                                 (l.origin.country ?? "").toLowerCase().includes(q),
                             )
-                          : economy.lots;
+                          : filteredLots;
+                        // Solar farms share the Lots section (second vertical). Few
+                        // (≤10), so they render in full above the capped coffee list.
+                        const solarItems = q
+                          ? filteredGlowFarms.filter(
+                              (f) => f.farm.name.toLowerCase().includes(q) || f.farm.location.toLowerCase().includes(q),
+                            )
+                          : filteredGlowFarms;
                         return (
                           <div className="flex-1 min-h-0 flex flex-col">
                             <div className="relative shrink-0 border-b border-gray-200">
@@ -1040,6 +941,19 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                               />
                             </div>
                             <div className="flex-1 min-h-0 overflow-y-auto">
+                              {solarItems.map((farmLot) => (
+                                <SolarFarmRow
+                                  key={farmLot.aqueduct_id}
+                                  farmLot={farmLot}
+                                  onLocate={() => {
+                                    mapRef?.current?.flyTo({
+                                      center: [farmLot.map_marker.longitude, farmLot.map_marker.latitude],
+                                      zoom: 9,
+                                      duration: 900,
+                                    });
+                                  }}
+                                />
+                              ))}
                               {items.slice(0, 80).map((lot) => (
                                 <LotExploreCard
                                   key={lot.aqueduct_id}
@@ -1067,8 +981,9 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </>
                 )}
 
-                {/* Intents & Routes — Aqueduct order flow */}
-                {economy.intents.length > 0 && (
+                {/* Intents & Routes — Aqueduct order flow (filtered; hidden when
+                    the "routes" category is off) */}
+                {activeCategories.has("routes") && filteredIntents.length > 0 && (
                   <>
                     <button
                       onClick={() => toggleSection("intent")}
@@ -1078,7 +993,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       <span className="flex items-center gap-1.5">
                         <ArrowsLeftRight size={14} style={{ color: AQUEDUCT_SECTION_COLORS.intent }} />
                         Intents & Routes{" "}
-                        <span className="font-normal text-gray-400">({economy.intents.length.toLocaleString()})</span>
+                        <span className="font-normal text-gray-400">({filteredIntents.length.toLocaleString()})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1089,10 +1004,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       (() => {
                         const q = accordionSearch.toLowerCase();
                         const items = q
-                          ? economy.intents.filter(
+                          ? filteredIntents.filter(
                               (it) => it.title.toLowerCase().includes(q) || it.detail.toLowerCase().includes(q),
                             )
-                          : economy.intents;
+                          : filteredIntents;
                         return (
                           <div className="flex-1 min-h-0 flex flex-col">
                             <div className="relative shrink-0 border-b border-gray-200">
@@ -1136,8 +1051,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </>
                 )}
 
-                {/* Solvers & Venues — Aqueduct market actors */}
-                {economy.actors.length > 0 && (
+                {/* Solvers & Venues — Aqueduct market actors (filtered; hidden
+                    when the "institutions" category is off, so the section AND the
+                    map markers vanish in the same click) */}
+                {activeCategories.has("institutions") && filteredActors.length > 0 && (
                   <>
                     <button
                       onClick={() => toggleSection("aqActor")}
@@ -1146,7 +1063,7 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                     >
                       <span className="flex items-center gap-1.5">
                         <Cpu size={14} style={{ color: AQUEDUCT_SECTION_COLORS.actor }} />
-                        Solvers & Venues <span className="font-normal text-gray-400">({economy.actors.length})</span>
+                        Solvers & Venues <span className="font-normal text-gray-400">({filteredActors.length})</span>
                       </span>
                       <CaretDown
                         size={14}
@@ -1157,10 +1074,10 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                       (() => {
                         const q = accordionSearch.toLowerCase();
                         const items = q
-                          ? economy.actors.filter(
+                          ? filteredActors.filter(
                               (a) => a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q),
                             )
-                          : economy.actors;
+                          : filteredActors;
                         return (
                           <div className="flex-1 min-h-0 flex flex-col">
                             <div className="relative shrink-0 border-b border-gray-200">
@@ -1206,196 +1123,11 @@ export default ({ experimentalMode = false }: { experimentalMode?: boolean } = {
                   </>
                 )}
 
-                {/* Assets */}
-                {activeEntityTypes.has("asset") && filteredAssets.length > 0 && (
-                  <>
-                    <button
-                      onClick={() => toggleSection("asset")}
-                      className={RAIL_HEADER_CLS}
-                      style={{ boxShadow: `inset 3px 0 0 ${ENTITY_COLORS.asset.primary}` }}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <TreeStructure size={14} style={{ color: ENTITY_COLORS.asset.primary }} />
-                        Assets <span className="font-normal text-gray-400">({filteredAssets.length})</span>
-                      </span>
-                      <CaretDown
-                        size={14}
-                        className={clsx("transition-transform", openSection === "asset" && "rotate-180")}
-                      />
-                    </button>
-                    {openSection === "asset" &&
-                      (() => {
-                        const q = accordionSearch.toLowerCase();
-                        const items = q
-                          ? filteredAssets.filter((a) => a.name.toLowerCase().includes(q))
-                          : filteredAssets;
-                        return (
-                          <div className="flex-1 min-h-0 flex flex-col">
-                            <div className="relative shrink-0 border-b border-gray-200">
-                              <MagnifyingGlass
-                                size={14}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                              />
-                              <input
-                                type="text"
-                                value={accordionSearch}
-                                onChange={(e) => setAccordionSearch(e.target.value)}
-                                placeholder="Search assets..."
-                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                              />
-                            </div>
-                            <div className="flex-1 min-h-0 overflow-y-auto">
-                              {items.map((asset) => (
-                                <AssetExploreCard
-                                  key={asset.id}
-                                  asset={asset}
-                                  onLocate={() => handleAssetCardPinClick(asset)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })()}
-                  </>
-                )}
-
-                {/* Actions */}
-                {activeEntityTypes.has("action") && actionsToDisplay.length > 0 && (
-                  <>
-                    <button
-                      onClick={() => toggleSection("action")}
-                      className={RAIL_HEADER_CLS}
-                      style={{ boxShadow: `inset 3px 0 0 ${ENTITY_COLORS.action.primary}` }}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Lightning size={14} style={{ color: ENTITY_COLORS.action.primary }} />
-                        Actions <span className="font-normal text-gray-400">({actionsToDisplay.length})</span>
-                      </span>
-                      <CaretDown
-                        size={14}
-                        className={clsx("transition-transform", openSection === "action" && "rotate-180")}
-                      />
-                    </button>
-                    {openSection === "action" &&
-                      (() => {
-                        const q = accordionSearch.toLowerCase();
-                        const items = q
-                          ? actionsToDisplay.filter((a) => (a.title ?? a.id).toLowerCase().includes(q))
-                          : actionsToDisplay;
-                        return (
-                          <div className="flex-1 min-h-0 flex flex-col">
-                            <div className="relative shrink-0 border-b border-gray-200">
-                              <MagnifyingGlass
-                                size={14}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                              />
-                              <input
-                                type="text"
-                                value={accordionSearch}
-                                onChange={(e) => setAccordionSearch(e.target.value)}
-                                placeholder="Search actions..."
-                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                              />
-                            </div>
-                            <div className="flex-1 min-h-0 overflow-y-auto">
-                              {items.map((action) => (
-                                <ActionExploreCard
-                                  key={action.id}
-                                  action={action}
-                                  onLocate={() => handleActionCardClick(action)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })()}
-                  </>
-                )}
-
-                {/* Actors */}
-                {activeEntityTypes.has("actor") && orgsToDisplay.length > 0 && (
-                  <>
-                    <button
-                      onClick={() => toggleSection("actor")}
-                      className={RAIL_HEADER_CLS}
-                      style={{ boxShadow: `inset 3px 0 0 ${ENTITY_COLORS.actor.primary}` }}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Users size={14} style={{ color: ENTITY_COLORS.actor.primary }} />
-                        Actors <span className="font-normal text-gray-400">({orgsToDisplay.length})</span>
-                      </span>
-                      <CaretDown
-                        size={14}
-                        className={clsx("transition-transform", openSection === "actor" && "rotate-180")}
-                      />
-                    </button>
-                    {openSection === "actor" &&
-                      (() => {
-                        const q = accordionSearch.toLowerCase();
-                        const items = q
-                          ? orgsToDisplay.filter((o) => (o.name || "").toLowerCase().includes(q))
-                          : orgsToDisplay;
-                        return (
-                          <div className="flex-1 min-h-0 flex flex-col">
-                            <div className="relative shrink-0 border-b border-gray-200">
-                              <MagnifyingGlass
-                                size={14}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                              />
-                              <input
-                                type="text"
-                                value={accordionSearch}
-                                onChange={(e) => setAccordionSearch(e.target.value)}
-                                placeholder="Search actors..."
-                                className="w-full pl-8 pr-3 py-2 text-xs bg-white focus:outline-none"
-                              />
-                            </div>
-                            <div className="flex-1 min-h-0 overflow-y-auto">
-                              {/* owockibot — universal agent */}
-                              <div className="bg-cardBackground border border-gray-100 overflow-hidden">
-                                <div className="flex">
-                                  <div className="w-1 flex-shrink-0 bg-purple-500" />
-                                  <div className="flex items-center pl-2.5 py-2.5">
-                                    <img
-                                      src="/images/agents/owockibot.webp"
-                                      className="w-10 h-10 rounded flex-shrink-0 object-cover"
-                                      alt="owockibot"
-                                    />
-                                  </div>
-                                  <div className="flex-1 min-w-0 px-2.5 py-2.5">
-                                    <div className="flex items-center justify-between gap-1.5 mb-0.5">
-                                      <div className="flex items-center gap-1.5">
-                                        <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-purple-50 text-purple-600">
-                                          Agent
-                                        </span>
-                                      </div>
-                                      <div className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-100 flex-shrink-0">
-                                        <ChainIcon chainId="base" chainName="Base" size={13} />
-                                      </div>
-                                    </div>
-                                    <div className="flex items-center justify-between gap-2">
-                                      <h4 className="text-sm font-semibold text-gray-900">owockibot</h4>
-                                      <a
-                                        href="https://owockibot.xyz"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex-shrink-0 text-gray-300 hover:text-purple-500 transition-colors"
-                                      >
-                                        <ArrowRight size={14} />
-                                      </a>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              {items.map((org) => (
-                                <OrgExploreCard key={org.id} org={org} onLocate={() => handleOrgCardClick(org)} />
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })()}
-                  </>
-                )}
+                {/* Base-Atlas Assets / Actions / Actors rail sections removed on
+                    this route — those entities are gone from the map (except via
+                    the investable overlay), so keeping their rail sections would
+                    make rail and map disagree. Bioregions + the three Aqueduct
+                    sections are the whole rail here. */}
               </div>
             )}
           </div>

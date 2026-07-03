@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Provenance } from "../components/Chips";
 import { getEconomy } from "../sim/economy.mjs";
-import { buildFinanceIntent } from "../sim/financeIntent.mjs";
+import { buildFinanceIntent, buildGlowFarmFinanceIntent } from "../sim/financeIntent.mjs";
 import { buildCoopRegistry } from "../sim/tradeFinance.mjs";
 import { AGROFORESTRY_VENUES, REGISTRAR_NODE, TO_BUILD_PLATFORM_NODES, VAULT_NODE } from "../sim/venues.mjs";
 import { type AqueductLotSnapshot, useAqueductLots } from "./useAqueductLots";
@@ -13,15 +13,51 @@ export type AqueductAnyLot = AqueductLotSnapshot & {
   weight_kg?: number;
 };
 
+/** REA/Valueflows typed extension (Architecture G, WP4) — additive fields carried by
+ *  finance-* intents only (`sell-this-lot` is a spot reciprocal exchange, never a Claim).
+ *  See sim/financeIntent.mjs's header comment for the Valueflows action-vocabulary
+ *  reasoning behind why financing produces a Claim and a sale doesn't. */
+export interface AqueductIntentInputResource {
+  resourceType: string;
+  quantity: number;
+  unit: string;
+}
+
+/** finance-this-planting's Claim shape — a conventional EUR-denominated, APR/term credit
+ *  line (EthicHub). */
+export interface EthicHubClaim {
+  principalEur: number;
+  aprPct: number;
+  termMonths: number;
+  confidence: "confirmed" | "reported" | "estimate";
+  source: string;
+}
+
+/** finance-this-farm's Claim shape — a USD-principal GLW token-stream delegation (Glow).
+ *  Deliberately NOT unified with EthicHubClaim: the two instruments differ in currency,
+ *  repayment mechanism (fixed APR vs. token emission stream), and term unit (months vs.
+ *  weeks) — forcing one shape would misrepresent one of them. */
+export interface GlowClaim {
+  principalUsd: number;
+  glwPerWeek: number;
+  termWeeks: number;
+  confidence: "confirmed" | "reported" | "estimate";
+  source: string;
+}
+
+export type AqueductFinanceClaim = EthicHubClaim | GlowClaim;
+
 export interface AqueductIntent {
   id: string;
-  intentType: "sell-this-lot" | "finance-this-planting";
+  intentType: "sell-this-lot" | "finance-this-planting" | "finance-this-farm";
   status?: "open" | "filled" | "settled";
   title: string;
   detail: string;
   provenance: Provenance;
   lotId?: string;
   coordinates?: { longitude: number; latitude: number };
+  inputResource?: AqueductIntentInputResource;
+  claim?: AqueductFinanceClaim;
 }
 
 export interface AqueductActor {
@@ -42,6 +78,25 @@ export interface AqueductEvent {
   summary: string;
   provenance: Provenance;
   lotId?: string;
+  url?: string;
+}
+
+/** Raw shape of /data/aqueduct/ledger.json — the ex-/ledger page's data source, now
+ *  folded into this hook's own events memo (the ledger route itself is gone). */
+interface LedgerJsonEntry {
+  ts: string; // ISO string — Date.parse() before merging; AqueductEvent.ts is epoch-ms
+  provenance: string;
+  agent: string;
+  platform: string;
+  url: string;
+  verb: string;
+  detail: string;
+  status: string;
+}
+interface LedgerJsonFile {
+  generated_at: string;
+  anchor_fallback_switch: { ts: string; note: string } | null;
+  entries: LedgerJsonEntry[];
 }
 
 const SIM_LOT_DEFAULTS = {
@@ -86,6 +141,26 @@ export function useAqueductEconomy() {
   const { lots: realLots, loading, refetchState, generatedAt } = useAqueductLots({ liveRefetch: false });
   const economy = useMemo(() => getEconomy(), []);
 
+  // ledger.json fold-in (the ex-/ledger page's only real data source that isn't
+  // already covered by realLots/economy). Same useState/useEffect fetch pattern as
+  // useRealVsSimSummary.ts. Consumers of `events` already tolerate an empty array on
+  // first render, so this arriving one render late is fine.
+  const [ledgerFile, setLedgerFile] = useState<LedgerJsonFile | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/data/aqueduct/ledger.json")
+      .then((r) => r.json())
+      .then((data: LedgerJsonFile) => {
+        if (!cancelled) setLedgerFile(data);
+      })
+      .catch(() => {
+        if (!cancelled) setLedgerFile(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const simLots = useMemo<AqueductAnyLot[]>(
     () => economy.lots.map((l: Record<string, unknown>) => normalizeSimLot(l)),
     [economy],
@@ -115,6 +190,12 @@ export function useAqueductEconomy() {
           : undefined,
       });
     }
+    // Kiva-template ask copy below (both finance intents) is an Aqueduct-designed
+    // ask-card convention, not a real platform's published copy — EthicHub research
+    // confirmed no real platform publishes a per-farmer dollar-ask card; Glow's real
+    // Miner listing is a raw quote, not ask-card copy either. Numbers are real/cited
+    // (finance.totalEur, finance.claim.aprPct, farmFinance.claim.glwPerWeek/termWeeks);
+    // only the sentence wrapping them is Aqueduct's own template.
     if (realLots && realLots.length > 0) {
       const finance = buildFinanceIntent(realLots[0]);
       out.push({
@@ -127,6 +208,27 @@ export function useAqueductEconomy() {
         coordinates: realLots[0].map_marker
           ? { longitude: realLots[0].map_marker.longitude, latitude: realLots[0].map_marker.latitude }
           : undefined,
+        inputResource: finance.inputResource,
+        claim: finance.claim,
+      });
+    }
+    // finance-this-farm (Glow solar) — not anchored to any coffee lot, always rendered
+    // once. The farm's own audit coordinates (parsed lng/lat) let it participate in
+    // map/rail rendering the same way a lot-anchored intent does.
+    {
+      const farmFinance = buildGlowFarmFinanceIntent();
+      out.push({
+        id: farmFinance.id,
+        intentType: "finance-this-farm",
+        status: "open",
+        title: `Finance — ${farmFinance.farmName} solar reward stream`,
+        detail: `$399 buys a fraction of ${farmFinance.farmName}'s solar reward stream — est. ${farmFinance.claim.glwPerWeek} GLW/week for ${farmFinance.claim.termWeeks} weeks`,
+        provenance: "SIM",
+        coordinates: farmFinance.coordinates
+          ? { longitude: farmFinance.coordinates.lng, latitude: farmFinance.coordinates.lat }
+          : undefined,
+        inputResource: farmFinance.inputResource,
+        claim: farmFinance.claim,
       });
     }
     return [...out, ...(economy.intents as AqueductIntent[])];
@@ -241,8 +343,38 @@ export function useAqueductEconomy() {
       provenance: (l.provenance ?? "SNAPSHOT") as Provenance,
       lotId: l.aqueduct_id,
     }));
-    return [...liveReads, ...(economy.events as AqueductEvent[])].sort((a, b) => b.ts - a.ts);
-  }, [realLots, economy]);
+
+    // ledger.json rows: Date.parse() the ISO ts before it ever touches the epoch-ms
+    // sort below — the old /ledger page's own sort mixed epoch-ms economy events with
+    // un-parsed ISO strings from raw `entries` (AqueductLedger.tsx:68) and silently
+    // NaN-sorted the ledger rows to one end. That bug is not reproduced here.
+    //
+    // Dedupe rule: ledger.json's own "pinned" rows (one per matched real lot, agent
+    // @scout-ethichub) record the exact same scout action `liveReads` above already
+    // synthesizes per-lot from realLots — same actor, same verb, same day. ledger.json's
+    // "read" rows (platform-level: the shop poll, the lending-API poll, the Celo
+    // eth_call) and "matched" rows (@diligence-identity) have no analog elsewhere in
+    // this memo and should pass through. AqueductEvent carries no `platform` field, but
+    // in this roster actor already disambiguates platform 1:1 (@scout-ethichub ↔
+    // ethichub-shop, @scout-ethichub-lending ↔ ethichub-lending-api,
+    // @oracle-celo-creditline ↔ celo-onchain) — so keying on (actor, verb, calendar day)
+    // is equivalent to (platform, verb, day) here and needs no extra field.
+    const dayOf = (ts: number) => new Date(ts).toISOString().slice(0, 10);
+    const liveReadKeys = new Set(liveReads.map((e) => `${e.actor}|${e.verb}|${dayOf(e.ts)}`));
+    const ledgerEvents: AqueductEvent[] = (ledgerFile?.entries ?? [])
+      .map((e) => ({ ...e, tsMs: Date.parse(e.ts) }))
+      .filter((e) => !liveReadKeys.has(`${e.agent}|${e.verb}|${dayOf(e.tsMs)}`))
+      .map((e) => ({
+        ts: e.tsMs,
+        actor: e.agent,
+        verb: e.verb,
+        summary: e.detail,
+        provenance: e.provenance as Provenance,
+        url: e.url || undefined,
+      }));
+
+    return [...liveReads, ...ledgerEvents, ...(economy.events as AqueductEvent[])].sort((a, b) => b.ts - a.ts);
+  }, [realLots, economy, ledgerFile]);
 
   return {
     lots,
